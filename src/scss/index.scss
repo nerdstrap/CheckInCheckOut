@@ -1,0 +1,340 @@
+@import "normalize";
+@import "foundation";
+
+/* -------- NocLog -------- */
+
+root {
+    display: block;
+    font-size: 1em;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+ol, ul {
+    list-style: none;
+    margin: 0;
+    padding: 0; }
+
+fieldset {
+    margin: 0;
+}
+
+/* stickey footer http://www.cssstickyfooter.com/using-sticky-footer-code.html*/
+html, body {
+    height: 100%; }
+
+body {
+    font-size: 1em;
+    line-height: 1.5em; }
+
+.shell-view {
+    min-height: 100%;
+    background-color: #DEDEDE;
+    min-width: 1254px;
+}
+
+.shell-view {
+    overflow: auto;
+    padding-bottom: 40px; }
+
+/* must be same height as the footer */
+#footer-view {
+    position: relative;
+    margin-top: -40px;
+    /* negative value of footer height */
+    height: 40px;
+    line-height: 40px;
+    overflow: hidden;
+    clear: both;
+    background-color: #DEDEDE; }
+
+.footer-logo {
+    width: 40px;
+}
+
+/*Opera Fix*/
+body:before {
+    content: "";
+    height: 100%;
+    float: left;
+    width: 0;
+    margin-top: -32767px; }
+
+/* app */
+.columns {
+    overflow-wrap: break-word;
+}
+
+.overflow-column {
+    overflow-y: hidden;
+}
+
+.row {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: none;
+}
+
+.row.highlighted {
+    background: red;
+}
+
+.hidden {
+    display: none;
+}
+
+.personnel-list-view, 
+.purpose-list-view,
+.station-entry-log-list-view,
+.station-entry-log-history-list-view,
+.station-list-view,
+.station-entry-log-view,
+.station-view,
+.personnel-view,
+.personnel-station-entry-log-list-view,
+.personnel-open-station-entry-log-view {
+    background-color: #FFFFFF;
+    margin: 5px;
+    padding: 5px;
+}
+
+.list-header-item-view {
+    background-color: #DEDEDE;
+    font-size: 1.2em;
+    line-height: 1.2em;
+    padding: 3px;
+    border: solid 1px #C2C2C2;
+    margin: 5px 0;
+}
+
+.list-header-item-view .columns {
+    position: relative;
+    height: 50px;
+}
+
+.list-header-item-view .columns span {
+    /*position: absolute;*/
+    bottom: 0;
+    left: 0;
+}
+
+.station-entry-log-list-item-view,
+.station-entry-log-history-list-item-view,
+.station-list-item-view,
+.station-list-item-view,
+.personnel-list-item-view,
+.personnel-station-entry-log-list-item-view {
+    background-color: #DEDEDE;
+    border: solid 1px #C2C2C2;
+    padding: 3px;
+    margin: 5px 0;
+}
+
+.h2 { 
+    font-size: 2.3em;
+}
+.h3 {
+    font-size: 1.5em;
+}
+
+.scroll{
+    height:550px;
+    overflow:scroll;
+    overflow-x:hidden;
+}
+
+.error{
+    color: #c22222;
+}
+
+.info{
+    color: #388e3a;
+}
+
+/* overriding font size for the various input types */
+select, 
+input, 
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea {
+    display: inline;
+    font-size: 1em;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: normal;
+    color: #000000;
+    cursor: pointer;
+}
+
+
+.new-station-entry-log-view select, 
+.new-station-entry-log-view input, 
+.station-entry-log-view select, 
+.station-entry-log-view input,
+.station-entry-log-list-view select, 
+.station-entry-log-list-view input,
+.station-entry-log-history-list-view select, 
+.station-entry-log-history-list-view input,
+.station-list-view select, 
+.station-list-view input,
+.personnel-list-view select, 
+.personnel-list-view input,
+.personnel-station-entry-log-list-view select, 
+.personnel-station-entry-log-list-view input
+{
+    min-width: 170px;
+    max-width: 170px;
+}
+
+span.detail {
+    font-size: 1em;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: normal;
+    font-style: italic;
+    color: #000000;
+}
+.station-view .columns {
+    overflow-y: hidden;
+}
+
+#station-show-contact-details-button,
+#station-show-location-details-button,
+#station-show-emergency-details-button,
+#station-show-other-details-button,
+.section-header {
+    color: #008cba;
+    font-size: 1em;
+    line-height: 1.2em;
+    border-bottom: solid 1px #b6edff;
+}
+
+#station-show-contact-details-button i,
+#station-show-location-details-button i,
+#station-show-emergency-details-button i,
+#station-show-other-details-button i,
+.section-header i {
+    float:right;
+}
+
+.station-entry-log-view .row,
+.new-station-entry-log-view .row {
+    padding: 5px 0px;
+}
+
+.hide-container-icon,
+.show-container-icon {
+    color: #008cba;
+    float:left;
+    font-size: 1rem;
+}
+
+.purpose-list-item-view .invalid,
+.new-station-entry-log-view .invalid,
+.edit-station-entry-log-view .invalid {
+    color: #c22222;
+    border: 1px solid #c22222;
+}
+
+.checkOutExpired {
+    background-color: #ffffcc;
+}
+
+.checkOutOverdue {
+    background-color: #ffcccc;
+}
+
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { 
+    color:    #B6B6B4;
+}
+input:-moz-placeholder, textarea:-moz-placeholder { 
+    color:    #B6B6B4;
+    opacity:  1;
+}
+input::-moz-placeholder, textarea::-moz-placeholder { 
+    color:    #B6B6B4;
+    opacity:  1;
+}
+input:-ms-input-placeholder, textarea:-ms-input-placeholder { 
+    color:    #B6B6B4;
+}
+
+.view-alerts {
+    margin: 0;
+    padding: 0;
+}
+.view-alerts .alert-box {
+    display: inline-block;
+    margin: 3px 3px 3px 0;
+}
+
+.invisible {
+    visibility:hidden;
+}
+
+.bolder {
+    font-weight: bolder;
+}
+
+.top-align {
+    vertical-align: top;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.large-link {
+    font-size: 1.125rem;
+}
+
+label {
+    margin-left: 5px;
+    margin-right: 5px;
+    cursor: default;
+}
+
+#purpose-other-input,
+#additional-info-input {
+    width: 99%;
+    resize: none;
+}
+
+.view-station-entry-log-button,
+.edit-station-entry-log-button,
+.check-out-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.purpose-list-item-view input,
+.purpose-list-item-view select,
+.purpose-list-item-view textarea {
+    width: 99%;
+}
+
+.hide-container-icon,
+#station-show-location-details-button {
+    cursor: pointer;
+}
+
+.expand-collapse-icons {
+    font-size: .833rem;
+}
+
+.right-side-buttons {
+    text-align: right;
+}
+
+.text-icon {
+    width: 20px;
+    margin-bottom: 5px;
+}
