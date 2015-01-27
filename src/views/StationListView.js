@@ -27,6 +27,8 @@ define(function (require) {
             var renderModel = _.extend({}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
+            this.hideLoading();
+
             return this;
         },
         addAll: function () {

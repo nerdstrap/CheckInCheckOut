@@ -9,6 +9,10 @@ define(function (require) {
             .substring(1);
     };
 
+    var toRad = function (degrees) {
+        return degrees * Math.PI / 180;
+    }
+
     var utils = {};
 
     utils.getNewGuid = function () {
@@ -66,6 +70,29 @@ define(function (require) {
             return (a < b) ? -1 : 1;
         }
     };
+
+    utils.computeDistanceBetween = function (start, end) {
+        var distance = 0.0;
+        try {
+            var R = 3956.0883313286096695299;
+
+            var dLat = toRad(end.latitude - start.latitude)
+            var dLon = toRad(end.longitude - start.longitude)
+            var lat1 = toRad(start.latitude)
+            var lat2 = toRad(end.latitude)
+
+            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(lat1) * Math.cos(lat2) *
+                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            disance = R * c;
+        } catch (ex) {
+            console.trace('compute distance failed');
+        }
+
+        return distance;
+    }
 
     return utils;
 });

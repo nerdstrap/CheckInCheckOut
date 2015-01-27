@@ -12,8 +12,8 @@ define(function (require) {
         enableHighAccuracy = masterConfig.enableHighAccuracy || false,
         maximumAge = masterConfig.maximumAge || 60000;
 
-    var Locator = function (options) {
-        console.trace('new Locator()');
+    var LocatorService = function (options) {
+        console.trace('new LocatorService()');
         options || (options = {});
         this.positionOptions = {
             'timeout': timeout,
@@ -22,9 +22,9 @@ define(function (require) {
         };
     };
 
-    _.extend(Locator.prototype, {
+    _.extend(LocatorService.prototype, {
         initialize: function (options) {
-            console.trace('Locator.initialize');
+            console.trace('LocatorService.initialize');
             options || (options = {});
         },
         getCurrentPosition: function () {
@@ -52,5 +52,5 @@ define(function (require) {
         }
     });
 
-    return Locator;
+    return LocatorService;
 });

@@ -2,11 +2,16 @@ require.config({
     config: {
         'env': {
             apiUrl: '',
-            siteRoot: ''
+            siteRoot: '/src'
         },
         'hbs': {
             'extension': 'html'
-        }
+        },
+        'Locator': {
+            'timeout': 30000, // 30 seconds
+            'enableHighAccuracy': false,
+            'maximumAge': 60000 // 1 minute
+        },
     },
     paths: {
         /* Require */

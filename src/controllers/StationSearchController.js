@@ -5,12 +5,10 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         StationService = require('services/StationService'),
+        LocatorService = require('services/LocatorService'),
         StationSearchView = require('views/StationSearchView'),
-        StationListView = require('views/StationListView'),
-        StationView = require('views/StationView'),
-        StationCollection = require('collections/StationCollection'),
         StationModel = require('models/StationModel'),
-        Locator = require('Locator'),
+        StationView = require('views/StationView'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         globals = require('globals'),
         utils = require('utils');
@@ -38,80 +36,40 @@ define(function (require) {
             this.router = options.router;
             this.dispatcher = options.dispatcher;
             this.stationService = options.stationService || new StationService();
-            this.locator = new Locator();
+            this.locatorService = options.locatorService || new LocatorService();
 
             this.listenTo(this.dispatcher, AppEventNamesEnum.goToStationSearch, this.goToStationSearch);
-            this.listenTo(this.dispatcher, AppEventNamesEnum.refreshStationList, this.refreshStationList);
+            this.listenTo(this.dispatcher, AppEventNamesEnum.refreshStations, this.refreshStations);
 
             this.listenTo(this.dispatcher, AppEventNamesEnum.goToDirectionsWithLatLng, this.goToDirectionsWithLatLng);
         },
-
-        //goToStationSearch: function () {
-        //    console.trace('StationSearchController.goToStationSearch');
-        //    var currentContext = this,
-        //        deferred = $.Deferred();
-        //
-        //    var stationCollectionInstance = new StationCollection();
-        //    var stationSearchViewInstance = new StationSearchView({
-        //        controller: currentContext,
-        //        dispatcher: currentContext.dispatcher,
-        //        stationCollection: stationCollectionInstance
-        //    });
-        //
-        //    currentContext.router.swapContent(stationSearchViewInstance);
-        //    var fragmentAlreadyMatches = (Backbone.history.fragment === 'station' || Backbone.history.fragment === '');
-        //    currentContext.router.navigate('station', {replace: fragmentAlreadyMatches});
-        //
-        //    var options = {};
-        //    stationSearchViewInstance.showLoading();
-        //    currentContext.stationService.getSearchOptions()
-        //        .done(function (getSearchOptionsResponse) {
-        //            currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getSearchOptionsResponse.userRole);
-        //            stationSearchViewInstance.hideLoading();
-        //            stationSearchViewInstance.dispatchRefreshSearch();
-        //            deferred.resolve(stationSearchViewInstance);
-        //        })
-        //        .fail(function (jqXHR, textStatus, errorThrown) {
-        //            stationSearchViewInstance.showError(textStatus);
-        //            deferred.reject({
-        //                stationSearchView: stationSearchViewInstance,
-        //                error: textStatus
-        //            });
-        //        });
-        //
-        //    return deferred.promise();
-        //},
 
         goToStationSearch: function () {
             console.trace('StationSearchController.goToStationSearch');
             var currentContext = this,
                 deferred = $.Deferred();
 
-            var stationCollectionInstance = new StationCollection();
             var stationSearchViewInstance = new StationSearchView({
                 controller: currentContext,
-                dispatcher: currentContext.dispatcher,
-                stationCollection: stationCollectionInstance
+                dispatcher: currentContext.dispatcher
             });
 
             currentContext.router.swapContent(stationSearchViewInstance);
             var fragmentAlreadyMatches = (Backbone.history.fragment === 'station' || Backbone.history.fragment === '');
-            currentContext.router.navigate('station', {replace: fragmentAlreadyMatches});
+            currentContext.router.navigate('station', { replace: fragmentAlreadyMatches });
 
-            var options = {};
             stationSearchViewInstance.showLoading();
-            currentContext.locator.getCurrentPosition()
-                .then(currentContext.stationService.getStations)
+            currentContext.stationService.getStationSearchOptions()
                 .then(function (getStationsResponse) {
                     currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getStationsResponse.userRole);
                     stationSearchViewInstance.hideLoading();
                     deferred.resolve(stationSearchViewInstance);
                 })
-                .fail(function (error) {
-                    stationCollectionInstance.reset();
+                .fail(function (errorCode, errorMessage) {
                     deferred.reject({
-                        stationCollection: stationCollectionInstance,
-                        error: textStatus
+                        stationSearchView: stationSearchViewInstance,
+                        errorCode: errorCode,
+                        errorMessage: errorMessage
                     })
                 });
 
@@ -119,59 +77,41 @@ define(function (require) {
         },
 
         refreshStations: function (stationCollectionInstance, options) {
-            console.trace('StationSearchController.refreshStationList');
+            console.trace('StationSearchController.refreshStations');
             options || (options = {});
             var currentContext = this,
                 deferred = $.Deferred();
 
             if (options.gps) {
-                stationSearchViewInstance.showLoading();
-                currentContext.locator.getCurrentPosition()
+                currentContext.locatorService.getCurrentPosition()
                     .then(currentContext.stationService.getStations)
                     .then(function (getStationsResponse) {
                         stationCollectionInstance.reset(getStationsResponse.stations);
                         deferred.resolve(stationCollectionInstance);
                     })
-                    .fail(function (error) {
+                    .fail(function (errorCode, errorMessage) {
                         stationCollectionInstance.reset();
                         deferred.reject({
                             stationCollection: stationCollectionInstance,
-                            error: textStatus
+                            errorCode: errorCode,
+                            errorMessage: errorMessage
                         })
                     });
+            } else {
+                currentContext.stationService.getStations(options)
+                    .then(function (getStationsResponse) {
+                        stationCollectionInstance.reset(getStationsResponse.stations);
+                        deferred.resolve(stationCollectionInstance);
+                    })
+                    .fail(function (errorCode, errorMessage) {
+                        stationCollectionInstance.reset();
+                        deferred.reject({
+                            stationCollection: stationCollectionInstance,
+                            errorCode: errorCode,
+                            errorMessage: errorMessage
+                        });
+                    });
             }
-
-            currentContext.stationService.getStations(options)
-            ).
-            done(function (getStationsResponse) {
-                stationCollectionInstance.reset(getStationsResponse.stations);
-                deferred.resolve(stationCollectionInstance);
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-                stationCollectionInstance.reset();
-                deferred.reject({
-                    stationCollection: stationCollectionInstance,
-                    error: textStatus
-                });
-            });
-
-            return deferred.promise();
-        },
-
-        refreshStationList: function (stationCollectionInstance, options) {
-            console.trace('StationSearchController.refreshStationList');
-            var currentContext = this,
-                deferred = $.Deferred();
-
-            $.when(currentContext.stationService.getStations(options)).done(function (getStationsResponse) {
-                stationCollectionInstance.reset(getStationsResponse.stations);
-                deferred.resolve(stationCollectionInstance);
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-                stationCollectionInstance.reset();
-                deferred.reject({
-                    stationCollection: stationCollectionInstance,
-                    error: textStatus
-                });
-            });
 
             return deferred.promise();
         },

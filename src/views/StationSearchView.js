@@ -5,6 +5,7 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseView = require('views/BaseView'),
+        StationCollection = require('collections/StationCollection'),
         StationListView = require('views/StationListView'),
         globals = require('globals'),
         env = require('env'),
@@ -16,7 +17,6 @@ define(function (require) {
             console.trace('StationSearchView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
-            this.stationCollection = options.stationCollection;
 
             this.listenTo(this, 'leave', this.onLeave);
         },
@@ -27,16 +27,13 @@ define(function (require) {
             var renderModel = _.extend({}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
+            currentContext.stationCollection = new StationCollection();
             currentContext.stationListViewInstance = new StationListView({
                 controller: currentContext.controller,
                 dispatcher: currentContext.dispatcher,
                 collection: currentContext.stationCollection
             });
             this.appendChildTo(currentContext.stationListViewInstance, '#station-list-view-container');
-
-            //var options = {};
-            //currentContext.stationListViewInstance.showLoading();
-            //currentContext.dispatcher.trigger(AppEventNamesEnum.refreshStationList, currentContext.stationCollection, options);
 
             return this;
         },
@@ -61,9 +58,11 @@ define(function (require) {
         refreshSearch: function () {
             this.showLoading();
 
-            var options = {};
+            var options = {
+                gps: true
+            };
             this.stationListViewInstance.showLoading();
-            this.dispatcher.trigger(AppEventNamesEnum.refreshStationList, this.stationCollection, options);
+            this.dispatcher.trigger(AppEventNamesEnum.refreshStations, this.stationCollection, options);
         },
         onLeave: function () {
             console.trace('StationSearchView.onLeave');

@@ -6,7 +6,7 @@ define(function (require) {
         globals = require('globals'),
         env = require('env');
 
-    var inMemoryStations = [
+    var _stations = [
         {
             'stationId': '1',
             'stationName': 'Station 1',
@@ -41,7 +41,35 @@ define(function (require) {
         }
     ];
 
-    var inMemoryUserRole = 'Admin';
+    var _userRole = 'Admin';
+
+    var _getById = function (stationId) {
+        return _.where(_stations, function (station) {
+            return station.stationId === stationId;
+        });
+    };
+
+    var _getByStationName = function (stationName) {
+        return _.where(_stations, function (station) {
+            return station.stationName === stationName;
+        });
+    };
+
+    var _getByRegionName = function (regionName) {
+        return _.where(_stations, function (station) {
+            return station.regionName === regionName;
+        });
+    };
+
+    var _getByAreaName = function (areaName) {
+        return _.where(_stations, function (station) {
+            return station.areaName === areaName;
+        });
+    };
+
+    var _getByCoords = function (coords) {
+        return _stations;
+    };
 
     var StationService = function (options) {
         console.trace('new StationService()');
@@ -54,48 +82,83 @@ define(function (require) {
             console.trace('StationService.initialize');
             options || (options = {});
         },
-        getSearchOptions: function (options) {
-
+        getStationSearchOptions: function (options) {
+            options || (options = {});
+            var currentContext = this;
             var deferred = $.Deferred();
-            var results = {
-                userRole: inMemoryUserRole
-            };
-            globals.window.setTimeout(function () {
-                deferred.resolve(results, 'success', null);
-            }, 3000);
+
+            var userRole;
+            if (options.userRole) {
+                userRole = options.userRole;
+            } else {
+                userRole = _userRole;
+            }
+
+            if (options.reject) {
+                var errorCode = options.errorCode;
+                var errorMessage = options.errorMessage;
+
+                globals.window.setTimeout(function () {
+                    deferred.rejectWith(currentContext, [errorCode, errorMessage]);
+                }, 1000);
+            } else {
+                var results = {
+                    userRole: userRole
+                };
+
+                globals.window.setTimeout(function () {
+                    deferred.resolveWith(currentContext, [results]);
+                }, 1000);
+            }
+
             return deferred.promise();
         },
         getStations: function (options) {
             options || (options = {});
+            var currentContext = this;
+            var deferred = $.Deferred();
 
             var stations;
             if (options.stationId) {
-                stations = _.where(inMemoryStations, function (station) {
-                    return station.stationId === options.stationId;
-                });
+                stations = _getById(options.stationId);
             } else if (options.areaName) {
-                stations = _.where(inMemoryStations, function (station) {
-                    return station.areaName === options.areaName;
-                });
+                stations = _getByRegionName(options.areaName);
             } else if (options.regionName) {
-                stations = _.where(inMemoryStations, function (station) {
-                    return station.regionName === options.regionName;
-                });
+                stations = _getByRegionName(options.regionName);
+            } else if (options.stationName) {
+                stations = _getByStationName(options.stationName);
             } else if (options.coords) {
-                console.log('getByGps was invoked');
-                stations = inMemoryStations;
+                console.trace('coords');
+                stations = _getByCoords(options.coords);
             } else {
-                stations = inMemoryStations;
+                stations = _stations;
             }
 
-            var deferred = $.Deferred();
-            var results = {
-                stations: stations,
-                userRole: inMemoryUserRole
-            };
-            globals.window.setTimeout(function () {
-                deferred.resolve(results, 'success', null);
-            }, 3000);
+            var userRole;
+            if (options.userRole) {
+                userRole = options.userRole;
+            } else {
+                userRole = _userRole;
+            }
+
+            if (options.reject) {
+                var errorCode = options.errorCode;
+                var errorMessage = options.errorMessage;
+
+                globals.window.setTimeout(function () {
+                    deferred.rejectWith(currentContext, [errorCode, errorMessage]);
+                }, 1000);
+            } else {
+                var results = {
+                    stations: stations,
+                    userRole: userRole
+                };
+
+                globals.window.setTimeout(function () {
+                    deferred.resolveWith(currentContext, [results]);
+                }, 1000);
+            }
+
             return deferred.promise();
         }
     });

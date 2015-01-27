@@ -10,6 +10,12 @@
             <a id="reset-search-button" class="button radius secondary" href="#">{{resource "resetButtonText"}}</a>
         </div>
     </div>
+    <div class="row collapse view-status hidden">
+        <div class="small-12 columns">
+            <span class="view-message">{{resource "stationSearch.loadingMessage"}}</span>
+            <img src="{{resource 'loadingIconSrc'}}" class="view-loading" />
+        </div>
+    </div>
     <div class="row collapse view-alerts">
         <div class="small-12 columns"></div>
     </div>

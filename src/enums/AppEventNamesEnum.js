@@ -6,21 +6,8 @@ define(function (require) {
         logout: 'logout',
         userRoleUpdated: 'userRoleUpdated',
         goToStationSearch: 'goToStationSearch',
-        goToStationList: 'goToStationList',
         goToStationWithId: 'goToStationWithId',
-        refreshStationList: 'refreshStationList',
-        checkIn: 'checkIn',
-        cancelCheckIn: 'cancelCheckIn',
-        checkInSuccess: 'checkInSuccess',
-        checkInError: 'checkInError',
-        checkOut: 'checkOut',
-        cancelCheckOut: 'cancelCheckOut',
-        checkOutSuccess: 'checkOutSuccess',
-        checkOutError: 'checkOutError',
-        updateCheckIn: 'updateCheckIn',
-        cancelUpdateCheckIn: 'cancelUpdateCheckIn',
-        updateCheckInSuccess: 'updateCheckInSuccess',
-        updateCheckInError: 'updateCheckInError'
+        refreshStations: 'refreshStations'
     };
 
     if (Object.freeze) {
