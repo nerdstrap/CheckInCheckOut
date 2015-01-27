@@ -7,11 +7,9 @@ define(function(require) {
 
     // these modules setup functions & configuration that are used elsewhere
     require('foundation.core');
-    require('foundation.alert');
     require('utils');
     require('routers/appRouterSingleton');
     require('handlebars.helpers');
-    require('filesaver');
 
     Backbone.history.start();
 

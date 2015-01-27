@@ -4,20 +4,18 @@ define(function(require) {
     var _ = require('underscore'),
         Backbone = require('backbone');
 
-    var Events = function(options) {
-        console.trace('new Events()');
+    var EventBus = function(options) {
+        console.trace('new EventBus()');
         options || (options = {});
         this.initialize.apply(this, arguments);
     };
 
-    _.extend(Events.prototype, Backbone.Events, {
+    _.extend(EventBus.prototype, Backbone.Events, {
         initialize: function(options) {
-            console.trace('Events.initialize');
+            console.trace('EventBus.initialize');
             options || (options = {});
         }
     });
 
-    var events = new Events();
-
-    return events;
+    return EventBus;
 });

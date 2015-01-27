@@ -4,8 +4,8 @@ define(function(require) {
     var $ = require('jquery'),
             _ = require('underscore'),
             Backbone = require('backbone'),
-            MockDispatcher = require('mocks/MockDispatcher');
+        EventBus = require('EventBus');
 
-    var mockDispatcherInstance = new MockDispatcher();
-    return mockDispatcherInstance;
+    var eventBusSingleton = new EventBus();
+    return eventBusSingleton;
 });

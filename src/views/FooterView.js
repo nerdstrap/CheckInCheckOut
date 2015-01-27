@@ -6,7 +6,6 @@ define(function (require) {
         Backbone = require('backbone'),
         CompositeView = require('views/CompositeView'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
-        appEvents = require('events'),
         template = require('hbs!templates/Footer');
 
     var FooterView = CompositeView.extend({
@@ -14,6 +13,9 @@ define(function (require) {
             console.trace('FooterView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
+
+            //this.listenTo(appEvents, AppEventNamesEnum.userRoleUpdated, this.userRoleUpdated);
+            this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
             console.trace('FooterView.render()');
@@ -23,6 +25,24 @@ define(function (require) {
             currentContext.$el.html(template(renderModel));
 
             return this;
+        },
+        events: {
+            'click #footer-button': 'footerButtonClick'
+        },
+        userRoleUpdated: function (userRole) {
+            if (userRole === UserRolesEnum.Admin) {
+                //show admin functions
+            } else {
+                //hide admin functions
+            }
+        },
+        footerButtonClick: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+        },
+        onLeave: function() {
+            console.trace('FooterView.onLeave');
         }
     });
 

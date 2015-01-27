@@ -8,7 +8,6 @@ define(function (require) {
         HeaderView = require('views/HeaderView'),
         FooterView = require('views/FooterView'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
-        appEvents = require('events'),
         template = require('hbs!templates/Shell');
 
     var ShellView = CompositeView.extend({
@@ -16,6 +15,8 @@ define(function (require) {
             console.trace('ShellView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
+
+            this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
             console.trace('ShellView.render()');
@@ -42,6 +43,9 @@ define(function (require) {
         },
         contentViewEl: function () {
             return $('#content-view', this.el);
+        },
+        onLeave: function() {
+            console.trace('ShellView.onLeave');
         }
     });
 

@@ -7,7 +7,6 @@ define(function (require) {
         CompositeView = require('views/CompositeView'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         UserRolesEnum = require('enums/UserRolesEnum'),
-        appEvents = require('events'),
         template = require('hbs!templates/Header');
 
     var HeaderView = CompositeView.extend({
@@ -16,15 +15,12 @@ define(function (require) {
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
 
-            this.listenTo(appEvents, AppEventNamesEnum.userRoleUpdated, this.userRoleUpdated);
+            //this.listenTo(appEvents, AppEventNamesEnum.userRoleUpdated, this.userRoleUpdated);
+            this.listenTo(this, 'leave', this.onLeave);
         },
         events: {
             'click #app-title-button': 'titleButtonClick',
-            'click #go-to-station-entry-log-list-button': 'goToStationEntryLogList',
-            'click #go-to-station-entry-log-history-list-button': 'goToStationEntryLogHistoryList',
-            'click #go-to-station-list-button': 'goToStationList',
-            'click #go-to-personnel-list-button': 'goToPersonnelList',
-            'click #go-to-maintain-purposes-button': 'goToMaintainPurposes'
+            'click #go-to-station-list-button': 'goToStationList'
         },
         render: function () {
             console.trace('HeaderView.render');
@@ -36,10 +32,10 @@ define(function (require) {
             return this;
         },
         userRoleUpdated: function (userRole) {
-            if (userRole === UserRolesEnum.NocAdmin) {
-                this.$('#go-to-maintain-purposes-link-container').removeClass('hidden');
+            if (userRole === UserRolesEnum.Admin) {
+                //show admin functions
             } else {
-                this.$('#go-to-maintain-purposes-link-container').addClass('hidden');
+                //hide admin functions
             }
         },
         titleButtonClick: function (event) {
@@ -47,35 +43,14 @@ define(function (require) {
                 event.preventDefault();
             }
         },
-        goToStationEntryLogList: function (event) {
-            if (event) {
-                event.preventDefault();
-            }
-            this.dispatcher.trigger(AppEventNamesEnum.goToStationEntryLogList);
-        },
         goToStationList: function (event) {
             if (event) {
                 event.preventDefault();
             }
             this.dispatcher.trigger(AppEventNamesEnum.goToStationList);
         },
-        goToPersonnelList: function (event) {
-            if (event) {
-                event.preventDefault();
-            }
-            this.dispatcher.trigger(AppEventNamesEnum.goToPersonnelList);
-        },
-        goToStationEntryLogHistoryList: function (event) {
-            if (event) {
-                event.preventDefault();
-            }
-            this.dispatcher.trigger(AppEventNamesEnum.goToStationEntryLogHistoryList);
-        },
-        goToMaintainPurposes: function (event) {
-            if (event) {
-                event.preventDefault();
-            }
-            this.dispatcher.trigger(AppEventNamesEnum.goToMaintainPurposes);
+        onLeave: function() {
+            console.trace('HeaderView.onLeave');
         }
     });
 

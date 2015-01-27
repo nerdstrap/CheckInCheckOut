@@ -1,12 +1,13 @@
-define(function(require) {
+define(function (require) {
     'use strict';
 
     var AppEventNamesEnum = {
         login: 'login',
         logout: 'logout',
         userRoleUpdated: 'userRoleUpdated',
+        goToStationSearch: 'goToStationSearch',
         goToStationList: 'goToStationList',
-	goToStationWithId: 'goToStationWithId',
+        goToStationWithId: 'goToStationWithId',
         refreshStationList: 'refreshStationList',
         checkIn: 'checkIn',
         cancelCheckIn: 'cancelCheckIn',
@@ -16,10 +17,10 @@ define(function(require) {
         cancelCheckOut: 'cancelCheckOut',
         checkOutSuccess: 'checkOutSuccess',
         checkOutError: 'checkOutError',
-	updateCheckIn: 'updateCheckIn',
+        updateCheckIn: 'updateCheckIn',
         cancelUpdateCheckIn: 'cancelUpdateCheckIn',
         updateCheckInSuccess: 'updateCheckInSuccess',
-        updateCheckInError: 'updateCheckInError',
+        updateCheckInError: 'updateCheckInError'
     };
 
     if (Object.freeze) {

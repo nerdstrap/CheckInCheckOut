@@ -10,17 +10,8 @@ define(function(require) {
             notificationTimeout = masterConfig.notificationTimeout || 10000,
             expirationThreshold = masterConfig.expirationThreshold || 1800000;
 
-    function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-                .toString(16)
-                .substring(1);
-    }
-
 
     var env = {
-        getNewGuid: function() {
-            return s4() + s4();
-        },
         getApiUrl: function() {
             return apiUrl;
         },

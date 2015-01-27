@@ -1,4 +1,4 @@
-define(function(require) {
+define(function (require) {
     'use strict';
 
     var _ = require('underscore');
@@ -6,9 +6,9 @@ define(function(require) {
     // In case we forget to take out console statements. IE becomes very unhappy when we forget. Let's not make IE unhappy
     if (typeof (window.console) === 'undefined') {
         window.console = {};
-        window.console.log = window.console.error = window.console.info = window.console.debug = window.console.warn = window.console.trace = window.console.dir = window.console.dirxml = window.console.group = window.console.groupEnd = window.console.time = window.console.timeEnd = window.console.assert = window.console.profile = function() {
+        window.console.log = window.console.error = window.console.info = window.console.debug = window.console.warn = window.console.trace = window.console.dir = window.console.dirxml = window.console.group = window.console.groupEnd = window.console.time = window.console.timeEnd = window.console.assert = window.console.profile = function () {
         };
-        window.console.table = function() {
+        window.console.table = function () {
         };
     }
 
@@ -23,9 +23,9 @@ define(function(require) {
     // manage IE8 & 9
     var methods = ['log', 'debug', 'trace', 'info', 'warn', 'error', 'assert', 'dir', 'clear', 'profile', 'profileEnd', 'table'];
     if (typeof console.log === 'object') {
-        _.each(methods, function(method) {
+        _.each(methods, function (method) {
             console['_' + method] = console[method];
-            console[method] = function(msg) {
+            console[method] = function (msg) {
                 console['_' + method](msg);
             };
         });
@@ -37,15 +37,15 @@ define(function(require) {
     // Disabled by default
     console._level = 'warn';
 
-    console.getLevel = function() {
+    console.getLevel = function () {
         return console._level;
     };
 
-    console.setLevel = function(level) {
+    console.setLevel = function (level) {
         console._level = level;
     };
 
-    var enabledFor = function(level) {
+    var enabledFor = function (level) {
         if (console.getLevel() === 'off') {
             return false;
         }
@@ -68,44 +68,44 @@ define(function(require) {
     var table = console.table;
 
     // console.log = console.debug
-    console.log = function() {
+    console.log = function () {
         if (enabledFor('log')) {
             log.apply(this, Array.prototype.slice.call(arguments));
         }
     };
-    console.debug = function() {
+    console.debug = function () {
         if (enabledFor('debug')) {
             debug.apply(this, Array.prototype.slice.call(arguments));
         }
     };
-    console.trace = function() {
+    console.trace = function () {
         if (enabledFor('trace')) {
             trace.apply(this, Array.prototype.slice.call(arguments));
         }
     };
-    console.info = function() {
+    console.info = function () {
         if (enabledFor('info')) {
             info.apply(this, Array.prototype.slice.call(arguments));
         }
     };
-    console.warn = function() {
+    console.warn = function () {
         if (enabledFor('warn')) {
             warn.apply(this, Array.prototype.slice.call(arguments));
         }
     };
-    console.error = function() {
+    console.error = function () {
         if (enabledFor('error')) {
             error.apply(this, Array.prototype.slice.call(arguments));
         }
     };
-    console.table = function() {
+    console.table = function () {
         if (enabledFor('table')) {
             table.apply(this, Array.prototype.slice.call(arguments));
         }
     };
 
     // manage global JS errors
-    window.onerror = function(message, url, linenumber) {
+    window.onerror = function (message, url, linenumber) {
         console.log(message);
     };
 });
