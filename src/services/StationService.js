@@ -51,7 +51,7 @@ define(function (require) {
 
     var _getByStationName = function (stationName) {
         return _.where(_stations, function (station) {
-            return station.stationName === stationName;
+            return station.stationName.toLowerCase().indexOf(stationName || "".toLowerCase()) > -1;
         });
     };
 
@@ -95,11 +95,10 @@ define(function (require) {
             }
 
             if (options.reject) {
-                var errorCode = options.errorCode;
-                var errorMessage = options.errorMessage;
+                var serverError = new Error({ errorCode: options.errorCode, errorMessage: options.errorMessage });
 
                 globals.window.setTimeout(function () {
-                    deferred.rejectWith(currentContext, [errorCode, errorMessage]);
+                    deferred.rejectWith(currentContext, [serverError]);
                 }, 1000);
             } else {
                 var results = {

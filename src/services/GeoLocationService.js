@@ -20,6 +20,7 @@ define(function (require) {
             'enableHighAccuracy': enableHighAccuracy,
             'maximumAge': maximumAge
         };
+        this.initialize.apply(this, arguments);
     };
 
     _.extend(GeoLocationService.prototype, {
@@ -47,7 +48,6 @@ define(function (require) {
             }
 
             return deferred.promise();
-
         }
     });
 

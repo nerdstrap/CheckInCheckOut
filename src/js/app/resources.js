@@ -45,7 +45,9 @@ define(function(require) {
         'stationList.loadingMessage': 'loading stations',
         'station.loadingMessage': 'loading station',
         
-        'validationErrorMessage': 'One or more of the fields are invalid. Please update them and try again.'
+        'validationErrorMessage': 'One or more of the fields are invalid. Please update them and try again.',
+        'criticalSystemErrorMessage': 'The app encountered an error. If you need to check-in to a station, please call the dispatcher.',
+        'stationNotFoundErrorMessage': 'The station specified was not found.'
     };
 
     var defaultResource = '';

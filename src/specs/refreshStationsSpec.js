@@ -18,10 +18,10 @@ define(function (require) {
     var builder = injector.mock({
         'models/StationModel': MockModel,
         'collections/StationCollection': MockCollection,
-        'views/StationSearchView': MockView
+        'views/StationView': MockView
     });
 
-    describe('go to station search', function () {
+    describe('refresh stations', function () {
         var self = this;
 
         beforeEach(function (done) {
@@ -41,16 +41,31 @@ define(function (require) {
             });
         });
 
-        it('should render the view', function (done) {
+        it('should update the collection', function (done) {
             //arrange
+            var fakeStationId1 = 1976;
+            var fakeStation1 = {
+                'stationId': fakeStationId1
+            };
+            var fakeStationId2 = 1978;
+            var fakeStation2 = {
+                'stationId': fakeStationId2
+            };
+            var fakeStationId3 = 2002;
+            var fakeStation3 = {
+                'stationId': fakeStationId3
+            };
+            var fakeStations = [fakeStation1, fakeStation2, fakeStation3];
             var fakeUserRole = UserRolesEnum.Admin;
 
             var fakeStationServiceInstance = {};
-            fakeStationServiceInstance.getStationSearchOptions = function () {
+            fakeStationServiceInstance.getStations = function (options) {
+                options || (options = {});
                 var currentContext = this;
                 var deferred = $.Deferred();
 
                 var results = {
+                    stations: fakeStations,
                     userRole: fakeUserRole
                 };
 
@@ -60,34 +75,32 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeStationServiceInstance, 'getStationSearchOptions').and.callThrough();
+            spyOn(fakeStationServiceInstance, 'getStations').and.callThrough();
             self.stationSearchControllerInstance.stationService = fakeStationServiceInstance;
 
-            //act
-            var promise = self.stationSearchControllerInstance.goToStationSearch();
+            var mockStationCollectionInstance = new MockCollection();
+            var fakeOptions = {};
 
-            promise.then(function (stationSearchView) {
+            //act
+            var promise = self.stationSearchControllerInstance.refreshStations(mockStationCollectionInstance, fakeOptions);
+
+            promise.then(function (stationCollection) {
                 //assert
-                expect(self.stationSearchControllerInstance.router.swapContent).toHaveBeenCalledWith(stationSearchView);
-                expect(self.stationSearchControllerInstance.router.navigate).toHaveBeenCalledWith('station', jasmine.any(Object));
-                expect(stationSearchView.showLoading).toHaveBeenCalled();
-                expect(self.stationSearchControllerInstance.stationService.getStationSearchOptions).toHaveBeenCalled();
-                expect(self.stationSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.userRoleUpdated, fakeUserRole);
-                expect(stationSearchView.setUserRole).toHaveBeenCalledWith(fakeUserRole);
-                expect(stationSearchView.hideLoading).toHaveBeenCalled();
+                expect(self.stationSearchControllerInstance.stationService.getStations).toHaveBeenCalled();
+                expect(mockStationCollectionInstance.reset).toHaveBeenCalledWith(fakeStations);
                 done();
             }, function () {
-                self.fail(new Error('stationSearchControllerInstance.goToStationSearch call failed'));
+                self.fail(new Error('stationSearchControllerInstance.refreshStations call failed'));
                 done();
             });
         });
 
-        it('should show error', function (done) {
+        it('should empty the collection and trigger an error', function (done) {
             //arrange
             var fakeUserRole = UserRolesEnum.Admin;
 
             var fakeStationServiceInstance = {};
-            fakeStationServiceInstance.getStationSearchOptions = function () {
+            fakeStationServiceInstance.getStations = function (options) {
                 var currentContext = this;
                 var deferred = $.Deferred();
 
@@ -99,23 +112,24 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeStationServiceInstance, 'getStationSearchOptions').and.callThrough();
+            spyOn(fakeStationServiceInstance, 'getStations').and.callThrough();
             self.stationSearchControllerInstance.stationService = fakeStationServiceInstance;
 
+            var mockStationCollectionInstance = new MockCollection();
+            var fakeOptions = {};
+
             //act
-            var promise = self.stationSearchControllerInstance.goToStationSearch();
+            var promise = self.stationSearchControllerInstance.refreshStations(mockStationCollectionInstance, fakeOptions);
 
             promise.fail(function (results) {
                 //assert
-                expect(self.stationSearchControllerInstance.router.swapContent).toHaveBeenCalledWith(results.stationSearchView);
-                expect(self.stationSearchControllerInstance.router.navigate).toHaveBeenCalledWith('station', jasmine.any(Object));
-                expect(results.stationSearchView.showLoading).toHaveBeenCalled();
-                expect(self.stationSearchControllerInstance.stationService.getStationSearchOptions).toHaveBeenCalled();
-                expect(results.stationSearchView.hideLoading).toHaveBeenCalled();
-                expect(results.stationSearchView.showError).toHaveBeenCalled();
+                expect(self.stationSearchControllerInstance.stationService.getStations).toHaveBeenCalled();
+                expect(mockStationCollectionInstance.reset).toHaveBeenCalledWith();
+                expect(mockStationCollectionInstance.trigger).toHaveBeenCalledWith('error');
+                expect(results.error).toBeDefined();
                 done();
             }, function () {
-                self.fail(new Error('stationSearchControllerInstance.goToStationSearch call failed'));
+                self.fail(new Error('stationSearchControllerInstance.refreshStations call failed'));
                 done();
             });
         });

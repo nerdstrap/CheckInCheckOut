@@ -1,81 +1,180 @@
-define(function(require) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery'),
-            _ = require('underscore'),
-            Backbone = require('backbone'),
-            AppEventNamesEnum = require('enums/AppEventNamesEnum'),
-            UserRolesEnum = require('enums/UserRolesEnum'),
-            MockAppRouter = require('mocks/MockAppRouter'),
-            MockStationView = require('mocks/MockStationView'),
-            MockStationModel = require('mocks/MockStationModel'),
-            mockAppEventsSingleton = require('mocks/mockAppEventsSingleton'),
-            Squire = require('squire');
+        _ = require('underscore'),
+        Backbone = require('backbone'),
+        globals = require('globals'),
+        EventBus = require('EventBus'),
+        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        UserRolesEnum = require('enums/UserRolesEnum'),
+        MockRouter = require('mocks/MockRouter'),
+        MockModel = require('mocks/MockModel'),
+        MockCollection = require('mocks/MockCollection'),
+        MockView = require('mocks/MockView'),
+        Squire = require('squire');
 
     var injector = new Squire();
-
     var builder = injector.mock({
-        'events': mockAppEventsSingleton,
-        'routers/AppRouter': MockAppRouter,
-        'models/StationModel': MockStationModel,
-        'views/StationView': MockStationView
+        'models/StationModel': MockModel,
+        'collections/StationCollection': MockCollection,
+        'views/StationView': MockView
     });
 
-    describe('go to station with id', function() {
+    describe('go to station with id', function () {
         var self = this;
 
-        beforeEach(function(done) {
-            self.mockAppRouterInstance = new MockAppRouter();
+        beforeEach(function (done) {
+            self.mockRouterInstance = new MockRouter();
 
-            builder.require(['controllers/DashboardController'], function(DashboardController) {
-                self.dashboardControllerInstance = new DashboardController({
-                    router: self.mockAppRouterInstance
+            self.mockEventBusSingleton = new EventBus();
+            self.mockEventBusSingleton.trigger = jasmine.createSpy();
+
+            builder.require(['controllers/StationSearchController'], function (StationSearchController) {
+                self.stationSearchControllerInstance = new StationSearchController({
+                    router: self.mockRouterInstance,
+                    dispatcher: self.mockEventBusSingleton
                 });
                 done();
-            }, function(err) {
-                this.fail('require controllers/DashboardController failed to load!');
+            }, function (err) {
+                self.fail('require controllers/StationSearchController failed to load!');
             });
         });
 
-        it('should render the view', function(done) {
+        it('should render the view', function (done) {
             //arrange
-            var fakeDashboardServiceInstance = {};
-            var fakeUserRole = UserRolesEnum.NocAdmin;
-            var fakeStationId = 'THALI';
-            var expectedStationModel = {stationId: 'THALI'};
-            var fakeStationModel = {stationId: fakeStationId};
-            fakeDashboardServiceInstance.getStations = function() {
+            var fakeStationId = 1976;
+            var fakeStation = {
+                'stationId': fakeStationId
+            };
+            var fakeStations = [fakeStation];
+            var fakeUserRole = UserRolesEnum.Admin;
+
+            var fakeStationServiceInstance = {};
+            fakeStationServiceInstance.getStations = function (options) {
+                options || (options = {});
+                var currentContext = this;
                 var deferred = $.Deferred();
+
                 var results = {
-                    stations: [expectedStationModel],
-                    stationIdentifiers: [],
-                    regions: [],
-                    areas: [],
+                    stations: fakeStations,
                     userRole: fakeUserRole
                 };
-                setTimeout(function() {
-                    deferred.resolve(results, 'success', null);
-                }, 200);
+
+                globals.window.setTimeout(function () {
+                    deferred.resolveWith(currentContext, [results]);
+                }, 1000);
+
                 return deferred.promise();
             };
-            spyOn(fakeDashboardServiceInstance, 'getStations').and.callThrough();
-            self.dashboardControllerInstance.dashboardService = fakeDashboardServiceInstance;
+            spyOn(fakeStationServiceInstance, 'getStations').and.callThrough();
+            self.stationSearchControllerInstance.stationService = fakeStationServiceInstance;
 
             //act
-            var promise = self.dashboardControllerInstance.goToStationWithId(fakeStationId);
+            var promise = self.stationSearchControllerInstance.goToStationWithId(fakeStationId);
 
-            promise.then(function(stationViewInstance) {
+            promise.then(function (stationView) {
                 //assert
-                expect(self.dashboardControllerInstance.router.swapContent).toHaveBeenCalledWith(stationViewInstance);
-                expect(self.dashboardControllerInstance.router.navigate).toHaveBeenCalledWith('station/' + fakeStationId);
-                expect(stationViewInstance.showLoading).toHaveBeenCalled();
-                expect(self.dashboardControllerInstance.dashboardService.getStations).toHaveBeenCalledWith(fakeStationModel);
-                expect(self.dashboardControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.userRoleUpdated, fakeUserRole);
-                expect(stationViewInstance.setUserRole).toHaveBeenCalledWith(fakeUserRole);
-                expect(stationViewInstance.model.set).toHaveBeenCalledWith(expectedStationModel);
+                expect(self.stationSearchControllerInstance.router.swapContent).toHaveBeenCalledWith(stationView);
+                expect(self.stationSearchControllerInstance.router.navigate).toHaveBeenCalledWith('station/' + fakeStationId, jasmine.any(Object));
+                expect(stationView.showLoading).toHaveBeenCalled();
+                expect(self.stationSearchControllerInstance.stationService.getStations).toHaveBeenCalled();
+                expect(self.stationSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.userRoleUpdated, fakeUserRole);
+                expect(stationView.setUserRole).toHaveBeenCalledWith(fakeUserRole);
+                expect(stationView.model.trigger).toHaveBeenCalledWith('reset', fakeStation);
+                expect(stationView.hideLoading).toHaveBeenCalled();
                 done();
-            }, function() {
-                this.fail(new Error('dashboardControllerInstance.goToStationList call failed'));
+            }, function () {
+                self.fail(new Error('stationSearchControllerInstance.goToStationWithId call failed'));
+                done();
+            });
+        });
+
+        it('should render the view, clear the model, trigger an error on the model, and show an alert', function (done) {
+            //arrange
+            var fakeStationId = 1976;
+            var fakeStations = [];
+            var fakeUserRole = UserRolesEnum.Admin;
+
+            var fakeStationServiceInstance = {};
+            fakeStationServiceInstance.getStations = function (options) {
+                options || (options = {});
+                var currentContext = this;
+                var deferred = $.Deferred();
+
+                var results = {
+                    stations: fakeStations,
+                    userRole: fakeUserRole
+                };
+
+                globals.window.setTimeout(function () {
+                    deferred.resolveWith(currentContext, [results]);
+                }, 1000);
+
+                return deferred.promise();
+            };
+            spyOn(fakeStationServiceInstance, 'getStations').and.callThrough();
+            self.stationSearchControllerInstance.stationService = fakeStationServiceInstance;
+
+            //act
+            var promise = self.stationSearchControllerInstance.goToStationWithId(fakeStationId);
+
+            promise.fail(function (stationView) {
+                //assert
+                expect(self.stationSearchControllerInstance.router.swapContent).toHaveBeenCalledWith(stationView);
+                expect(self.stationSearchControllerInstance.router.navigate).toHaveBeenCalledWith('station/' + fakeStationId, jasmine.any(Object));
+                expect(stationView.showLoading).toHaveBeenCalled();
+                expect(self.stationSearchControllerInstance.stationService.getStations).toHaveBeenCalled();
+                expect(self.stationSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.userRoleUpdated, fakeUserRole);
+                expect(stationView.setUserRole).toHaveBeenCalledWith(fakeUserRole);
+                expect(stationView.model.clear).toHaveBeenCalled();
+                expect(stationView.model.trigger).toHaveBeenCalledWith('error');
+                expect(stationView.hideLoading).toHaveBeenCalled();
+                expect(stationView.showError).toHaveBeenCalled();
+                done();
+            }, function () {
+                self.fail(new Error('stationSearchControllerInstance.goToStationWithId call failed'));
+                done();
+            });
+        });
+
+        it('should render the view, clear the model, trigger an error on the model, and show an alert', function (done) {
+            //arrange
+            var fakeStationId = 1976;
+            var fakeUserRole = UserRolesEnum.Admin;
+
+            var fakeStationServiceInstance = {};
+            fakeStationServiceInstance.getStations = function (options) {
+                var currentContext = this;
+                var deferred = $.Deferred();
+
+                var serverError = new Error({ errorCode: 500, errorMessage: 'server error' });
+
+                globals.window.setTimeout(function () {
+                    deferred.rejectWith(currentContext, [serverError]);
+                }, 1000);
+
+                return deferred.promise();
+            };
+            spyOn(fakeStationServiceInstance, 'getStations').and.callThrough();
+            self.stationSearchControllerInstance.stationService = fakeStationServiceInstance;
+
+            //act
+            var promise = self.stationSearchControllerInstance.goToStationWithId(fakeStationId);
+
+            promise.fail(function (results) {
+                //assert
+                expect(self.stationSearchControllerInstance.router.swapContent).toHaveBeenCalledWith(results.stationView);
+                expect(self.stationSearchControllerInstance.router.navigate).toHaveBeenCalledWith('station/' + fakeStationId, jasmine.any(Object));
+                expect(results.stationView.showLoading).toHaveBeenCalled();
+                expect(self.stationSearchControllerInstance.stationService.getStations).toHaveBeenCalled();
+                expect(results.stationView.model.clear).toHaveBeenCalled();
+                expect(results.stationView.model.trigger).toHaveBeenCalledWith('error');
+                expect(results.stationView.hideLoading).toHaveBeenCalled();
+                expect(results.stationView.showError).toHaveBeenCalled();
+                done();
+            }, function () {
+                self.fail(new Error('stationSearchControllerInstance.goToStationWithId call failed'));
                 done();
             });
         });

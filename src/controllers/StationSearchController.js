@@ -64,10 +64,13 @@ define(function (require) {
             currentContext.stationService.getStationSearchOptions()
                 .then(function (getStationSearchOptionsResponse) {
                     currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getStationSearchOptionsResponse.userRole);
+                    stationSearchViewInstance.setUserRole(getStationSearchOptionsResponse.userRole);
                     stationSearchViewInstance.hideLoading();
                     deferred.resolve(stationSearchViewInstance);
                 })
                 .fail(function (error) {
+                    stationSearchViewInstance.hideLoading();
+                    stationSearchViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
                     deferred.reject({
                         stationSearchView: stationSearchViewInstance,
                         error: error
@@ -94,24 +97,27 @@ define(function (require) {
             currentContext.router.navigate('station/' + stationId, {replace: fragmentAlreadyMatches});
 
             stationViewInstance.showLoading();
-            currentContext.stationService.getStations()
+            currentContext.stationService.getStations({stationId: stationId})
                 .then(function (getStationsResponse) {
                     currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getStationsResponse.userRole);
+                    stationViewInstance.setUserRole(getStationsResponse.userRole);
                     if (getStationsResponse.stations && getStationsResponse.stations.length > 0) {
-                        stationModelInstance.set(getStationsResponse.stations[0]);
+                        stationModelInstance.trigger('reset', getStationsResponse.stations[0]);
                         stationViewInstance.hideLoading();
                         deferred.resolve(stationViewInstance);
                     } else {
                         stationModelInstance.clear();
+                        stationModelInstance.trigger('error');
                         stationViewInstance.hideLoading();
-                        var serverError = new Error({errorCode: 500, errorMessage: 'station not found'});
-                        deferred.reject({
-                            stationView: stationViewInstance,
-                            error: serverError
-                        });
+                        stationViewInstance.showError(utils.getResource('stationNotFoundErrorMessage'));
+                        deferred.reject(stationViewInstance);
                     }
                 })
                 .fail(function (error) {
+                    stationModelInstance.clear();
+                    stationModelInstance.trigger('error');
+                    stationViewInstance.hideLoading();
+                    stationViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
                     deferred.reject({
                         stationView: stationViewInstance,
                         error: error
@@ -134,6 +140,7 @@ define(function (require) {
                 })
                 .fail(function (error) {
                     stationCollectionInstance.reset();
+                    stationCollectionInstance.trigger('error');
                     deferred.reject({
                         stationCollection: stationCollectionInstance,
                         error: error
@@ -157,6 +164,7 @@ define(function (require) {
                 })
                 .fail(function (error) {
                     stationCollectionInstance.reset();
+                    stationCollectionInstance.trigger('error');
                     deferred.reject({
                         stationCollection: stationCollectionInstance,
                         error: error

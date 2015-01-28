@@ -8,7 +8,8 @@ define(function (require) {
         goToStationSearch: 'goToStationSearch',
         goToStationWithId: 'goToStationWithId',
         refreshStationsByGps: 'refreshStationsByGps',
-        refreshStations: 'refreshStations'
+        refreshStations: 'refreshStations',
+        goToDirectionsWithLatLng: 'goToDirectionsWithLatLng'
     };
 
     if (Object.freeze) {
