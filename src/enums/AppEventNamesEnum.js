@@ -7,6 +7,7 @@ define(function (require) {
         userRoleUpdated: 'userRoleUpdated',
         goToStationSearch: 'goToStationSearch',
         goToStationWithId: 'goToStationWithId',
+        refreshStationsByGps: 'refreshStationsByGps',
         refreshStations: 'refreshStations'
     };
 

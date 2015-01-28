@@ -22,7 +22,7 @@ define(function (require) {
             console.trace('ShellView.render()');
             var currentContext = this;
 
-            var renderModel = _.extend({}, currentContext.model);
+            var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
             var headerViewInstance = new HeaderView({

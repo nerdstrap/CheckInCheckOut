@@ -24,18 +24,26 @@ define(function(require) {
         'goToStationButtonText': 'Station',
         'goToMapButtonText': 'View in Google Maps',
 
+        'gpsSearchButtonText': 'GPS',
+        'manualSearchButtonText': 'Manual',
+        'recentSearchButtonText': 'Recent',
+        'helpButtonText': 'Help',
+        'logOutButtonText': 'Log out',
+
         'areaNameHeaderText': 'Area',
         'regionNameHeaderText': 'Region',
         'stationNameHeaderText': 'Station',
         'stationIdHeaderText': 'Station',
 
-        'stationNameSearchQueryPlaceholderText': 'enter a station name',
+        'station.manualSearchPlaceholderText': 'enter a station name',
 
+        'stationSearch.viewTitleText': 'Find a Station',
         'stationList.viewTitleText': 'Stations',
         'station.viewTitleText': 'Station',
 
-        'stationList.loadingMessage': 'loading stations...',
-        'station.loadingMessage': 'loading station...',
+        'stationSearch.loadingMessage': 'loading search',
+        'stationList.loadingMessage': 'loading stations',
+        'station.loadingMessage': 'loading station',
         
         'validationErrorMessage': 'One or more of the fields are invalid. Please update them and try again.'
     };

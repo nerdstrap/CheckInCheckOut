@@ -24,7 +24,7 @@ define(function (require) {
             console.trace('StationListView.render()');
             var currentContext = this;
 
-            var renderModel = _.extend({}, currentContext.model);
+            var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
             this.hideLoading();

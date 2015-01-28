@@ -22,7 +22,7 @@ define(function (require) {
             console.trace('StationListItemView.render()');
             var currentContext = this;
 
-            var renderModel = _.extend({}, currentContext.model.attributes);
+            var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
             currentContext.$el.html(template(renderModel));
 
             return this;

@@ -23,7 +23,7 @@ define(function(require) {
             console.trace('AlertView.render()');
             var currentContext = this;
 
-            var renderModel = _.extend({}, currentContext.model.attributes);
+            var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
             currentContext.$el.html(template(renderModel));
             
             currentContext.timeoutId = globals.window.setTimeout(function() {

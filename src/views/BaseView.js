@@ -5,6 +5,7 @@ define(function (require) {
         _ = require('underscore'),
         CompositeView = require('views/CompositeView'),
         AlertView = require('views/AlertView'),
+        AlertModel = require('models/AlertModel'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         globals = require('globals'),
         env = require('env'),
@@ -15,14 +16,14 @@ define(function (require) {
     };
 
     _.extend(BaseView.prototype, CompositeView.prototype, {
-        setUserRole: function(userRole) {
+        setUserRole: function (userRole) {
             this.userRole = userRole;
         },
         showLoading: function () {
-            this.$('.view-status').removeClass('hidden');
+            this.$('.view-status.' + this.cid).removeClass('hidden');
         },
         hideLoading: function () {
-            this.$('.view-status').addClass('hidden');
+            this.$('.view-status.' + this.cid).addClass('hidden');
         },
         showInfo: function (message) {
             var level;
@@ -35,15 +36,15 @@ define(function (require) {
             this.addAlert('alert', message);
         },
         addAlert: function (level, message) {
-            var alertModel = {
+            var alertModelInstance = new AlertModel({
                 level: level,
                 message: message
-            };
-            var alertViewInstance = new AlertView({
-                model: alertModel,
-                dispatcher: currentContext.dispatcher
             });
-            this.prependChildTo(alertViewInstance, '.view-alerts:first .columns');
+            var alertViewInstance = new AlertView({
+                model: alertModelInstance,
+                dispatcher: this.dispatcher
+            });
+            this.prependChildTo(alertViewInstance, '.view-alerts.' + this.cid);
         }
     });
 

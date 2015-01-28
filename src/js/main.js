@@ -47,7 +47,6 @@ require.config({
         'EventBus': 'app/EventBus',
         'eventBusSingleton': 'app/eventBusSingleton',
         'globals': 'app/globals',
-        'Locator': 'app/Locator',
         'resources': 'app/resources',
         'utils': 'app/utils',
 

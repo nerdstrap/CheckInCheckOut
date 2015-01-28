@@ -128,7 +128,6 @@ define(function (require) {
             } else if (options.stationName) {
                 stations = _getByStationName(options.stationName);
             } else if (options.coords) {
-                console.trace('coords');
                 stations = _getByCoords(options.coords);
             } else {
                 stations = _stations;
@@ -142,11 +141,10 @@ define(function (require) {
             }
 
             if (options.reject) {
-                var errorCode = options.errorCode;
-                var errorMessage = options.errorMessage;
+                var serverError = new Error({errorCode: options.errorCode, errorMessage: options.errorMessage});
 
                 globals.window.setTimeout(function () {
-                    deferred.rejectWith(currentContext, [errorCode, errorMessage]);
+                    deferred.rejectWith(currentContext, [serverError]);
                 }, 1000);
             } else {
                 var results = {

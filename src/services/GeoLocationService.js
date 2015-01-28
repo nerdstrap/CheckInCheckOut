@@ -12,8 +12,8 @@ define(function (require) {
         enableHighAccuracy = masterConfig.enableHighAccuracy || false,
         maximumAge = masterConfig.maximumAge || 60000;
 
-    var LocatorService = function (options) {
-        console.trace('new LocatorService()');
+    var GeoLocationService = function (options) {
+        console.trace('new GeoLocationService()');
         options || (options = {});
         this.positionOptions = {
             'timeout': timeout,
@@ -22,9 +22,9 @@ define(function (require) {
         };
     };
 
-    _.extend(LocatorService.prototype, {
+    _.extend(GeoLocationService.prototype, {
         initialize: function (options) {
-            console.trace('LocatorService.initialize');
+            console.trace('GeoLocationService.initialize');
             options || (options = {});
         },
         getCurrentPosition: function () {
@@ -42,9 +42,8 @@ define(function (require) {
                     currentContext.positionOptions
                 );
             } else {
-                var errorCode = 404;
-                var errorMessage = 'geolocation is not supported';
-                deferred.rejectWith(currentContext, [errorCode, errorMessage]);
+                var capabilityError = new Error({errorCode: 500, errorMessage: 'geolocation is not available'});
+                deferred.rejectWith(currentContext, [capabilityError]);
             }
 
             return deferred.promise();
@@ -52,5 +51,5 @@ define(function (require) {
         }
     });
 
-    return LocatorService;
+    return GeoLocationService;
 });

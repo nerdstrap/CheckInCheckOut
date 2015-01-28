@@ -24,7 +24,7 @@ define(function (require) {
             console.trace('StationListView.render()');
             var currentContext = this;
 
-            var renderModel = _.extend({}, currentContext.model);
+            var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
             currentContext.stationCollection = new StationCollection();
@@ -38,17 +38,18 @@ define(function (require) {
             return this;
         },
         events: {
-            'click #refresh-search-button': 'dispatchRefreshSearch',
-            'click #reset-search-button': 'resetSearch'
+            'click #gps-search-button': 'dispatchRefreshSearch',
+            'click #manual-search-button': 'dispatchRefreshSearch',
+            'click #recent-search-button': 'dispatchRecentSearch'
         },
-        dispatchRefreshSearch: function (event) {
+        dispatchGpsSearch: function (event) {
             if (event) {
                 event.preventDefault();
             }
 
             this.refreshSearch();
         },
-        resetSearch: function (event) {
+        dispatchRecentSearch: function (event) {
             if (event) {
                 event.preventDefault();
             }
@@ -56,11 +57,9 @@ define(function (require) {
             this.refreshSearch();
         },
         refreshSearch: function () {
-            this.showLoading();
-
             var options = {
                 gps: true
-            };
+            }
             this.stationListViewInstance.showLoading();
             this.dispatcher.trigger(AppEventNamesEnum.refreshStations, this.stationCollection, options);
         },

@@ -22,7 +22,7 @@ define(function (require) {
             console.trace('StationView.render()');
             var currentContext = this;
 
-            var renderModel = _.extend({}, currentContext.model.attributes);
+            var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
             currentContext.$el.html(template(renderModel));
 
             return this;
@@ -38,6 +38,9 @@ define(function (require) {
             var latitude = this.model.get('latitude');
             var longitude = this.model.get('longitude');
             this.dispatcher.trigger(AppEventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
+        },
+        updateViewFromModel: function() {
+
         },
         onLeave: function () {
             console.trace('StationView.onLeave');
