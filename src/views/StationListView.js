@@ -18,6 +18,7 @@ define(function (require) {
             this.dispatcher = options.dispatcher || this;
 
             this.listenTo(this.collection, 'reset', this.addAll);
+            this.listenTo(this.collection, 'error', this.removeAll);
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
@@ -45,6 +46,11 @@ define(function (require) {
                 userRole: currentContext.userRole
             });
             this.appendChildTo(stationListItemViewInstance, '#station-list-item-container');
+        },
+        removeAll: function () {
+            this.showLoading();
+            this._leaveChildren();
+            this.hideLoading();
         },
         onLeave: function () {
             console.trace('StationListView.onLeave');

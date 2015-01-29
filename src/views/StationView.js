@@ -15,7 +15,8 @@ define(function (require) {
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
 
-            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'reset', this.updateViewFromModel);
+            this.listenTo(this.model, 'error', this.resetView);
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
@@ -39,8 +40,17 @@ define(function (require) {
             var longitude = this.model.get('longitude');
             this.dispatcher.trigger(AppEventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
         },
-        updateViewFromModel: function() {
-
+        updateViewFromModel: function () {
+            this.$('.station-id-label').attr('data-station-id', this.model.get('stationId')).html(this.model.get('stationName'));
+            this.$('.directions-link').attr('data-latitude', this.model.get('latitude')).attr('data-longitude', this.model.get('longitude'));
+            this.$('.region-name-label').html(this.model.get('regionName'));
+            this.$('.area-name-label').html(this.model.get('areaName'));
+        },
+        resetView: function () {
+            this.$('.station-id-label').attr('data-station-id', '').html('');
+            this.$('.directions-link').attr('data-latitude', '').attr('data-longitude', '');
+            this.$('.region-name-label').html('');
+            this.$('.area-name-label').html('');
         },
         onLeave: function () {
             console.trace('StationView.onLeave');

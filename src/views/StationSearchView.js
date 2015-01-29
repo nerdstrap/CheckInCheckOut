@@ -38,8 +38,10 @@ define(function (require) {
             return this;
         },
         events: {
-            'click #gps-search-button': 'dispatchRefreshSearch',
-            'click #manual-search-button': 'dispatchRefreshSearch',
+            'click #gps-search-button': 'dispatchGpsSearch',
+            'click #show-manual-search-button': 'showManualSearchForm',
+            'keypress #user-name-input': 'dispatchManualSearch',
+            'click #manual-search-button': 'dispatchManualSearch',
             'click #recent-search-button': 'dispatchRecentSearch'
         },
         dispatchGpsSearch: function (event) {
@@ -47,21 +49,69 @@ define(function (require) {
                 event.preventDefault();
             }
 
-            this.refreshSearch();
+            this.stationCollection.reset();
+            this.hideManualSearchForm();
+            this.refreshStationsByGps();
+        },
+        showManualSearchForm: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            this.stationCollection.reset();
+            this.$('#manual-search-form').removeClass('hidden');
+            this.$('#manual-search-input').focus();
+        },
+        hideManualSearchForm: function() {
+            this.$('#manual-search-input').val('');
+            this.$('#manual-search-form').addClass('hidden');
         },
         dispatchRecentSearch: function (event) {
             if (event) {
                 event.preventDefault();
             }
 
-            this.refreshSearch();
+            this.stationCollection.reset();
+            this.hideManualSearchForm();
+            this.refreshStations();
         },
-        refreshSearch: function () {
+        dispatchManualSearch: function(event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            this.stationCollection.reset();
+            this.refreshStations();
+            //var validPattern = /^[A-Za-z0-9\s]*$/;
+            //if (event) {
+            //    if (event.keyCode === 13) {
+            //        /* enter key pressed */
+            //        this.refreshStations();
+            //    }
+            //    var charCode = event.charCode || event.keyCode || event.which;
+            //    var inputChar = String.fromCharCode(charCode);
+            //    if (!validPattern.test(inputChar) && event.charCode !== 0) {
+            //        event.preventDefault();
+            //        return false;
+            //    }
+            //}
+        },
+        refreshStations: function () {
+            var stationName = this.$('#manual-search-input').val();
+            if (stationName && stationName.length > 1) {
+                var options = {
+                    stationName: stationName
+                }
+                this.stationListViewInstance.showLoading();
+                this.dispatcher.trigger(AppEventNamesEnum.refreshStations, this.stationCollection, options);
+            }
+        },
+        refreshStationsByGps: function () {
             var options = {
                 gps: true
             }
             this.stationListViewInstance.showLoading();
-            this.dispatcher.trigger(AppEventNamesEnum.refreshStations, this.stationCollection, options);
+            this.dispatcher.trigger(AppEventNamesEnum.refreshStationsByGps, this.stationCollection, options);
         },
         onLeave: function () {
             console.trace('StationSearchView.onLeave');

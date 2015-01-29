@@ -102,7 +102,8 @@ define(function (require) {
                     currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getStationsResponse.userRole);
                     stationViewInstance.setUserRole(getStationsResponse.userRole);
                     if (getStationsResponse.stations && getStationsResponse.stations.length > 0) {
-                        stationModelInstance.trigger('reset', getStationsResponse.stations[0]);
+                        stationModelInstance.set(getStationsResponse.stations[0]);
+                        stationModelInstance.trigger('reset');
                         stationViewInstance.hideLoading();
                         deferred.resolve(stationViewInstance);
                     } else {
@@ -135,8 +136,16 @@ define(function (require) {
 
             currentContext.stationService.getStations(options)
                 .then(function (getStationsResponse) {
-                    stationCollectionInstance.reset(getStationsResponse.stations);
-                    deferred.resolve(stationCollectionInstance);
+                    currentContext.geoLocationService.getCurrentPosition()
+                        .then(function (position) {
+                            utils.computeDistances(position, getStationsResponse.stations);
+                            stationCollectionInstance.reset(getStationsResponse.stations);
+                            deferred.resolve(stationCollectionInstance);
+                        })
+                        .fail(function () {
+                            stationCollectionInstance.reset(getStationsResponse.stations);
+                            deferred.resolve(stationCollectionInstance);
+                        });
                 })
                 .fail(function (error) {
                     stationCollectionInstance.reset();

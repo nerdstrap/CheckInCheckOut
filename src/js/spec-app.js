@@ -9,6 +9,7 @@ define(function (require) {
     specs.push('specs/goToStationSearchSpec');
     specs.push('specs/goToStationWithIdSpec');
     specs.push('specs/refreshStationsSpec');
+    specs.push('specs/refreshStationsByGpsSpec');
 
     $(document).ready(function () {
         require(specs, function (spec) {

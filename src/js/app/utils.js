@@ -86,12 +86,20 @@ define(function (require) {
                     Math.sin(dLon / 2) * Math.sin(dLon / 2);
             var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-            disance = R * c;
+            distance = (R * c).toFixed(2);
         } catch (ex) {
             console.trace('compute distance failed');
         }
 
         return distance;
+    };
+
+    utils.computeDistances = function(position, locations) {
+        var currentContext = this;
+        _.each(locations, function(location) {
+            var distance = utils.computeDistanceBetween(position.coords, location);
+            location.distance = distance;
+        });
     }
 
     return utils;

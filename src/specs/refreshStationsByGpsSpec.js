@@ -79,7 +79,7 @@ define(function (require) {
             self.stationSearchControllerInstance.stationService = fakeStationServiceInstance;
 
             var fakeGeoLocationServiceInstance = {};
-            fakeStationServiceInstance.getCurrentPosition = function (options) {
+            fakeGeoLocationServiceInstance.getCurrentPosition = function (options) {
                 options || (options = {});
                 var currentContext = this;
                 var deferred = $.Deferred();
@@ -97,7 +97,7 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeStationServiceInstance, 'getCurrentPosition').and.callThrough();
+            spyOn(fakeGeoLocationServiceInstance, 'getCurrentPosition').and.callThrough();
             self.stationSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
 
             var mockStationCollectionInstance = new MockCollection();
@@ -136,39 +136,38 @@ define(function (require) {
                 return deferred.promise();
             };
             spyOn(fakeStationServiceInstance, 'getStations').and.callThrough();
-            self.stationSearchControllerInstance.stationService = fakeStationServiceInstance;
+            self.stationSearchControllerInstance.geoLocationService = fakeStationServiceInstance;
 
             var fakeGeoLocationServiceInstance = {};
-            fakeStationServiceInstance.getCurrentPosition = function (options) {
+            fakeGeoLocationServiceInstance.getCurrentPosition = function (options) {
                 options || (options = {});
                 var currentContext = this;
                 var deferred = $.Deferred();
 
                 var results = {
-                    coords: {
-                        latitude: 40,
-                        longitude: 82
+                    error: {
+                        errorCode: 999, errorMessage: 'error'
                     }
                 };
 
                 globals.window.setTimeout(function () {
-                    deferred.resolveWith(currentContext, [results]);
+                    deferred.rejectWith(currentContext, [results]);
                 }, 1000);
 
                 return deferred.promise();
             };
-            spyOn(fakeStationServiceInstance, 'getCurrentPosition').and.callThrough();
+            spyOn(fakeGeoLocationServiceInstance, 'getCurrentPosition').and.callThrough();
             self.stationSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
 
             var mockStationCollectionInstance = new MockCollection();
             var fakeOptions = {};
 
             //act
-            var promise = self.stationSearchControllerInstance.refreshStations(mockStationCollectionInstance, fakeOptions);
+            var promise = self.stationSearchControllerInstance.refreshStationsByGps(mockStationCollectionInstance, fakeOptions);
 
             promise.fail(function (results) {
                 //assert
-                expect(self.stationSearchControllerInstance.stationService.getStations).toHaveBeenCalled();
+                expect(self.stationSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
                 expect(mockStationCollectionInstance.reset).toHaveBeenCalledWith();
                 expect(mockStationCollectionInstance.trigger).toHaveBeenCalledWith('error');
                 expect(results.error).toBeDefined();

@@ -12,5 +12,6 @@ define(function (require) {
             options || (options = {});
         }
     });
+
     return StationCollection;
 });

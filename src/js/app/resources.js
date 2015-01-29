@@ -25,7 +25,8 @@ define(function(require) {
         'goToMapButtonText': 'View in Google Maps',
 
         'gpsSearchButtonText': 'GPS',
-        'manualSearchButtonText': 'Manual',
+        'showManualSearchButtonText': 'Manual',
+        'manualSearchButtonText': 'Search',
         'recentSearchButtonText': 'Recent',
         'helpButtonText': 'Help',
         'logOutButtonText': 'Log out',

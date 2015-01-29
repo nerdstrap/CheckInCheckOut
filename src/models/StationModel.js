@@ -31,10 +31,10 @@ define(function (require) {
                     }
                 }
                 
-                if (attributes.hasOwnProperty('distanceInMiles')) {
-                    var distanceInMiles = attributes.distanceInMiles;
-                    if (distanceInMiles && !isNaN(distanceInMiles)) {
-                        attributes.distanceInMiles = Number(distanceInMiles);
+                if (attributes.hasOwnProperty('distance')) {
+                    var distance = attributes.distance;
+                    if (distance && !isNaN(distance)) {
+                        attributes.distance = Number(distance);
                     }
                 }
             }
