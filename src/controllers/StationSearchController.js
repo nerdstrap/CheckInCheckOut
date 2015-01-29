@@ -64,18 +64,16 @@ define(function (require) {
             currentContext.stationService.getStationSearchOptions()
                 .then(function (getStationSearchOptionsResponse) {
                     currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getStationSearchOptionsResponse.userRole);
-                    stationSearchViewInstance.setUserRole(getStationSearchOptionsResponse.userRole);
-                    stationSearchViewInstance.hideLoading();
                     deferred.resolve(stationSearchViewInstance);
                 })
                 .fail(function (error) {
-                    stationSearchViewInstance.hideLoading();
                     stationSearchViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
-                    deferred.reject({
-                        stationSearchView: stationSearchViewInstance,
-                        error: error
-                    });
-                });
+                    deferred.reject(stationSearchViewInstance);
+                })
+                .always(function () {
+                    stationSearchViewInstance.hideLoading();
+                })
+            ;
 
             return deferred.promise();
         },
@@ -97,32 +95,32 @@ define(function (require) {
             currentContext.router.navigate('station/' + stationId, {replace: fragmentAlreadyMatches});
 
             stationViewInstance.showLoading();
-            currentContext.stationService.getStations({stationId: stationId})
+            currentContext.stationService.getStations({ stationId: stationId })
                 .then(function (getStationsResponse) {
                     currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getStationsResponse.userRole);
                     stationViewInstance.setUserRole(getStationsResponse.userRole);
                     if (getStationsResponse.stations && getStationsResponse.stations.length > 0) {
-                        stationModelInstance.set(getStationsResponse.stations[0]);
-                        stationModelInstance.trigger('reset');
-                        stationViewInstance.hideLoading();
-                        deferred.resolve(stationViewInstance);
+                        currentContext.geoLocationService.getCurrentPosition()
+                        .then(function (position) {
+                            utils.computeDistances(position, getStationsResponse.stations);
+                        })
+                        .always(function () {
+                            stationModelInstance.reset(getStationsResponse.stations[0]);
+                            deferred.resolve(stationViewInstance);
+                        });
                     } else {
-                        stationModelInstance.clear();
-                        stationModelInstance.trigger('error');
-                        stationViewInstance.hideLoading();
+                        stationModelInstance.reset();
                         stationViewInstance.showError(utils.getResource('stationNotFoundErrorMessage'));
                         deferred.reject(stationViewInstance);
                     }
                 })
                 .fail(function (error) {
-                    stationModelInstance.clear();
-                    stationModelInstance.trigger('error');
-                    stationViewInstance.hideLoading();
+                    stationModelInstance.reset();
                     stationViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
-                    deferred.reject({
-                        stationView: stationViewInstance,
-                        error: error
-                    });
+                    deferred.reject(stationViewInstance);
+                })
+                .always(function () {
+                    stationViewInstance.hideLoading();
                 });
 
             return deferred.promise();
@@ -139,21 +137,15 @@ define(function (require) {
                     currentContext.geoLocationService.getCurrentPosition()
                         .then(function (position) {
                             utils.computeDistances(position, getStationsResponse.stations);
-                            stationCollectionInstance.reset(getStationsResponse.stations);
-                            deferred.resolve(stationCollectionInstance);
                         })
-                        .fail(function () {
+                        .always(function () {
                             stationCollectionInstance.reset(getStationsResponse.stations);
                             deferred.resolve(stationCollectionInstance);
                         });
                 })
                 .fail(function (error) {
                     stationCollectionInstance.reset();
-                    stationCollectionInstance.trigger('error');
-                    deferred.reject({
-                        stationCollection: stationCollectionInstance,
-                        error: error
-                    });
+                    deferred.reject(error);
                 });
 
             return deferred.promise();
@@ -173,11 +165,7 @@ define(function (require) {
                 })
                 .fail(function (error) {
                     stationCollectionInstance.reset();
-                    stationCollectionInstance.trigger('error');
-                    deferred.reject({
-                        stationCollection: stationCollectionInstance,
-                        error: error
-                    });
+                    deferred.reject(error);
                 });
 
             return deferred.promise();

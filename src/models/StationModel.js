@@ -4,9 +4,10 @@ define(function (require) {
     var $ = require('jquery'),
         _ = require('underscore'),
         Backbone = require('backbone'),
+        BaseModel = require('models/BaseModel'),
         env = require('env');
 
-    var StationModel = Backbone.Model.extend({
+    var StationModel = BaseModel.extend({
         idAttribute: 'stationId',
         set: function (key, val, options) {
             var attributes;

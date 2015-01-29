@@ -43,7 +43,7 @@ define(function (require) {
                     currentContext.positionOptions
                 );
             } else {
-                var capabilityError = new Error({errorCode: 500, errorMessage: 'geolocation is not available'});
+                var capabilityError = new Error('geolocation capability is not supported');
                 deferred.rejectWith(currentContext, [capabilityError]);
             }
 
