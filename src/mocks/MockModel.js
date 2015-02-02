@@ -8,9 +8,7 @@ define(function (require) {
     var MockModel = Backbone.Model.extend({
         initialize: function (options) {
             options || (options = {});
-            this.clear = jasmine.createSpy();
-            this.set = jasmine.createSpy();
-            this.trigger = jasmine.createSpy();
+            this.reset = jasmine.createSpy();
         }
     });
     return MockModel;

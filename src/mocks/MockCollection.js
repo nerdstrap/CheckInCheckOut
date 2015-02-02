@@ -11,7 +11,6 @@ define(function (require) {
         initialize: function (options) {
             options || (options = {});
             this.reset = jasmine.createSpy();
-            this.trigger = jasmine.createSpy();
         }
     });
     return MockCollection;

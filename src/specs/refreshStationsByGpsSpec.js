@@ -37,7 +37,7 @@ define(function (require) {
                 });
                 done();
             }, function (err) {
-                self.fail('require controllers/StationSearchController failed to load!');
+                this.fail('require controllers/StationSearchController failed to load!');
             });
         });
 
@@ -71,7 +71,7 @@ define(function (require) {
 
                 globals.window.setTimeout(function () {
                     deferred.resolveWith(currentContext, [results]);
-                }, 1000);
+                }, 50);
 
                 return deferred.promise();
             };
@@ -110,10 +110,10 @@ define(function (require) {
                 //assert
                 expect(self.stationSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
                 expect(self.stationSearchControllerInstance.stationService.getStations).toHaveBeenCalled();
-                expect(mockStationCollectionInstance.reset).toHaveBeenCalledWith(fakeStations);
+                expect(stationCollection.reset).toHaveBeenCalledWith(fakeStations);
                 done();
             }, function () {
-                self.fail(new Error('stationSearchControllerInstance.refreshStations call failed'));
+                this.fail(new Error('stationSearchControllerInstance.refreshStations call failed'));
                 done();
             });
         });
@@ -131,7 +131,7 @@ define(function (require) {
 
                 globals.window.setTimeout(function () {
                     deferred.rejectWith(currentContext, [serverError]);
-                }, 1000);
+                }, 50);
 
                 return deferred.promise();
             };
@@ -152,7 +152,7 @@ define(function (require) {
 
                 globals.window.setTimeout(function () {
                     deferred.rejectWith(currentContext, [results]);
-                }, 1000);
+                }, 50);
 
                 return deferred.promise();
             };
@@ -165,15 +165,13 @@ define(function (require) {
             //act
             var promise = self.stationSearchControllerInstance.refreshStationsByGps(mockStationCollectionInstance, fakeOptions);
 
-            promise.fail(function (results) {
+            promise.fail(function (stationCollection) {
                 //assert
                 expect(self.stationSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
-                expect(mockStationCollectionInstance.reset).toHaveBeenCalledWith();
-                expect(mockStationCollectionInstance.trigger).toHaveBeenCalledWith('error');
-                expect(results.error).toBeDefined();
+                expect(stationCollection.reset).toHaveBeenCalledWith();
                 done();
             }, function () {
-                self.fail(new Error('stationSearchControllerInstance.refreshStations call failed'));
+                this.fail(new Error('stationSearchControllerInstance.refreshStations call failed'));
                 done();
             });
         });

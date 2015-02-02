@@ -18,7 +18,6 @@ define(function (require) {
             this.dispatcher = options.dispatcher || this;
 
             this.listenTo(this.collection, 'reset', this.addAll);
-            this.listenTo(this.collection, 'error', this.removeAll);
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
@@ -45,7 +44,7 @@ define(function (require) {
                 dispatcher: currentContext.dispatcher,
                 userRole: currentContext.userRole
             });
-            this.appendChildTo(stationListItemViewInstance, '#station-list-item-container');
+            this.appendChildTo(stationListItemViewInstance, '#station-list-item-view-container');
         },
         removeAll: function () {
             this.showLoading();

@@ -94,10 +94,10 @@ define(function (require) {
         return distance;
     };
 
-    utils.computeDistances = function(position, locations) {
+    utils.computeDistances = function(start, locations) {
         var currentContext = this;
         _.each(locations, function(location) {
-            var distance = utils.computeDistanceBetween(position.coords, location);
+            var distance = utils.computeDistanceBetween(start, location);
             location.distance = distance;
         });
     }

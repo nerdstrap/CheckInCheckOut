@@ -37,7 +37,7 @@ define(function (require) {
                 });
                 done();
             }, function (err) {
-                self.fail('require controllers/StationSearchController failed to load!');
+                this.fail('require controllers/StationSearchController failed to load!');
             });
         });
 
@@ -56,7 +56,7 @@ define(function (require) {
 
                 globals.window.setTimeout(function () {
                     deferred.resolveWith(currentContext, [results]);
-                }, 1000);
+                }, 50);
 
                 return deferred.promise();
             };
@@ -73,11 +73,10 @@ define(function (require) {
                 expect(stationSearchView.showLoading).toHaveBeenCalled();
                 expect(self.stationSearchControllerInstance.stationService.getStationSearchOptions).toHaveBeenCalled();
                 expect(self.stationSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.userRoleUpdated, fakeUserRole);
-                expect(stationSearchView.setUserRole).toHaveBeenCalledWith(fakeUserRole);
                 expect(stationSearchView.hideLoading).toHaveBeenCalled();
                 done();
             }, function () {
-                self.fail(new Error('stationSearchControllerInstance.goToStationSearch call failed'));
+                this.fail(new Error('stationSearchControllerInstance.goToStationSearch call failed'));
                 done();
             });
         });
@@ -95,7 +94,7 @@ define(function (require) {
 
                 globals.window.setTimeout(function () {
                     deferred.rejectWith(currentContext, [serverError]);
-                }, 1000);
+                }, 50);
 
                 return deferred.promise();
             };
@@ -105,17 +104,17 @@ define(function (require) {
             //act
             var promise = self.stationSearchControllerInstance.goToStationSearch();
 
-            promise.fail(function (results) {
+            promise.fail(function (stationSearchView) {
                 //assert
-                expect(self.stationSearchControllerInstance.router.swapContent).toHaveBeenCalledWith(results.stationSearchView);
+                expect(self.stationSearchControllerInstance.router.swapContent).toHaveBeenCalledWith(stationSearchView);
                 expect(self.stationSearchControllerInstance.router.navigate).toHaveBeenCalledWith('station', jasmine.any(Object));
-                expect(results.stationSearchView.showLoading).toHaveBeenCalled();
+                expect(stationSearchView.showLoading).toHaveBeenCalled();
                 expect(self.stationSearchControllerInstance.stationService.getStationSearchOptions).toHaveBeenCalled();
-                expect(results.stationSearchView.hideLoading).toHaveBeenCalled();
-                expect(results.stationSearchView.showError).toHaveBeenCalled();
+                expect(stationSearchView.hideLoading).toHaveBeenCalled();
+                expect(stationSearchView.showError).toHaveBeenCalled();
                 done();
             }, function () {
-                self.fail(new Error('stationSearchControllerInstance.goToStationSearch call failed'));
+                this.fail(new Error('stationSearchControllerInstance.goToStationSearch call failed'));
                 done();
             });
         });

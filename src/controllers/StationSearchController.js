@@ -64,16 +64,14 @@ define(function (require) {
             currentContext.stationService.getStationSearchOptions()
                 .then(function (getStationSearchOptionsResponse) {
                     currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getStationSearchOptionsResponse.userRole);
+                    stationSearchViewInstance.hideLoading();
                     deferred.resolve(stationSearchViewInstance);
                 })
                 .fail(function (error) {
                     stationSearchViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
-                    deferred.reject(stationSearchViewInstance);
-                })
-                .always(function () {
                     stationSearchViewInstance.hideLoading();
-                })
-            ;
+                    deferred.reject(stationSearchViewInstance);
+                });
 
             return deferred.promise();
         },
@@ -95,32 +93,30 @@ define(function (require) {
             currentContext.router.navigate('station/' + stationId, {replace: fragmentAlreadyMatches});
 
             stationViewInstance.showLoading();
-            currentContext.stationService.getStations({ stationId: stationId })
+            currentContext.stationService.getStations({stationId: stationId})
                 .then(function (getStationsResponse) {
                     currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getStationsResponse.userRole);
                     stationViewInstance.setUserRole(getStationsResponse.userRole);
                     if (getStationsResponse.stations && getStationsResponse.stations.length > 0) {
                         currentContext.geoLocationService.getCurrentPosition()
-                        .then(function (position) {
-                            utils.computeDistances(position, getStationsResponse.stations);
-                        })
-                        .always(function () {
-                            stationModelInstance.reset(getStationsResponse.stations[0]);
-                            deferred.resolve(stationViewInstance);
-                        });
+                            .then(function (position) {
+                                utils.computeDistances(position.coords, getStationsResponse.stations);
+                                stationModelInstance.reset(getStationsResponse.stations[0]);
+                                stationViewInstance.hideLoading();
+                                deferred.resolve(stationViewInstance);
+                            });
                     } else {
                         stationModelInstance.reset();
                         stationViewInstance.showError(utils.getResource('stationNotFoundErrorMessage'));
+                        stationViewInstance.hideLoading();
                         deferred.reject(stationViewInstance);
                     }
                 })
                 .fail(function (error) {
                     stationModelInstance.reset();
                     stationViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
-                    deferred.reject(stationViewInstance);
-                })
-                .always(function () {
                     stationViewInstance.hideLoading();
+                    deferred.reject(stationViewInstance);
                 });
 
             return deferred.promise();
@@ -136,16 +132,14 @@ define(function (require) {
                 .then(function (getStationsResponse) {
                     currentContext.geoLocationService.getCurrentPosition()
                         .then(function (position) {
-                            utils.computeDistances(position, getStationsResponse.stations);
-                        })
-                        .always(function () {
+                            utils.computeDistances(position.coords, getStationsResponse.stations);
                             stationCollectionInstance.reset(getStationsResponse.stations);
                             deferred.resolve(stationCollectionInstance);
                         });
                 })
                 .fail(function (error) {
                     stationCollectionInstance.reset();
-                    deferred.reject(error);
+                    deferred.reject(stationCollectionInstance);
                 });
 
             return deferred.promise();
@@ -160,12 +154,13 @@ define(function (require) {
             currentContext.geoLocationService.getCurrentPosition()
                 .then(currentContext.stationService.getStations)
                 .then(function (getStationsResponse) {
+                    utils.computeDistances(getStationsResponse.coords, getStationsResponse.stations);
                     stationCollectionInstance.reset(getStationsResponse.stations);
                     deferred.resolve(stationCollectionInstance);
                 })
                 .fail(function (error) {
                     stationCollectionInstance.reset();
-                    deferred.reject(error);
+                    deferred.reject(stationCollectionInstance);
                 });
 
             return deferred.promise();

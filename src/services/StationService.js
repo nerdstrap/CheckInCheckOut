@@ -462,7 +462,7 @@ define(function (require) {
 
                 globals.window.setTimeout(function () {
                     deferred.rejectWith(currentContext, [serverError]);
-                }, 1000);
+                }, 200);
             } else {
                 var results = {
                     userRole: userRole
@@ -470,7 +470,7 @@ define(function (require) {
 
                 globals.window.setTimeout(function () {
                     deferred.resolveWith(currentContext, [results]);
-                }, 1000);
+                }, 200);
             }
 
             return deferred.promise();
@@ -507,16 +507,16 @@ define(function (require) {
 
                 globals.window.setTimeout(function () {
                     deferred.rejectWith(currentContext, [serverError]);
-                }, 1000);
+                }, 200);
             } else {
-                var results = {
+                var results = _.extend(options, {
                     stations: stations,
                     userRole: userRole
-                };
+                });
 
                 globals.window.setTimeout(function () {
                     deferred.resolveWith(currentContext, [results]);
-                }, 1000);
+                }, 200);
             }
 
             return deferred.promise();

@@ -20,10 +20,10 @@ define(function (require) {
             this.userRole = userRole;
         },
         showLoading: function () {
-            this.$('.view-status.' + this.cid).removeClass('hidden');
+            this.$('.loading.' + this.cid).removeClass('hidden');
         },
         hideLoading: function () {
-            this.$('.view-status.' + this.cid).addClass('hidden');
+            this.$('.loading.' + this.cid).addClass('hidden');
         },
         showInfo: function (message) {
             var level;
@@ -44,7 +44,7 @@ define(function (require) {
                 model: alertModelInstance,
                 dispatcher: this.dispatcher
             });
-            this.prependChildTo(alertViewInstance, '.view-alerts.' + this.cid);
+            this.prependChildTo(alertViewInstance, '.alert-view-container.' + this.cid);
         }
     });
 

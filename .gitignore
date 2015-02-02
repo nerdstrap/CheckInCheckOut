@@ -3,5 +3,6 @@ node_modules/grunt-contrib-uglify
 node_modules/grunt
 node_modules/grunt-contrib-jshint
 .idea
+.sass-cache
 *.sln
 *.suo

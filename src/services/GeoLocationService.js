@@ -43,7 +43,7 @@ define(function (require) {
                     currentContext.positionOptions
                 );
             } else {
-                var capabilityError = new Error('geolocation capability is not supported');
+                var capabilityError = new Error('geolocation capability not found');
                 deferred.rejectWith(currentContext, [capabilityError]);
             }
 

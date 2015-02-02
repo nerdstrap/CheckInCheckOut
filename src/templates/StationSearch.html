@@ -7,26 +7,24 @@
     <div class="row collapse">
         <div class="small-12 columns">
             <a id="gps-search-button" class="button radius" href="#">{{resource "gpsSearchButtonText"}}</a>
-            <a id="show-manual-search-button" class="button radius secondary" href="#">{{resource "showManualSearchButtonText"}}</a>
+            <a id="show-manual-search-button" class="button radius secondary" href="#">{{resource "manualSearchButtonText"}}</a>
             <a id="recent-search-button" class="button radius secondary" href="#">{{resource "recentSearchButtonText"}}</a>
         </div>
     </div>
     <div id="manual-search-form" class="row collapse hidden">
         <div class="small columns-12">
             <input id="manual-search-input" type="search" placeholder="{{resource "station.manualSearchPlaceholderText"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off">
-            <a id="clear-manual-search-button" class="hidden" href="#" style="display: none;">
-                <i class="fa-close"></i>
-            </a>
-            <a id="manual-search-button" class="button radius secondary" href="#">{{resource "manualSearchButtonText"}}</a>
+            <a id="manual-search-button" class="button radius" href="#">{{resource "searchButtonText"}}</a>
+            <a id="reset-manual-search-button" class="button radius secondary" href="#">{{resource "resetButtonText"}}</a>
         </div>
     </div>
-    <div class="row collapse view-status hidden {{cid}}">
+    <div class="row collapse loading {{cid}} hidden">
         <div class="small-12 columns">
-            <span class="view-message">{{resource "stationSearch.loadingMessage"}}</span>
-            <img src="{{resource 'loadingIconSrc'}}" class="view-loading" />
+            <span class="loading-message">{{resource "stationSearch.loadingMessage"}}</span>
+            <img src="{{resource 'loadingIconSrc'}}" class="loading-icon" />
         </div>
     </div>
-    <div class="row collapse view-alerts {{cid}}">
+    <div class="row collapse alert-view-container {{cid}}">
         <div class="small-12 columns"></div>
     </div>
     <div class="row collapse">

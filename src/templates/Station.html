@@ -1,31 +1,21 @@
 <div class="station-view">
-    <div class="row collapse view-status {{cid}} hidden">
+    <div class="row collapse">
         <div class="small-12 columns">
-            <span class="view-message">{{resource "station.loadingMessage"}}</span>
-            <img src="{{resource 'loadingIconSrc'}}" class="view-loading"/>
+            <h3 class="station-name-label" data-station-id="{{stationId}}">{{stationName}}</h3>
         </div>
     </div>
-    <div class="row collapse view-alerts {{cid}}">
+    <div class="row collapse loading {{cid}} hidden">
+        <div class="small-12 columns">
+            <span class="loading-message">{{resource "station.loadingMessage"}}</span>
+            <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
+        </div>
+    </div>
+    <div class="row collapse alert-view-container {{cid}}">
         <div class="small-12 columns"></div>
     </div>
     <div class="row collapse">
         <div class="small-12 columns">
-            <h2 class="station-id-label" data-station-id="{{stationId}}">{{stationName}}</h2>
-        </div>
-    </div>
-    <div class="row collapse">
-        <div class="small-12 columns">
-            <a class="directions-link" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{resource "goToMapButtonText"}}</a>
-        </div>
-    </div>
-    <div class="row collapse">
-        <div class="small-4 columns">
-            <span class="region-name-label">{{withDefault regionName  "&nbsp;"}}</span>
-        </div>
-    </div>
-    <div class="row collapse">
-        <div class="small-4 columns">
-            <span class="area-name-label">{{withDefault areaName  "&nbsp;"}}</span>
+            <span class="distance-label">{{withDefault distance  "&nbsp;"}}</span> miles | <a class="directions-link" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{resource "goToMapButtonText"}}</a>
         </div>
     </div>
 </div>
