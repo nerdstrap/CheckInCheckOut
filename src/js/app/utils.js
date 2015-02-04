@@ -35,6 +35,20 @@ define(function (require) {
         return phone;
     };
 
+    utils.formatString = function(formatString, args) {
+        return formatString.replace(/{(\d+)}/g, function (match, number) {
+
+            return typeof args[number] != 'undefined'
+
+                ? args[number]
+
+                : match
+
+                ;
+
+        });
+    };
+
     utils.addMinutes = function (date, minutes) {
         var minutesToAdd = minutes * 60000;
         return new Date(date.getTime() + minutesToAdd);
@@ -72,21 +86,23 @@ define(function (require) {
     };
 
     utils.computeDistanceBetween = function (start, end) {
-        var distance = 0.0;
+        var distance;
         try {
-            var R = 3956.0883313286096695299;
+            if (start && start.latitude && start.longitude && end && end.latitude && end.longitude) {
+                var R = 3956.0883313286096695299;
 
-            var dLat = toRad(end.latitude - start.latitude)
-            var dLon = toRad(end.longitude - start.longitude)
-            var lat1 = toRad(start.latitude)
-            var lat2 = toRad(end.latitude)
+                var dLat = toRad(end.latitude - start.latitude)
+                var dLon = toRad(end.longitude - start.longitude)
+                var lat1 = toRad(start.latitude)
+                var lat2 = toRad(end.latitude)
 
-            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                     Math.cos(lat1) * Math.cos(lat2) *
                     Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-            distance = (R * c).toFixed(2);
+                distance = (R * c).toFixed(2);
+            }
         } catch (ex) {
             console.trace('compute distance failed');
         }
@@ -98,7 +114,9 @@ define(function (require) {
         var currentContext = this;
         _.each(locations, function(location) {
             var distance = utils.computeDistanceBetween(start, location);
-            location.distance = distance;
+            if (distance) {
+                location.distance = distance;
+            }
         });
     }
 

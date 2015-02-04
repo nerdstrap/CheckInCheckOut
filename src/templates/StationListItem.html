@@ -1,18 +1,12 @@
 <div class="station-list-item-view">
     <div class="row collapse">
-        <div class="small-4 columns">
-            <a class="station-link" data-station-id="{{stationId}}" href="#">{{withDefault stationName "&nbsp;"}}</a>
-        </div>
-        <div class="small-8 columns">
-            <img xlink:href="{{resource "checkedInIconSvgSrc"}}" src="{{resource "checkedInIconSrc"}}" alt="{{resource "checkedInIconAlt"}}" class="checked-in-icon"  />
-            <img xlink:href="{{resource "checkedInWithCrewIconSvgSrc"}}" src="{{resource "checkedInWithCrewIconSrc"}}" alt="{{resource "checkedInWithCrewIconAlt"}}" class="checked-in-with-crew-icon"  />
-            <img xlink:href="{{resource "hazardIconSvgSrc"}}" src="{{resource "hazardIconSrc"}}" alt="{{resource "hazardIconAlt"}}" class="hazard-icon"  />
-            <img xlink:href="{{resource "outageIconSvgSrc"}}" src="{{resource "outageIconSrc"}}" alt="{{resource "outageIconAlt"}}" class="outage-icon"  />
+        <div class="small-12 columns">
+            <a class="go-to-station-button" data-station-id="{{stationId}}" href="#">{{withDefault stationName "&nbsp;"}}</a>
         </div>
     </div>
     <div class="row collapse">
-        <div class="small-4 columns">
-            <span class="distance-label">{{withDefault distance  "&nbsp;"}}</span> miles | <a class="directions-link" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{resource "goToMapButtonText"}}</a>
+        <div class="small-12 columns">
+            <span class="distance-label">{{withDefault distance "&nbsp;"}}</span>&nbsp;&#124;&nbsp;<a class="go-to-directions-button" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{resource "goToDirectionsButtonText"}}&nbsp;<i class="fa fa-map-marker"></i></a><span class="directions-unavailable-label hidden">{{resource "directionsUnavailableErrorMessage"}}</span>
         </div>
     </div>
 </div>

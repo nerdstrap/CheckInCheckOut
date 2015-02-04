@@ -7,6 +7,7 @@ define(function (require) {
         Backbone = require('backbone'),
         BaseView = require('views/BaseView'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        utils = require('utils'),
         template = require('hbs!templates/Station');
 
     var StationView = BaseView.extend({
@@ -28,7 +29,16 @@ define(function (require) {
             return this;
         },
         events: {
-            'click .directions-link': 'goToDirectionsWithLatLng'
+            'click .go-to-linked-station-button': 'goToLinkedStationWithId',
+            'click .go-to-directions-button': 'goToDirectionsWithLatLng'
+        },
+        goToLinkedStationWithId: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            var linkedStationId = this.model.get('linkedStationId');
+            this.dispatcher.trigger(AppEventNamesEnum.goToStationWithId, linkedStationId);
         },
         goToDirectionsWithLatLng: function (event) {
             if (event) {
@@ -43,12 +53,32 @@ define(function (require) {
             if (this.model.has('stationName')) {
                 this.$('.station-name-label').html(this.model.get('stationName'));
             }
+            if (this.model.has('linkedStationId')) {
+                this.$('.linked-station-view').removeClass('hidden');
+                this.$('.go-to-linked-station-button').attr('data-linked-station-id', this.model.get('linkedStationId')).html(this.model.get('linkedStationName'));
+            } else {
+                this.$('.linked-station-view').addClass('hidden');
+            }
             if (this.model.has('distance')) {
-                this.$('.distance-label').html(this.model.get('distance'));
+                this.$('.distance-label').html(utils.formatString(utils.getResource('distanceFormatString'), [this.model.get('distance')]));
+            } else {
+                this.$('.distance-label').html(utils.getResource('distanceUnknownErrorMessage'));
             }
             if (this.model.has('latitude') && this.model.has('longitude')) {
-
-                this.$('.directions-link').attr('data-latitude', this.model.get('latitude')).attr('data-longitude', this.model.get('longitude'));
+                this.$('.directions-unavailable-label').addClass('hidden');
+                this.$('.go-to-directions-button').removeClass('hidden').attr('data-latitude', this.model.get('latitude')).attr('data-longitude', this.model.get('longitude'));
+            } else {
+                this.$('.go-to-directions-button').addClass('hidden');
+                this.$('.directions-unavailable-label').removeClass('hidden');
+            }
+            if (this.model.has('hasHazard') && this.model.get('hasHazard') === "true") {
+                this.$('.station-name-label').parent().append('<i class="fa fa-warning"></i>');
+            }
+            if (this.model.has('hasOpenCheckIns') && this.model.get('hasOpenCheckIns') === "true") {
+                this.$('.station-name-label').parent().append('<i class="fa fa-user-plus"></i>');
+            }
+            if (this.model.has('linkedStationId')) {
+                this.$('.station-name-label').parent().append('<i class="fa fa-arrows-h"></i>');
             }
         },
         onLeave: function () {

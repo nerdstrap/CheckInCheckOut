@@ -1,5 +1,6 @@
 @import "normalize";
 @import "foundation";
+@import "font-awesome";
 
 /* -------- NocLog -------- */
 
@@ -97,12 +98,22 @@ body:before {
   margin: 3px 3px 3px 0;
 }
 
-.checked-in-icon,
-.checked-in-with-crew-icon,
-.outage-icon,
-.hazard-icon,{
-  margin: 0;
-  padding: 0;
-  height: 45px;
-  width: 45px;
+.fa-user-plus {
+  margin-left: 2px;
+  color: green;
+}
+
+.fa-map-marker {
+  margin-left: 2px;
+  color: blue;
+}
+
+.fa-warning {
+  margin-left: 2px;
+  color: yellow;
+}
+
+.fa-arrows-h {
+  margin-left: 2px;
+  color: red;
 }

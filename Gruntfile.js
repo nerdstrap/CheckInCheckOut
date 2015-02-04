@@ -38,7 +38,7 @@ module.exports = function (grunt) {
                 options: {
                     style: 'expanded',
                     sourcemap: 'none',
-                    loadPath: ['src/scss/foundation']
+                    loadPath: ['bower_components/foundation/scss', 'bower_components/font-awesome/scss' ]
                 },
                 files: [{
                     expand: true,
@@ -57,7 +57,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
 
     grunt.registerTask('validate', ['jshint']);
-    grunt.registerTask('compile', ['sass']);
-    grunt.registerTask('test', ['sass', 'jasmine']);
+    grunt.registerTask('precompile', ['sass']);
+    grunt.registerTask('test', ['jasmine']);
     grunt.registerTask('default', ['test']);
 };

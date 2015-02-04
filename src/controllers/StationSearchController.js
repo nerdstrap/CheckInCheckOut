@@ -96,7 +96,6 @@ define(function (require) {
             currentContext.stationService.getStations({stationId: stationId})
                 .then(function (getStationsResponse) {
                     currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getStationsResponse.userRole);
-                    stationViewInstance.setUserRole(getStationsResponse.userRole);
                     if (getStationsResponse.stations && getStationsResponse.stations.length > 0) {
                         currentContext.geoLocationService.getCurrentPosition()
                             .then(function (position) {

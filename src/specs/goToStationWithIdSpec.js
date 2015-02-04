@@ -70,6 +70,28 @@ define(function (require) {
             spyOn(fakeStationServiceInstance, 'getStations').and.callThrough();
             self.stationSearchControllerInstance.stationService = fakeStationServiceInstance;
 
+            var fakeGeoLocationServiceInstance = {};
+            fakeGeoLocationServiceInstance.getCurrentPosition = function (options) {
+                options || (options = {});
+                var currentContext = this;
+                var deferred = $.Deferred();
+
+                var results = {
+                    coords: {
+                        latitude: 40,
+                        longitude: 82
+                    }
+                };
+
+                globals.window.setTimeout(function () {
+                    deferred.resolveWith(currentContext, [results]);
+                }, 1000);
+
+                return deferred.promise();
+            };
+            spyOn(fakeGeoLocationServiceInstance, 'getCurrentPosition').and.callThrough();
+            self.stationSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
+
             //act
             var promise = self.stationSearchControllerInstance.goToStationWithId(fakeStationId);
 
@@ -80,6 +102,7 @@ define(function (require) {
                 expect(stationView.showLoading).toHaveBeenCalled();
                 expect(self.stationSearchControllerInstance.stationService.getStations).toHaveBeenCalled();
                 expect(self.stationSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.userRoleUpdated, fakeUserRole);
+                expect(self.stationSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
                 expect(stationView.model.reset).toHaveBeenCalledWith(fakeStation);
                 expect(stationView.hideLoading).toHaveBeenCalled();
                 done();

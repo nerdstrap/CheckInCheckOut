@@ -78,6 +78,28 @@ define(function (require) {
             spyOn(fakeStationServiceInstance, 'getStations').and.callThrough();
             self.stationSearchControllerInstance.stationService = fakeStationServiceInstance;
 
+            var fakeGeoLocationServiceInstance = {};
+            fakeGeoLocationServiceInstance.getCurrentPosition = function (options) {
+                options || (options = {});
+                var currentContext = this;
+                var deferred = $.Deferred();
+
+                var results = {
+                    coords: {
+                        latitude: 40,
+                        longitude: 82
+                    }
+                };
+
+                globals.window.setTimeout(function () {
+                    deferred.resolveWith(currentContext, [results]);
+                }, 1000);
+
+                return deferred.promise();
+            };
+            spyOn(fakeGeoLocationServiceInstance, 'getCurrentPosition').and.callThrough();
+            self.stationSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
+
             var mockStationCollectionInstance = new MockCollection();
             var fakeOptions = {};
 
@@ -87,6 +109,7 @@ define(function (require) {
             promise.then(function (stationCollection) {
                 //assert
                 expect(self.stationSearchControllerInstance.stationService.getStations).toHaveBeenCalled();
+                expect(self.stationSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
                 expect(stationCollection.reset).toHaveBeenCalledWith(fakeStations);
                 done();
             }, function () {

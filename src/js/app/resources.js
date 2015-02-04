@@ -6,7 +6,7 @@ define(function(require) {
             Backbone = require('backbone');
 
     var resources = {
-        'appTitleText': 'Check-in|Check-out',
+        'appTitleText': 'Check-in&#124;Check-out',
 
         'loadingIconSrc': 'images/loading.gif',
         'loadingIconAlt': 'loading',
@@ -33,7 +33,7 @@ define(function(require) {
 
         'goToStationSearchButtonText': 'Stations',
         'goToStationWithIdButtonText': 'View Station',
-        'goToMapButtonText': 'directions',
+        'goToDirectionsButtonText': 'directions',
 
         'gpsSearchButtonText': 'GPS',
         'manualSearchButtonText': 'Manual',
@@ -62,9 +62,15 @@ define(function(require) {
         'stationSearch.loadingMessage': 'loading search',
         'stationList.loadingMessage': 'loading stations',
         'station.loadingMessage': 'loading station',
+        'calculatingDistanceLoadingMessage': 'calculating distance',
+
+        'distanceFormatString': '{0} miles',
+        'linkedStationHeaderText': 'Linked to',
         
-        'criticalSystemErrorMessage': 'Critical Error',
-        'stationNotFoundErrorMessage': 'Station Not Found'
+        'criticalSystemErrorMessage': 'critical error',
+        'stationNotFoundErrorMessage': 'station not found',
+        'distanceUnknownErrorMessage': 'distance unknown',
+        'directionsUnavailableErrorMessage': 'directions unavailable'
     };
 
     var defaultResource = '';

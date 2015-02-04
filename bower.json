@@ -1,0 +1,20 @@
+{
+  "name": "CheckInCheckOut",
+  "version": "1.0.0",
+  "homepage": "https://github.com/nerdstrap/CheckInCheckOut",
+  "authors": [
+    "nerdstrap <geekstrap@live.com>"
+  ],
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
