@@ -37,7 +37,6 @@ module.exports = function (grunt) {
             dist: {
                 options: {
                     style: 'expanded',
-                    sourcemap: 'none',
                     loadPath: ['bower_components/foundation/scss', 'bower_components/font-awesome/scss' ]
                 },
                 files: [{
