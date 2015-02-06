@@ -1,19 +1,24 @@
 <div class="station-search-view">
     <div class="row collapse">
         <div class="small-12 columns">
-            <h3>{{resource "stationSearch.viewTitleText"}}</h3>
-        </div>
-    </div>
-    <div class="row collapse">
-        <div class="small-12 columns">
-            <a id="gps-search-button" class="button radius" href="#">{{resource "gpsSearchButtonText"}}</a>
-            <a id="show-manual-search-button" class="button radius secondary" href="#">{{resource "manualSearchButtonText"}}</a>
-            <a id="recent-search-button" class="button radius secondary" href="#">{{resource "recentSearchButtonText"}}</a>
+            <ul class="button-group radius even-3">
+                <li>
+                    <a id="gps-search-button" class="button radius tiny" href="#">{{resource "gpsSearchButtonText"}}</a>
+                </li>
+                <li>
+                    <a id="show-manual-search-button" class="button radius tiny secondary" href="#">{{resource "manualSearchButtonText"}}</a>
+                </li>
+                <li>
+                    <a id="recent-search-button" class="button radius tiny secondary" href="#">{{resource "recentSearchButtonText"}}</a>
+                </li>
+            </ul>
         </div>
     </div>
     <div id="manual-search-form" class="row collapse hidden">
-        <div class="small columns-12">
-            <input id="manual-search-input" type="search" placeholder="{{resource "station.manualSearchPlaceholderText"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off">
+        <div class="small-8 columns">
+            <input id="manual-search-input" type="search" placeholder="{{resource "station.manualSearchPlaceholderText"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off" />
+        </div>
+        <div class="small-4 columns">
             <a id="manual-search-button" class="button radius" href="#">{{resource "searchButtonText"}}</a>
             <a id="reset-manual-search-button" class="button radius secondary" href="#">{{resource "resetButtonText"}}</a>
         </div>

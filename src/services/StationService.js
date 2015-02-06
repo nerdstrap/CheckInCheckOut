@@ -486,7 +486,7 @@ define(function (require) {
             if (options.stationId) {
                 stations = _getById(options.stationId);
             } else if (options.areaName) {
-                stations = _getByRegionName(options.areaName);
+                stations = _getByAreaName(options.areaName);
             } else if (options.regionName) {
                 stations = _getByRegionName(options.regionName);
             } else if (options.stationName) {

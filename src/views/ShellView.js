@@ -25,19 +25,19 @@ define(function (require) {
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
-            var headerViewInstance = new HeaderView({
+            currentContext.headerViewInstance = new HeaderView({
                 model: currentContext.model,
                 el: $('#header-view', currentContext.$el),
                 dispatcher: currentContext.dispatcher
             });
-            this.renderChild(headerViewInstance);
+            this.renderChild(currentContext.headerViewInstance);
 
-            var footerViewInstance = new FooterView({
+            currentContext.footerViewInstance = new FooterView({
                 model: currentContext.model,
                 el: $('#footer-view', currentContext.$el),
                 dispatcher: currentContext.dispatcher
             });
-            this.renderChild(footerViewInstance);
+            this.renderChild(currentContext.footerViewInstance);
 
             return this;
         },

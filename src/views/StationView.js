@@ -6,6 +6,8 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseView = require('views/BaseView'),
+        StationEntryLogCollection = require('collections/StationEntryLogCollection'),
+        StationEntryLogListView = require('views/StationEntryLogListView'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         utils = require('utils'),
         template = require('hbs!templates/Station');
@@ -25,6 +27,14 @@ define(function (require) {
 
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
             currentContext.$el.html(template(renderModel));
+
+            currentContext.stationEntryLogCollection = new StationEntryLogCollection();
+            currentContext.stationEntryLogListViewInstance = new StationEntryLogListView({
+                controller: currentContext.controller,
+                dispatcher: currentContext.dispatcher,
+                collection: currentContext.stationEntryLogCollection
+            });
+            this.appendChildTo(currentContext.stationEntryLogListViewInstance, '#station-entry-log-list-view-container');
 
             return this;
         },
@@ -71,15 +81,15 @@ define(function (require) {
                 this.$('.go-to-directions-button').addClass('hidden');
                 this.$('.directions-unavailable-label').removeClass('hidden');
             }
-            if (this.model.has('hasHazard') && this.model.get('hasHazard') === "true") {
-                this.$('.station-name-label').parent().append('<i class="fa fa-warning"></i>');
-            }
-            if (this.model.has('hasOpenCheckIns') && this.model.get('hasOpenCheckIns') === "true") {
-                this.$('.station-name-label').parent().append('<i class="fa fa-user-plus"></i>');
-            }
-            if (this.model.has('linkedStationId')) {
-                this.$('.station-name-label').parent().append('<i class="fa fa-arrows-h"></i>');
-            }
+            //if (this.model.has('hasHazard') && this.model.get('hasHazard') === "true") {
+            //    this.$('.station-name-label').parent().append('<i class="fa fa-warning"></i>');
+            //}
+            //if (this.model.has('hasOpenCheckIns') && this.model.get('hasOpenCheckIns') === "true") {
+            //    this.$('.station-name-label').parent().append('<i class="fa fa-user-plus"></i>');
+            //}
+            //if (this.model.has('linkedStationId')) {
+            //    this.$('.station-name-label').parent().append('<i class="fa fa-arrows-h"></i>');
+            //}
         },
         onLeave: function () {
             console.trace('StationView.onLeave');

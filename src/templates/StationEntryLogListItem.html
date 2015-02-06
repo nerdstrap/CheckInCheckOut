@@ -1,0 +1,12 @@
+<div class="station-entry-log-list-item-view">
+    <div class="row collapse">
+        <div class="small-12 columns">
+            <a class="go-to-station-button" data-station-id="{{stationId}}" href="#">{{withDefault stationName "&nbsp;"}}</a>
+        </div>
+    </div>
+    <div class="row collapse">
+        <div class="small-12 columns">
+            <span class="distance-label">{{withDefault distance "&nbsp;"}}</span>&nbsp;&#124;&nbsp;<a class="go-to-directions-button" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{resource "goToDirectionsButtonText"}}&nbsp;<i class="fa fa-map-marker"></i></a><span class="directions-unavailable-label hidden">{{resource "directionsUnavailableErrorMessage"}}</span>
+        </div>
+    </div>
+</div>

@@ -70,7 +70,12 @@ define(function(require) {
         'criticalSystemErrorMessage': 'critical error',
         'stationNotFoundErrorMessage': 'station not found',
         'distanceUnknownErrorMessage': 'distance unknown',
-        'directionsUnavailableErrorMessage': 'directions unavailable'
+        'directionsUnavailableErrorMessage': 'directions unavailable',
+
+        'goToGpsSearchButtonText': 'Nearby',
+        'goToManualSearchButtonText': 'Search',
+        'goToAdHocEntryButtonText': 'Ad Hoc',
+        'goToSettingsButtonText': 'Settings'
     };
 
     var defaultResource = '';

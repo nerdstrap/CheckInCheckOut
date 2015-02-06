@@ -6,7 +6,7 @@
     </div>
     <div class="row collapse linked-station-view hidden">
         <div class="small-12 columns">
-            <span class="linked-station-header">{{resource "linkedStationHeaderText"}}</span>&nbsp;<a class="go-to-linked-station-button" data-linked-station-id href="#">{{withDefault linkedStationName "&nbsp;"}}</a>&nbsp;<i class="fa fa-arrows-h"></i>
+            <span class="linked-station-header">{{resource "linkedStationHeaderText"}}</span>&nbsp;<a class="go-to-linked-station-button" data-linked-station-id href="#">{{withDefault linkedStationName "&nbsp;"}}<i class="fa fa-arrows-h"></i></a>
         </div>
     </div>
     <div class="row collapse loading {{cid}} hidden">
@@ -25,6 +25,10 @@
     </div>
     <div class="row collapse">
         <div id="warning-list-view-container" class="small-12 columns">
+        </div>
+    </div>
+    <div class="row collapse">
+        <div id="station-entry-log-list-view-container" class="small-12 columns">
         </div>
     </div>
 </div>
