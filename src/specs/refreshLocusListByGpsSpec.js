@@ -21,7 +21,7 @@ define(function (require) {
         'views/LocusView': MockView
     });
 
-    describe('refresh loci by gps', function () {
+    describe('refresh locus list by gps', function () {
         var self = this;
 
         beforeEach(function (done) {
@@ -59,13 +59,13 @@ define(function (require) {
             var fakeUserRole = UserRolesEnum.Admin;
 
             var fakeLocusServiceInstance = {};
-            fakeLocusServiceInstance.getLoci = function (options) {
+            fakeLocusServiceInstance.getLocusList = function (options) {
                 options || (options = {});
                 var currentContext = this;
                 var deferred = $.Deferred();
 
                 var results = {
-                    loci: fakeLoci,
+                    locusList: fakeLoci,
                     userRole: fakeUserRole
                 };
 
@@ -75,7 +75,7 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeLocusServiceInstance, 'getLoci').and.callThrough();
+            spyOn(fakeLocusServiceInstance, 'getLocusList').and.callThrough();
             self.locusSearchControllerInstance.locusService = fakeLocusServiceInstance;
 
             var fakeGeoLocationServiceInstance = {};
@@ -109,7 +109,7 @@ define(function (require) {
             promise.then(function (locusCollection) {
                 //assert
                 expect(self.locusSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
-                expect(self.locusSearchControllerInstance.locusService.getLoci).toHaveBeenCalled();
+                expect(self.locusSearchControllerInstance.locusService.getLocusList).toHaveBeenCalled();
                 expect(locusCollection.reset).toHaveBeenCalledWith(fakeLoci);
                 done();
             }, function () {
@@ -123,7 +123,7 @@ define(function (require) {
             var fakeUserRole = UserRolesEnum.Admin;
 
             var fakeLocusServiceInstance = {};
-            fakeLocusServiceInstance.getLoci = function (options) {
+            fakeLocusServiceInstance.getLocusList = function (options) {
                 var currentContext = this;
                 var deferred = $.Deferred();
 
@@ -135,7 +135,7 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeLocusServiceInstance, 'getLoci').and.callThrough();
+            spyOn(fakeLocusServiceInstance, 'getLocusList').and.callThrough();
             self.locusSearchControllerInstance.geoLocationService = fakeLocusServiceInstance;
 
             var fakeGeoLocationServiceInstance = {};

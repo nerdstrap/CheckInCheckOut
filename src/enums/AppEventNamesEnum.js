@@ -11,11 +11,11 @@ define(function (require) {
         refreshLocusListByGps: 'refreshLocusListByGps',
         refreshLocusList: 'refreshLocusList',
 
-        goToListingWithId: 'goToListingWithId',
-        refreshListingListByGps: 'refreshListingListByGps',
-        refreshListingList: 'refreshListingList',
+        goToEntryLogWithId: 'goToEntryLogWithId',
+        refreshEntryLogListByGps: 'refreshEntryLogListByGps',
+        refreshEntryLogList: 'refreshEntryLogList',
 
-        goToNewListing: 'goToNewListing',
+        goToNewEntryLog: 'goToNewEntryLog',
         checkIn: 'checkIn',
         checkInSuccess: 'checkInSuccess',
         checkInError: 'checkInError',

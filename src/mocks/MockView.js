@@ -9,6 +9,7 @@ define(function (require) {
         initialize: function (options) {
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
+            this.setUserId = jasmine.createSpy();
             this.setUserRole = jasmine.createSpy();
             this.showLoading = jasmine.createSpy();
             this.hideLoading = jasmine.createSpy();

@@ -7,7 +7,7 @@ define(function (require) {
         SwappingRouter = require('routers/SwappingRouter'),
         ShellView = require('views/ShellView'),
         LocusController = require('controllers/LocusController'),
-        ListingController = require('controllers/ListingController'),
+        EntryLogController = require('controllers/EntryLogController'),
         eventBusSingleton = require('eventBusSingleton');
 
     var AppRouter = SwappingRouter.extend({
@@ -30,7 +30,7 @@ define(function (require) {
                 router: currentContext,
                 dispatcher: eventBusSingleton
             });
-            this.listingControllerInstance = new ListingController({
+            this.entryLogControllerInstance = new EntryLogController({
                 router: currentContext,
                 dispatcher: eventBusSingleton
             });

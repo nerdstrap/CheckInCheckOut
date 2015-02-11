@@ -9,11 +9,11 @@ define(function (require) {
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         utils = require('utils'),
         handlebarsHelpers = require('handlebars.helpers'),
-        template = require('hbs!templates/ListingListItem');
+        template = require('hbs!templates/EntryLogListItem');
 
-    var ListingListItemView = CompositeView.extend({
+    var EntryLogListItemView = CompositeView.extend({
         initialize: function (options) {
-            console.trace('ListingListItemView.initialize');
+            console.trace('EntryLogListItemView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
 
@@ -21,7 +21,7 @@ define(function (require) {
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
-            console.trace('ListingListItemView.render()');
+            console.trace('EntryLogListItemView.render()');
             var currentContext = this;
 
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
@@ -61,7 +61,7 @@ define(function (require) {
             //if (this.model.has('hasOpenCheckIns') && this.model.get('hasOpenCheckIns') === "true") {
             //    this.$('.go-to-locus-button').parent().append('<i class="fa fa-user-plus"></i>');
             //}
-            //if (this.model.has('linkedListingId')) {
+            //if (this.model.has('linkedEntryLogId')) {
             //    this.$('.go-to-locus-button').parent().append('<i class="fa fa-arrows-h"></i>');
             //}
             if (this.model.has('purpose')) {
@@ -103,10 +103,10 @@ define(function (require) {
             this.dispatcher.trigger(AppEventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
         },
         onLeave: function () {
-            console.trace('ListingListItemView.onLeave');
+            console.trace('EntryLogListItemView.onLeave');
         }
     });
 
-    return ListingListItemView;
+    return EntryLogListItemView;
 
 });

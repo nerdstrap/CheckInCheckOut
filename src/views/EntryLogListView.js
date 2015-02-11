@@ -5,15 +5,15 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseView = require('views/BaseView'),
-        ListingListItemView = require('views/ListingListItemView'),
+        EntryLogListItemView = require('views/EntryLogListItemView'),
         globals = require('globals'),
         env = require('env'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
-        template = require('hbs!templates/ListingList');
+        template = require('hbs!templates/EntryLogList');
 
-    var ListingListView = BaseView.extend({
+    var EntryLogListView = BaseView.extend({
         initialize: function (options) {
-            console.trace('ListingListView.initialize');
+            console.trace('EntryLogListView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
 
@@ -21,7 +21,7 @@ define(function (require) {
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
-            console.trace('ListingListView.render()');
+            console.trace('EntryLogListView.render()');
             var currentContext = this;
 
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
@@ -37,18 +37,18 @@ define(function (require) {
             _.each(this.collection.models, this.addOne, this);
             this.hideLoading();
         },
-        addOne: function (listing) {
+        addOne: function (entryLog) {
             var currentContext = this;
-            var listingListItemViewInstance = new ListingListItemView({
-                model: listing,
+            var entryLogListItemViewInstance = new EntryLogListItemView({
+                model: entryLog,
                 dispatcher: currentContext.dispatcher
             });
-            this.appendChildTo(listingListItemViewInstance, '#locus-entry-log-list-item-view-container');
+            this.appendChildTo(entryLogListItemViewInstance, '#entry-log-list-item-view-container');
         },
         onLeave: function () {
-            console.trace('ListingListView.onLeave');
+            console.trace('EntryLogListView.onLeave');
         }
     });
 
-    return ListingListView;
+    return EntryLogListView;
 });

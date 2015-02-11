@@ -7,8 +7,8 @@ define(function (require) {
         BaseModel = require('models/BaseModel'),
         env = require('env');
 
-    var ListingModel = BaseModel.extend({
-        idAttribute: 'listingId',
+    var EntryLogModel = BaseModel.extend({
+        idAttribute: 'entryLogId',
         set: function (key, val, options) {
             var attributes;
             if (typeof key === 'object') {
@@ -64,5 +64,5 @@ define(function (require) {
         }
     });
 
-    return ListingModel;
+    return EntryLogModel;
 });

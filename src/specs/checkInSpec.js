@@ -16,9 +16,9 @@ define(function (require) {
 
     var injector = new Squire();
     var builder = injector.mock({
-        'models/ListingModel': MockModel,
-        'collections/ListingCollection': MockCollection,
-        'views/ListingView': MockView
+        'models/EntryLogModel': MockModel,
+        'collections/EntryLogCollection': MockCollection,
+        'views/EntryLogView': MockView
     });
 
     describe('check in', function () {
@@ -30,33 +30,33 @@ define(function (require) {
             self.mockEventBusSingleton = new EventBus();
             self.mockEventBusSingleton.trigger = jasmine.createSpy();
 
-            builder.require(['controllers/ListingController'], function (ListingController) {
-                self.listingSearchControllerInstance = new ListingController({
+            builder.require(['controllers/EntryLogController'], function (EntryLogController) {
+                self.entryLogSearchControllerInstance = new EntryLogController({
                     router: self.mockRouterInstance,
                     dispatcher: self.mockEventBusSingleton
                 });
                 done();
             }, function (err) {
-                this.fail('require controllers/ListingController failed to load!');
+                this.fail('require controllers/EntryLogController failed to load!');
             });
         });
 
         it('should post the model attributes', function (done) {
             //arrange
-            var fakeListingId = 1976;
-            var fakeListing = {
-                'listingId': fakeListingId
+            var fakeEntryLogId = 1976;
+            var fakeEntryLog = {
+                'entryLogId': fakeEntryLogId
             };
             var fakeUserRole = UserRolesEnum.Admin;
 
-            var fakeListingServiceInstance = {};
-            fakeListingServiceInstance.postCheckIn = function (options) {
+            var fakeEntryLogServiceInstance = {};
+            fakeEntryLogServiceInstance.postCheckIn = function (options) {
                 options || (options = {});
                 var currentContext = this;
                 var deferred = $.Deferred();
 
                 var results = {
-                    listing: fakeListing,
+                    entryLog: fakeEntryLog,
                     userRole: fakeUserRole
                 };
 
@@ -66,22 +66,22 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeListingServiceInstance, 'postCheckIn').and.callThrough();
-            self.listingSearchControllerInstance.listingService = fakeListingServiceInstance;
+            spyOn(fakeEntryLogServiceInstance, 'postCheckIn').and.callThrough();
+            self.entryLogSearchControllerInstance.entryLogService = fakeEntryLogServiceInstance;
 
-            var mockListingModelInstance = new MockModel();
+            var mockEntryLogModelInstance = new MockModel();
 
             //act
-            var promise = self.listingSearchControllerInstance.checkIn(mockListingModelInstance);
+            var promise = self.entryLogSearchControllerInstance.checkIn(mockEntryLogModelInstance);
 
-            promise.then(function (listingModel) {
+            promise.then(function (entryLogModel) {
                 //assert
-                expect(self.listingSearchControllerInstance.listingService.postCheckIn).toHaveBeenCalledWith(mockListingModelInstance.attributes);
-                expect(mockListingModelInstance.reset).toHaveBeenCalledWith(fakeListing);
-                expect(self.listingSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.checkInSuccess, mockListingModelInstance);
+                expect(self.entryLogSearchControllerInstance.entryLogService.postCheckIn).toHaveBeenCalledWith(mockEntryLogModelInstance.attributes);
+                expect(mockEntryLogModelInstance.reset).toHaveBeenCalledWith(fakeEntryLog);
+                expect(self.entryLogSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.checkInSuccess, mockEntryLogModelInstance);
                 done();
             }, function () {
-                this.fail(new Error('listingSearchControllerInstance.checkIn call failed'));
+                this.fail(new Error('entryLogSearchControllerInstance.checkIn call failed'));
                 done();
             });
         });

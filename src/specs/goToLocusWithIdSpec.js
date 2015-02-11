@@ -51,13 +51,13 @@ define(function (require) {
             var fakeUserRole = UserRolesEnum.Admin;
 
             var fakeLocusServiceInstance = {};
-            fakeLocusServiceInstance.getLoci = function (options) {
+            fakeLocusServiceInstance.getLocusList = function (options) {
                 options || (options = {});
                 var currentContext = this;
                 var deferred = $.Deferred();
 
                 var results = {
-                    loci: fakeLoci,
+                    locusList: fakeLoci,
                     userRole: fakeUserRole
                 };
 
@@ -67,7 +67,7 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeLocusServiceInstance, 'getLoci').and.callThrough();
+            spyOn(fakeLocusServiceInstance, 'getLocusList').and.callThrough();
             self.locusSearchControllerInstance.locusService = fakeLocusServiceInstance;
 
             var fakeGeoLocationServiceInstance = {};
@@ -100,7 +100,7 @@ define(function (require) {
                 expect(self.locusSearchControllerInstance.router.swapContent).toHaveBeenCalledWith(locusView);
                 expect(self.locusSearchControllerInstance.router.navigate).toHaveBeenCalledWith('locus/' + fakeLocusId, jasmine.any(Object));
                 expect(locusView.showLoading).toHaveBeenCalled();
-                expect(self.locusSearchControllerInstance.locusService.getLoci).toHaveBeenCalled();
+                expect(self.locusSearchControllerInstance.locusService.getLocusList).toHaveBeenCalled();
                 expect(self.locusSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.userRoleUpdated, fakeUserRole);
                 expect(self.locusSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
                 expect(locusView.model.reset).toHaveBeenCalledWith(fakeLocus);
@@ -119,13 +119,13 @@ define(function (require) {
             var fakeUserRole = UserRolesEnum.Admin;
 
             var fakeLocusServiceInstance = {};
-            fakeLocusServiceInstance.getLoci = function (options) {
+            fakeLocusServiceInstance.getLocusList = function (options) {
                 options || (options = {});
                 var currentContext = this;
                 var deferred = $.Deferred();
 
                 var results = {
-                    loci: fakeLoci,
+                    locusList: fakeLoci,
                     userRole: fakeUserRole
                 };
 
@@ -135,7 +135,7 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeLocusServiceInstance, 'getLoci').and.callThrough();
+            spyOn(fakeLocusServiceInstance, 'getLocusList').and.callThrough();
             self.locusSearchControllerInstance.locusService = fakeLocusServiceInstance;
 
             //act
@@ -146,7 +146,7 @@ define(function (require) {
                 expect(self.locusSearchControllerInstance.router.swapContent).toHaveBeenCalledWith(locusView);
                 expect(self.locusSearchControllerInstance.router.navigate).toHaveBeenCalledWith('locus/' + fakeLocusId, jasmine.any(Object));
                 expect(locusView.showLoading).toHaveBeenCalled();
-                expect(self.locusSearchControllerInstance.locusService.getLoci).toHaveBeenCalled();
+                expect(self.locusSearchControllerInstance.locusService.getLocusList).toHaveBeenCalled();
                 expect(self.locusSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.userRoleUpdated, fakeUserRole);
                 expect(locusView.model.reset).toHaveBeenCalled();
                 expect(locusView.hideLoading).toHaveBeenCalled();
@@ -164,7 +164,7 @@ define(function (require) {
             var fakeUserRole = UserRolesEnum.Admin;
 
             var fakeLocusServiceInstance = {};
-            fakeLocusServiceInstance.getLoci = function (options) {
+            fakeLocusServiceInstance.getLocusList = function (options) {
                 var currentContext = this;
                 var deferred = $.Deferred();
 
@@ -176,7 +176,7 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeLocusServiceInstance, 'getLoci').and.callThrough();
+            spyOn(fakeLocusServiceInstance, 'getLocusList').and.callThrough();
             self.locusSearchControllerInstance.locusService = fakeLocusServiceInstance;
 
             //act
@@ -187,7 +187,7 @@ define(function (require) {
                 expect(self.locusSearchControllerInstance.router.swapContent).toHaveBeenCalledWith(locusView);
                 expect(self.locusSearchControllerInstance.router.navigate).toHaveBeenCalledWith('locus/' + fakeLocusId, jasmine.any(Object));
                 expect(locusView.showLoading).toHaveBeenCalled();
-                expect(self.locusSearchControllerInstance.locusService.getLoci).toHaveBeenCalled();
+                expect(self.locusSearchControllerInstance.locusService.getLocusList).toHaveBeenCalled();
                 expect(locusView.model.reset).toHaveBeenCalled();
                 expect(locusView.hideLoading).toHaveBeenCalled();
                 expect(locusView.showError).toHaveBeenCalled();

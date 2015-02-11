@@ -4,14 +4,14 @@ define(function (require) {
     var $ = require('jquery'),
         _ = require('underscore'),
         Backbone = require('backbone'),
-        ListingModel = require('models/ListingModel');
+        EntryLogModel = require('models/EntryLogModel');
 
-    var ListingCollection = Backbone.Collection.extend({
-        model: ListingModel,
+    var EntryLogCollection = Backbone.Collection.extend({
+        model: EntryLogModel,
         initialize: function (options) {
             options || (options = {});
         }
     });
 
-    return ListingCollection;
+    return EntryLogCollection;
 });

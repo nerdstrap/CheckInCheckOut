@@ -7,9 +7,9 @@ define(function (require) {
         env = require('env'),
         utils = require('utils');
 
-    var _listings = [
+    var _entryLogList = [
         {
-            "listingId": "380",
+            "entryLogId": "380",
             "locusId": "840",
             "personnelId": "S251201",
             "personnelName": "baltic, michael",
@@ -25,7 +25,7 @@ define(function (require) {
             "hasCrew": "true"
         },
         {
-            "listingId": "381",
+            "entryLogId": "381",
             "locusId": "840",
             "personnelId": "S251202",
             "personnelName": "walden, heather",
@@ -41,7 +41,7 @@ define(function (require) {
             "hasCrew": "true"
         },
         {
-            "listingId": "382",
+            "entryLogId": "382",
             "locusId": "840",
             "personnelId": "S251203",
             "personnelName": "shu, shujing",
@@ -57,7 +57,7 @@ define(function (require) {
             "hasCrew": "true"
         },
         {
-            "listingId": "383",
+            "entryLogId": "383",
             "locusId": "840",
             "personnelId": "S251204",
             "personnelName": "veit, alex",
@@ -77,40 +77,40 @@ define(function (require) {
     var _userId = 'S251201';
     var _userRole = 'Admin';
 
-    var _getById = function (listingId) {
-        return _.where(_listings, function (listing) {
-            return listing.listingId === listingId;
+    var _getById = function (entryLogId) {
+        return _.where(_entryLogList, function (entryLog) {
+            return entryLog.entryLogId === entryLogId;
         });
     };
 
     var _getByLocusId = function (locusId) {
-        return _.where(_listings, function (listing) {
-            return listing.locusId === locusId;
+        return _.where(_entryLogList, function (entryLog) {
+            return entryLog.locusId === locusId;
         });
     };
 
     var _getByPersonnelId = function (personnelId) {
-        return _.where(_listings, function (listing) {
-            return listing.personnelId === personnelId;
+        return _.where(_entryLogList, function (entryLog) {
+            return entryLog.personnelId === personnelId;
         });
     };
 
-    var _getByStatus = function (listings, status) {
-        return _.where(listings, function (listing) {
-            return listing.hasOwnProperty('outTime') === status;
+    var _getByStatus = function (entryLogList, status) {
+        return _.where(entryLogList, function (entryLog) {
+            return entryLog.hasOwnProperty('outTime') === status;
         });
     };
 
-    var _postCheckIn = function (listing) {
-        listing.id = utils.getNewGuid();
-        listing.inTime = new Date().getTime();
-        _listings.push(listing);
-        return listing;
+    var _postCheckIn = function (entryLog) {
+        entryLog.id = utils.getNewGuid();
+        entryLog.inTime = new Date().getTime();
+        _entryLogList.push(entryLog);
+        return entryLog;
     };
 
-    var _postEditCheckIn = function (listingId, duration, additionalInfo) {
-        var match = _.find(_listings, function (listing) {
-            return listing.listingId === listingId;
+    var _postEditCheckIn = function (entryLogId, duration, additionalInfo) {
+        var match = _.find(_entryLogList, function (entryLog) {
+            return entryLog.entryLogId === entryLogId;
         })
 
         if (match) {
@@ -121,9 +121,9 @@ define(function (require) {
         return match;
     };
 
-    var _postCheckOut = function (listingId) {
-        var match = _.find(_listings, function (listing) {
-            return listing.listingId === listingId;
+    var _postCheckOut = function (entryLogId) {
+        var match = _.find(_entryLogList, function (entryLog) {
+            return entryLog.entryLogId === entryLogId;
         })
 
         if (match) {
@@ -134,32 +134,32 @@ define(function (require) {
     };
 
     var _getByCoords = function (coords, distanceThreshold, searchResultsThreshold) {
-        utils.computeDistances(coords, _listings);
-        var nearbyListings = _.filter(_listings, function (listing) {
-            return listing.distance <= distanceThreshold
+        utils.computeDistances(coords, _entryLogList);
+        var nearbyEntryLogs = _.filter(_entryLogList, function (entryLog) {
+            return entryLog.distance <= distanceThreshold
         });
-        if (nearbyListings.length > searchResultsThreshold) {
-            nearbyListings = nearbyListings.slice(0, searchResultsThreshold);
+        if (nearbyEntryLogs.length > searchResultsThreshold) {
+            nearbyEntryLogs = nearbyEntryLogs.slice(0, searchResultsThreshold);
         }
-        var sortedNearbyListings = _.sortBy(nearbyListings, function (nearbyListing) {
-            return parseFloat(nearbyListing.distance);
+        var sortedNearbyEntryLogs = _.sortBy(nearbyEntryLogs, function (nearbyEntryLog) {
+            return parseFloat(nearbyEntryLog.distance);
         });
 
-        return sortedNearbyListings;
+        return sortedNearbyEntryLogs;
     };
 
-    var ListingService = function (options) {
-        console.trace('new ListingService()');
+    var EntryLogService = function (options) {
+        console.trace('new EntryLogService()');
         options || (options = {});
         this.initialize.apply(this, arguments);
     };
 
-    _.extend(ListingService.prototype, {
+    _.extend(EntryLogService.prototype, {
         initialize: function (options) {
-            console.trace('ListingService.initialize');
+            console.trace('EntryLogService.initialize');
             options || (options = {});
         },
-        getListingOptions: function (options) {
+        getEntryLogOptions: function (options) {
             options || (options = {});
             var currentContext = this;
             var deferred = $.Deferred();
@@ -178,29 +178,29 @@ define(function (require) {
 
             return deferred.promise();
         },
-        getListings: function (options) {
+        getEntryLogList: function (options) {
             options || (options = {});
             var currentContext = this;
             var deferred = $.Deferred();
 
-            var listings;
-            if (options.listingId) {
-                listings = _getById(options.listingId);
+            var entryLogList;
+            if (options.entryLogId) {
+                entryLogList = _getById(options.entryLogId);
             } else if (options.locusId) {
-                listings = _getByLocusId(options.locusId);
+                entryLogList = _getByLocusId(options.locusId);
             } else if (options.personnelId) {
-                listings = _getByPersonnelId(options.personnelId);
+                entryLogList = _getByPersonnelId(options.personnelId);
             } else if (options.coords) {
-                listings = _getByCoords(options.coords, env.getDistanceThreshold(), env.getSearchResultsThreshold());
+                entryLogList = _getByCoords(options.coords, env.getDistanceThreshold(), env.getSearchResultsThreshold());
             } else {
-                listings = _listings;
+                entryLogList = _entryLogList;
             }
 
             var userId = _userId;
             var userRole = _userRole;
 
             var results = _.extend(options, {
-                listings: listings,
+                entryLogList: entryLogList,
                 userId: userId,
                 userRole: userRole
             });
@@ -216,12 +216,12 @@ define(function (require) {
             var currentContext = this;
             var deferred = $.Deferred();
 
-            var listing = _postCheckIn(options);
+            var entryLog = _postCheckIn(options);
             var userId = _userId;
             var userRole = _userRole;
 
             var results = {
-                listing: listing,
+                entryLog: entryLog,
                 userId: userId,
                 userRole: userRole
             };
@@ -234,5 +234,5 @@ define(function (require) {
         }
     });
 
-    return ListingService;
+    return EntryLogService;
 });

@@ -6,8 +6,8 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseView = require('views/BaseView'),
-        ListingCollection = require('collections/ListingCollection'),
-        ListingListView = require('views/ListingListView'),
+        EntryLogCollection = require('collections/EntryLogCollection'),
+        EntryLogListView = require('views/EntryLogListView'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         utils = require('utils'),
         template = require('hbs!templates/Locus');
@@ -17,10 +17,10 @@ define(function (require) {
             console.trace('LocusView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
-            this.listingCollection = new ListingCollection();
+            this.entryLogCollection = new EntryLogCollection();
 
             this.listenTo(this.model, 'reset', this.updateViewFromModel);
-            this.listenTo(this.listingCollection, 'reset', this.updateCheckInView);
+            this.listenTo(this.entryLogCollection, 'reset', this.updateCheckInView);
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
@@ -30,12 +30,12 @@ define(function (require) {
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
             currentContext.$el.html(template(renderModel));
 
-            currentContext.listingListViewInstance = new ListingListView({
+            currentContext.entryLogListViewInstance = new EntryLogListView({
                 controller: currentContext.controller,
                 dispatcher: currentContext.dispatcher,
-                collection: currentContext.listingCollection
+                collection: currentContext.entryLogCollection
             });
-            this.appendChildTo(currentContext.listingListViewInstance, '#locus-entry-log-list-view-container');
+            this.appendChildTo(currentContext.entryLogListViewInstance, '#entry-log-list-view-container');
 
             return this;
         },
@@ -77,12 +77,12 @@ define(function (require) {
         },
         updateCheckInView: function () {
             var currentContext = this;
-            var userOpenListing = currentContext.listingCollection.find(function (listing) {
-                return listing.get('personnelId') === currentContext.userId && !listing.hasOwnProperty('outTime');
+            var userOpenEntryLog = currentContext.entryLogCollection.find(function (entryLog) {
+                return entryLog.get('personnelId') === currentContext.userId && !entryLog.hasOwnProperty('outTime');
             });
 
-            if (userOpenListing) {
-                if (userOpenListing.get('locusId') === this.model.get('locusId')) {
+            if (userOpenEntryLog) {
+                if (userOpenEntryLog.get('locusId') === this.model.get('locusId')) {
                     //show checkout
                     console.log('check-out');
                 } else {
@@ -131,18 +131,18 @@ define(function (require) {
             var longitude = this.model.get('longitude');
             this.dispatcher.trigger(AppEventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
         },
-        refreshListingList: function (event) {
+        refreshEntryLogList: function (event) {
             if (event) {
                 event.preventDefault();
             }
 
-            this.listingListViewInstance.showLoading();
+            this.entryLogListViewInstance.showLoading();
 
             var options = {
                 locusId: this.model.get('locusId')
             };
 
-            this.dispatcher.trigger(AppEventNamesEnum.refreshListingList, this.listingCollection, options);
+            this.dispatcher.trigger(AppEventNamesEnum.refreshEntryLogList, this.entryLogCollection, options);
         },
         onLeave: function () {
             console.trace('LocusView.onLeave');

@@ -95,25 +95,23 @@ define(function (require) {
             currentContext.router.navigate('locus/' + locusId, {replace: fragmentAlreadyMatches});
 
             locusViewInstance.showLoading();
-            currentContext.locusService.getLoci({locusId: locusId})
-                .then(function (getLociResponse) {
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getLociResponse.userRole);
-                    locusViewInstance.setUserId(getLociResponse.userId);
-                    locusViewInstance.setUserRole(getLociResponse.userRole);
-                    if (getLociResponse.loci && getLociResponse.loci.length > 0) {
+            currentContext.locusService.getLocusList({locusId: locusId})
+                .then(function (getLocusListResponse) {
+                    currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getLocusListResponse.userRole);
+                    locusViewInstance.setUserId(getLocusListResponse.userId);
+                    locusViewInstance.setUserRole(getLocusListResponse.userRole);
+                    if (getLocusListResponse.locusList && getLocusListResponse.locusList.length > 0) {
                         currentContext.geoLocationService.getCurrentPosition()
                             .then(function (position) {
-                                utils.computeDistances(position.coords, getLociResponse.loci);
-                                locusModelInstance.reset(getLociResponse.loci[0]);
+                                utils.computeDistances(position.coords, getLocusListResponse.locusList);
+                                locusModelInstance.reset(getLocusListResponse.locusList[0]);
                                 locusViewInstance.hideLoading();
-                                locusViewInstance.refreshListingList();
                                 deferred.resolve(locusViewInstance);
                             });
                     } else {
                         locusModelInstance.reset();
                         locusViewInstance.showError(utils.getResource('locusNotFoundErrorMessage'));
                         locusViewInstance.hideLoading();
-                        locusViewInstance.refreshListingList();
                         deferred.reject(locusViewInstance);
                     }
                 })
@@ -133,16 +131,16 @@ define(function (require) {
             var currentContext = this,
                 deferred = $.Deferred();
 
-            currentContext.locusService.getLoci(options)
-                .then(function (getLociResponse) {
+            currentContext.locusService.getLocusList(options)
+                .then(function (getLocusListResponse) {
                     currentContext.geoLocationService.getCurrentPosition()
                         .then(function (position) {
-                            utils.computeDistances(position.coords, getLociResponse.loci);
-                            locusCollectionInstance.reset(getLociResponse.loci);
+                            utils.computeDistances(position.coords, getLocusListResponse.locusList);
+                            locusCollectionInstance.reset(getLocusListResponse.locusList);
                             deferred.resolve(locusCollectionInstance);
                         })
-                        .fail(function() {
-                            locusCollectionInstance.reset(getLociResponse.loci);
+                        .fail(function () {
+                            locusCollectionInstance.reset(getLocusListResponse.locusList);
                             deferred.resolve(locusCollectionInstance);
                         });
                 })
@@ -161,11 +159,17 @@ define(function (require) {
                 deferred = $.Deferred();
 
             currentContext.geoLocationService.getCurrentPosition()
-                .then(currentContext.locusService.getLoci)
-                .then(function (getLociResponse) {
-                    utils.computeDistances(getLociResponse.coords, getLociResponse.loci);
-                    locusCollectionInstance.reset(getLociResponse.loci);
-                    deferred.resolve(locusCollectionInstance);
+                .then(function (position) {
+                    currentContext.locusService.getLocusList(position)
+                        .then(function (getLocusListResponse) {
+                            utils.computeDistances(position.coords, getLocusListResponse.locusList);
+                            locusCollectionInstance.reset(getLocusListResponse.locusList);
+                            deferred.resolve(locusCollectionInstance);
+                        })
+                        .fail(function (error) {
+                            locusCollectionInstance.reset();
+                            deferred.reject(locusCollectionInstance);
+                        });
                 })
                 .fail(function (error) {
                     locusCollectionInstance.reset();

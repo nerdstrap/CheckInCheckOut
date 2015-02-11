@@ -7,7 +7,7 @@ define(function (require) {
         env = require('env'),
         utils = require('utils');
 
-    var _loci = [
+    var _locusList = [
         {
             "locusId": "FRDIA",
             "locusName": "Fredonia TS",
@@ -330,42 +330,42 @@ define(function (require) {
     var _userRole = 'Admin';
 
     var _getById = function (locusId) {
-        return _.where(_loci, function (locus) {
+        return _.where(_locusList, function (locus) {
             return locus.locusId === locusId;
         });
     };
 
     var _getByLocusName = function (locusName) {
-        return _.where(_loci, function (locus) {
+        return _.where(_locusList, function (locus) {
             return locus.locusName.toLowerCase().indexOf(locusName || "".toLowerCase()) > -1;
         });
     };
 
     var _getByRegionName = function (regionName) {
-        return _.where(_loci, function (locus) {
+        return _.where(_locusList, function (locus) {
             return locus.regionName === regionName;
         });
     };
 
     var _getByAreaName = function (areaName) {
-        return _.where(_loci, function (locus) {
+        return _.where(_locusList, function (locus) {
             return locus.areaName === areaName;
         });
     };
 
     var _getByCoords = function (coords, distanceThreshold, searchResultsThreshold) {
-        utils.computeDistances(coords, _loci);
-        var nearbyLoci = _.filter(_loci, function (locus) {
+        utils.computeDistances(coords, _locusList);
+        var nearbylocusList = _.filter(_locusList, function (locus) {
             return locus.distance <= distanceThreshold
         });
-        if (nearbyLoci.length > searchResultsThreshold) {
-            nearbyLoci = nearbyLoci.slice(0, searchResultsThreshold);
+        if (nearbylocusList.length > searchResultsThreshold) {
+            nearbylocusList = nearbylocusList.slice(0, searchResultsThreshold);
         }
-        var sortedNearbyLoci = _.sortBy(nearbyLoci, function (nearbyLocus) {
+        var sortedNearbylocusList = _.sortBy(nearbylocusList, function (nearbyLocus) {
             return parseFloat(nearbyLocus.distance);
         });
 
-        return sortedNearbyLoci;
+        return sortedNearbylocusList;
     };
 
     var LocusService = function (options) {
@@ -399,30 +399,30 @@ define(function (require) {
 
             return deferred.promise();
         },
-        getLoci: function (options) {
+        getLocusList: function (options) {
             options || (options = {});
             var currentContext = this;
             var deferred = $.Deferred();
 
-            var loci;
+            var locusList;
             if (options.locusId) {
-                loci = _getById(options.locusId);
+                locusList = _getById(options.locusId);
             } else if (options.locusName) {
-                loci = _getByLocusName(options.locusName);
+                locusList = _getByLocusName(options.locusName);
             } else if (options.coords) {
-                loci = _getByCoords(options.coords, env.getDistanceThreshold(), env.getSearchResultsThreshold());
+                locusList = _getByCoords(options.coords, env.getDistanceThreshold(), env.getSearchResultsThreshold());
             } else {
-                loci = _loci;
+                locusList = _locusList;
             }
 
             var userId = _userId;
             var userRole = _userRole;
 
-            var results = _.extend(options, {
-                loci: loci,
+            var results = {
+                locusList: locusList,
                 userId: userId,
                 userRole: userRole
-            });
+            };
 
             globals.window.setTimeout(function () {
                 deferred.resolveWith(currentContext, [results]);

@@ -18,7 +18,7 @@ define(function (require) {
     var builder = injector.mock({
         'models/LocusModel': MockModel,
         'collections/LocusCollection': MockCollection,
-        'views/LocusView': MockView
+        'views/LocusSearchView': MockView
     });
 
     describe('go to locus search', function () {
@@ -46,7 +46,7 @@ define(function (require) {
             var fakeUserRole = UserRolesEnum.Admin;
 
             var fakeLocusServiceInstance = {};
-            fakeLocusServiceInstance.getLocusOptions = function () {
+            fakeLocusServiceInstance.getLocusSearchOptions = function () {
                 var currentContext = this;
                 var deferred = $.Deferred();
 
@@ -60,23 +60,23 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeLocusServiceInstance, 'getLocusOptions').and.callThrough();
+            spyOn(fakeLocusServiceInstance, 'getLocusSearchOptions').and.callThrough();
             self.locusSearchControllerInstance.locusService = fakeLocusServiceInstance;
 
             //act
-            var promise = self.locusSearchControllerInstance.goToLocus();
+            var promise = self.locusSearchControllerInstance.goToLocusSearch();
 
             promise.then(function (locusSearchView) {
                 //assert
                 expect(self.locusSearchControllerInstance.router.swapContent).toHaveBeenCalledWith(locusSearchView);
                 expect(self.locusSearchControllerInstance.router.navigate).toHaveBeenCalledWith('locus', jasmine.any(Object));
                 expect(locusSearchView.showLoading).toHaveBeenCalled();
-                expect(self.locusSearchControllerInstance.locusService.getLocusOptions).toHaveBeenCalled();
+                expect(self.locusSearchControllerInstance.locusService.getLocusSearchOptions).toHaveBeenCalled();
                 expect(self.locusSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.userRoleUpdated, fakeUserRole);
                 expect(locusSearchView.hideLoading).toHaveBeenCalled();
                 done();
             }, function () {
-                this.fail(new Error('locusSearchControllerInstance.goToLocus call failed'));
+                this.fail(new Error('locusSearchControllerInstance.getLocusSearchOptions call failed'));
                 done();
             });
         });
@@ -86,7 +86,7 @@ define(function (require) {
             var fakeUserRole = UserRolesEnum.Admin;
 
             var fakeLocusServiceInstance = {};
-            fakeLocusServiceInstance.getLocusOptions = function () {
+            fakeLocusServiceInstance.getLocusSearchOptions = function () {
                 var currentContext = this;
                 var deferred = $.Deferred();
 
@@ -98,23 +98,23 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeLocusServiceInstance, 'getLocusOptions').and.callThrough();
+            spyOn(fakeLocusServiceInstance, 'getLocusSearchOptions').and.callThrough();
             self.locusSearchControllerInstance.locusService = fakeLocusServiceInstance;
 
             //act
-            var promise = self.locusSearchControllerInstance.goToLocus();
+            var promise = self.locusSearchControllerInstance.goToLocusSearch();
 
             promise.fail(function (locusSearchView) {
                 //assert
                 expect(self.locusSearchControllerInstance.router.swapContent).toHaveBeenCalledWith(locusSearchView);
                 expect(self.locusSearchControllerInstance.router.navigate).toHaveBeenCalledWith('locus', jasmine.any(Object));
                 expect(locusSearchView.showLoading).toHaveBeenCalled();
-                expect(self.locusSearchControllerInstance.locusService.getLocusOptions).toHaveBeenCalled();
+                expect(self.locusSearchControllerInstance.locusService.getLocusSearchOptions).toHaveBeenCalled();
                 expect(locusSearchView.hideLoading).toHaveBeenCalled();
                 expect(locusSearchView.showError).toHaveBeenCalled();
                 done();
             }, function () {
-                this.fail(new Error('locusSearchControllerInstance.goToLocus call failed'));
+                this.fail(new Error('locusSearchControllerInstance.getLocusSearchOptions call failed'));
                 done();
             });
         });

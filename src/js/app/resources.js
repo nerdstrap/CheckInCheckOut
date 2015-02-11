@@ -54,7 +54,7 @@ define(function(require) {
         'latitudeHeaderText': 'Latitude',
         'longitudeHeaderText': 'Longitude',
         'distanceHeaderText': 'Distance',
-        'openListingListHeader': 'Open Station Entry Logs',
+        'openEntryLogListHeader': 'Open Station Entry Logs',
 
         'locus.manualSearchPlaceholderText': 'enter a station name',
 
@@ -62,7 +62,7 @@ define(function(require) {
 
         'locusSearch.loadingMessage': 'loading search',
         'locusList.loadingMessage': 'loading stations',
-        'listingList.loadingMessage': 'loading station entry logs',
+        'entryLogList.loadingMessage': 'loading station entry logs',
         'locus.loadingMessage': 'loading station',
         'calculatingDistanceLoadingMessage': 'calculating distance',
 

@@ -18,10 +18,10 @@ define(function (require) {
     var builder = injector.mock({
         'models/LocusModel': MockModel,
         'collections/LocusCollection': MockCollection,
-        'views/LocusView': MockView
+        'views/LocusSearchView': MockView
     });
 
-    describe('refresh loci', function () {
+    describe('refresh locus list', function () {
         var self = this;
 
         beforeEach(function (done) {
@@ -59,13 +59,13 @@ define(function (require) {
             var fakeUserRole = UserRolesEnum.Admin;
 
             var fakeLocusServiceInstance = {};
-            fakeLocusServiceInstance.getLoci = function (options) {
+            fakeLocusServiceInstance.getLocusList = function (options) {
                 options || (options = {});
                 var currentContext = this;
                 var deferred = $.Deferred();
 
                 var results = {
-                    loci: fakeLoci,
+                    locusList: fakeLoci,
                     userRole: fakeUserRole
                 };
 
@@ -75,7 +75,7 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeLocusServiceInstance, 'getLoci').and.callThrough();
+            spyOn(fakeLocusServiceInstance, 'getLocusList').and.callThrough();
             self.locusSearchControllerInstance.locusService = fakeLocusServiceInstance;
 
             var fakeGeoLocationServiceInstance = {};
@@ -108,7 +108,7 @@ define(function (require) {
 
             promise.then(function (locusCollection) {
                 //assert
-                expect(self.locusSearchControllerInstance.locusService.getLoci).toHaveBeenCalled();
+                expect(self.locusSearchControllerInstance.locusService.getLocusList).toHaveBeenCalled();
                 expect(self.locusSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
                 expect(locusCollection.reset).toHaveBeenCalledWith(fakeLoci);
                 done();
@@ -123,7 +123,7 @@ define(function (require) {
             var fakeUserRole = UserRolesEnum.Admin;
 
             var fakeLocusServiceInstance = {};
-            fakeLocusServiceInstance.getLoci = function (options) {
+            fakeLocusServiceInstance.getLocusList = function (options) {
                 var currentContext = this;
                 var deferred = $.Deferred();
 
@@ -135,7 +135,7 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeLocusServiceInstance, 'getLoci').and.callThrough();
+            spyOn(fakeLocusServiceInstance, 'getLocusList').and.callThrough();
             self.locusSearchControllerInstance.locusService = fakeLocusServiceInstance;
 
             var mockLocusCollectionInstance = new MockCollection();
@@ -146,7 +146,7 @@ define(function (require) {
 
             promise.fail(function (locusCollection) {
                 //assert
-                expect(self.locusSearchControllerInstance.locusService.getLoci).toHaveBeenCalled();
+                expect(self.locusSearchControllerInstance.locusService.getLocusList).toHaveBeenCalled();
                 expect(locusCollection.reset).toHaveBeenCalledWith();
                 done();
             }, function () {
