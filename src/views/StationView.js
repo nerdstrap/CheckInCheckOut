@@ -17,8 +17,10 @@ define(function (require) {
             console.trace('StationView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
+            this.stationEntryLogCollection = new StationEntryLogCollection();
 
             this.listenTo(this.model, 'reset', this.updateViewFromModel);
+            this.listenTo(this.stationEntryLogCollection, 'reset', this.updateCheckInView);
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
@@ -28,7 +30,6 @@ define(function (require) {
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
             currentContext.$el.html(template(renderModel));
 
-            currentContext.stationEntryLogCollection = new StationEntryLogCollection();
             currentContext.stationEntryLogListViewInstance = new StationEntryLogListView({
                 controller: currentContext.controller,
                 dispatcher: currentContext.dispatcher,
@@ -41,23 +42,6 @@ define(function (require) {
         events: {
             'click .go-to-linked-station-button': 'goToLinkedStationWithId',
             'click .go-to-directions-button': 'goToDirectionsWithLatLng'
-        },
-        goToLinkedStationWithId: function (event) {
-            if (event) {
-                event.preventDefault();
-            }
-
-            var linkedStationId = this.model.get('linkedStationId');
-            this.dispatcher.trigger(AppEventNamesEnum.goToStationWithId, linkedStationId);
-        },
-        goToDirectionsWithLatLng: function (event) {
-            if (event) {
-                event.preventDefault();
-            }
-
-            var latitude = this.model.get('latitude');
-            var longitude = this.model.get('longitude');
-            this.dispatcher.trigger(AppEventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
         },
         updateViewFromModel: function () {
             if (this.model.has('stationName')) {
@@ -90,6 +74,75 @@ define(function (require) {
             //if (this.model.has('linkedStationId')) {
             //    this.$('.station-name-label').parent().append('<i class="fa fa-arrows-h"></i>');
             //}
+        },
+        updateCheckInView: function () {
+            var currentContext = this;
+            var userOpenStationEntryLog = currentContext.stationEntryLogCollection.find(function (stationEntryLog) {
+                return stationEntryLog.get('personnelId') === currentContext.userId && !stationEntryLog.hasOwnProperty('outTime');
+            });
+
+            if (userOpenStationEntryLog) {
+                if (userOpenStationEntryLog.get('stationId') === this.model.get('stationId')) {
+                    //show checkout
+                    console.log('check-out');
+                } else {
+                    //show go to checked-in station
+                    console.log('already checked-in other');
+                }
+            } else {
+                //show check-in
+                console.log('check-in');
+            }
+        },
+        //showCheckInView: function () {
+        //    if (this.model.has('hasHazard') && this.model.get('hasHazard') === 'true') {
+        //        this.showHazardView();
+        //    } else {
+        //        this.$('.check-in-button').removeClass('hidden');
+        //        this.$('.check-out-button').removeClass('hidden');
+        //        this.$('.check-in-button').removeClass('hidden');
+        //    }
+        //},
+        //showGoToCheckInView: function () {
+        //},
+        //showCheckOutView: function () {
+        //    if (this.model.has('hasHazard') && this.model.get('hasHazard') === 'true') {
+        //        this.showHazardView();
+        //    } else {
+        //
+        //    }
+        //},
+        //showHazardView: function () {
+        //},
+        goToLinkedStationWithId: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            var linkedStationId = this.model.get('linkedStationId');
+            this.dispatcher.trigger(AppEventNamesEnum.goToStationWithId, linkedStationId);
+        },
+        goToDirectionsWithLatLng: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            var latitude = this.model.get('latitude');
+            var longitude = this.model.get('longitude');
+            this.dispatcher.trigger(AppEventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
+        },
+        refreshStationEntryLogs: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            this.stationEntryLogListViewInstance.showLoading();
+
+            var options = {
+                stationId: this.model.get('stationId')
+            };
+
+            this.dispatcher.trigger(AppEventNamesEnum.refreshStationEntryLogs, this.stationEntryLogCollection, options);
         },
         onLeave: function () {
             console.trace('StationView.onLeave');

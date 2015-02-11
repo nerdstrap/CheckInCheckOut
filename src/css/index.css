@@ -10505,3 +10505,9 @@ body:before {
   margin-left: 2px;
   color: red;
 }
+
+.table-view-header {
+  border-bottom: #000000 1px solid;
+}
+
+/*# sourceMappingURL=index.css.map */

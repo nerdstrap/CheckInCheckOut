@@ -7,6 +7,7 @@ define(function (require) {
         SwappingRouter = require('routers/SwappingRouter'),
         ShellView = require('views/ShellView'),
         StationSearchController = require('controllers/StationSearchController'),
+        StationEntryLogSearchController = require('controllers/StationEntryLogSearchController'),
         eventBusSingleton = require('eventBusSingleton');
 
     var AppRouter = SwappingRouter.extend({
@@ -26,6 +27,10 @@ define(function (require) {
 
             //controllers
             this.stationSearchControllerInstance = new StationSearchController({
+                router: currentContext,
+                dispatcher: eventBusSingleton
+            });
+            this.stationEntryLogSearchControllerInstance = new StationEntryLogSearchController({
                 router: currentContext,
                 dispatcher: eventBusSingleton
             });

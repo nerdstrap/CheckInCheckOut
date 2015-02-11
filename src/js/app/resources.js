@@ -54,6 +54,7 @@ define(function(require) {
         'latitudeHeaderText': 'Latitude',
         'longitudeHeaderText': 'Longitude',
         'distanceHeaderText': 'Distance',
+        'openStationEntryLogListHeader': 'Open Station Entry Logs',
 
         'station.manualSearchPlaceholderText': 'enter a station name',
 
@@ -61,6 +62,7 @@ define(function(require) {
 
         'stationSearch.loadingMessage': 'loading search',
         'stationList.loadingMessage': 'loading stations',
+        'stationEntryLogList.loadingMessage': 'loading station entry logs',
         'station.loadingMessage': 'loading station',
         'calculatingDistanceLoadingMessage': 'calculating distance',
 

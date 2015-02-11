@@ -61,8 +61,12 @@ define(function(require) {
     };
 
     helpers.formatDate = function(date, format) {
-        date = new Date(date);
-        return date.toString();
+        var day = date.getDate();
+        var month = date.getMonth();
+        var fullYear = date.getFullYear();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        return month + '/' + day + '/' + fullYear + ' ' + hours + ':' + minutes;
     };
 
     helpers.formatDateWithDefault = function(date, format, defaultValue) {

@@ -2,9 +2,9 @@ define(function(require) {
     'use strict';
 
     var UserRolesEnum = {
-        NocAdmin: 'Admin',
-        NocUser: 'User',
-        NocRead: 'ReadOnly'
+        Admin: 'Admin',
+        User: 'User',
+        ReadOnly: 'ReadOnly'
     };
 
     if (Object.freeze) {

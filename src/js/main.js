@@ -2,7 +2,10 @@ require.config({
     config: {
         'env': {
             apiUrl: '',
-            siteRoot: '/src'
+            siteRoot: '/src',
+            distanceThreshold: 50,
+            searchResultsThreshold: 20,
+            expirationThreshold: 1800000
         },
         'hbs': {
             'extension': 'html'
@@ -11,7 +14,7 @@ require.config({
             'timeout': 30000, // 30 seconds
             'enableHighAccuracy': false,
             'maximumAge': 60000 // 1 minute
-        },
+        }
     },
     paths: {
         /* Require */

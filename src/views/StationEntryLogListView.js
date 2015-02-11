@@ -41,10 +41,9 @@ define(function (require) {
             var currentContext = this;
             var stationEntryLogListItemViewInstance = new StationEntryLogListItemView({
                 model: stationEntryLog,
-                dispatcher: currentContext.dispatcher,
-                userRole: currentContext.userRole
+                dispatcher: currentContext.dispatcher
             });
-            this.appendChildTo(stationEntryLogListItemViewInstance, '#station-list-item-view-container');
+            this.appendChildTo(stationEntryLogListItemViewInstance, '#station-entry-log-list-item-view-container');
         },
         onLeave: function () {
             console.trace('StationEntryLogListView.onLeave');

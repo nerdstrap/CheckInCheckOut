@@ -1,30 +1,30 @@
-define(function(require) {
+define(function (require) {
     'use strict';
 
     var module = require('module'),
-            globals = require('globals'),
-            masterConfig = module.config(),
-            apiUrl = masterConfig.apiUrl || '',
-            siteRoot = masterConfig.siteRoot || '',
-            autoRefreshInterval = masterConfig.autoRefreshInterval || 60000,
-            notificationTimeout = masterConfig.notificationTimeout || 10000,
-            expirationThreshold = masterConfig.expirationThreshold || 1800000;
+        globals = require('globals'),
+        masterConfig = module.config(),
+        apiUrl = masterConfig.apiUrl || '',
+        siteRoot = masterConfig.siteRoot || '',
+        distanceThreshold = masterConfig.distanceThreshold || 50,
+        searchResultsThreshold = masterConfig.searchResultsThreshold || 20,
+        expirationThreshold = masterConfig.expirationThreshold || 1800000;
 
 
     var env = {
-        getApiUrl: function() {
+        getApiUrl: function () {
             return apiUrl;
         },
-        getSiteRoot: function() {
+        getSiteRoot: function () {
             return siteRoot;
         },
-        getAutoRefreshInterval: function() {
-            return autoRefreshInterval;
+        getDistanceThreshold: function () {
+            return distanceThreshold;
         },
-        getNotificationTimeout: function() {
-            return notificationTimeout;
+        getSearchResultsThreshold: function () {
+            return searchResultsThreshold;
         },
-        getExpirationThreshold: function() {
+        getExpirationThreshold: function () {
             return expirationThreshold;
         }
     };

@@ -4,9 +4,26 @@ define(function (require) {
     var $ = require('jquery'),
         _ = require('underscore'),
         globals = require('globals'),
-        env = require('env');
+        env = require('env'),
+        utils = require('utils');
 
     var _stations = [
+        {
+            "stationId": "FRDIA",
+            "stationName": "Fredonia TS",
+            "latitude": "40.16352778",
+            "longitude": "-82.61269444",
+            "hasHazard": "false",
+            "hasOpenCheckIns": "false"
+        },
+        {
+            "stationId": "DELAW",
+            "stationName": "Delaware POP",
+            "latitude": "40.28777777",
+            "longitude": "-83.80555550",
+            "hasHazard": "false",
+            "hasOpenCheckIns": "false"
+        },
         {
             "stationType": "TD",
             "stationId": "840",
@@ -15,9 +32,7 @@ define(function (require) {
             "latitude": "39.97109",
             "longitude": "-83.00647",
             "hasHazard": "true",
-            "hasOpenCheckIns": "true",
-            "regionName": "Columbus",
-            "areaName": "Columbus"
+            "hasOpenCheckIns": "true"
         },
         {
             "stationType": "TD",
@@ -28,8 +43,6 @@ define(function (require) {
             "longitude": "-82.99404",
             "hasHazard": "true",
             "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus",
             "linkedStationId": "AEPHS",
             "linkedStationName": "AEP Headquarters POP"
         },
@@ -42,8 +55,6 @@ define(function (require) {
             "longitude": "-83.00544444",
             "hasHazard": "false",
             "hasOpenCheckIns": "true",
-            "regionName": "Ohio",
-            "areaName": "Groveport",
             "linkedStationId": "4444",
             "linkedStationName": "Italian Village"
         },
@@ -55,9 +66,7 @@ define(function (require) {
             "latitude": "39.96500000",
             "longitude": "-83.00555555",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Ohio",
-            "areaName": "Groveport"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -67,8 +76,7 @@ define(function (require) {
             "latitude": "39.966363",
             "longitude": "-83.017552",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -78,9 +86,7 @@ define(function (require) {
             "latitude": "39.96426",
             "longitude": "-82.99761",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TC",
@@ -90,9 +96,7 @@ define(function (require) {
             "latitude": "39.96277777",
             "longitude": "-82.99583333",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Ohio",
-            "areaName": "Groveport"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -102,9 +106,7 @@ define(function (require) {
             "latitude": "39.99649",
             "longitude": "-83.02306",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -114,9 +116,7 @@ define(function (require) {
             "latitude": "39.98482",
             "longitude": "-82.97821",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -126,9 +126,7 @@ define(function (require) {
             "latitude": "39.98988",
             "longitude": "-83.03281",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -138,9 +136,7 @@ define(function (require) {
             "latitude": "39.95386",
             "longitude": "-83.0037",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -148,9 +144,7 @@ define(function (require) {
             "internalStationId": "4526",
             "stationName": "Sullivant Terminal",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus South"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -160,9 +154,7 @@ define(function (require) {
             "latitude": "39.95647",
             "longitude": "-82.97812",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus South"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -172,9 +164,7 @@ define(function (require) {
             "latitude": "40.00042",
             "longitude": "-83.03558",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus South"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -184,9 +174,7 @@ define(function (require) {
             "latitude": "39.99077",
             "longitude": "-83.06662",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -196,9 +184,7 @@ define(function (require) {
             "latitude": "40.03006",
             "longitude": "-82.99598",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -208,9 +194,7 @@ define(function (require) {
             "latitude": "40.02507",
             "longitude": "-83.04613",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -220,9 +204,7 @@ define(function (require) {
             "latitude": "39.92042",
             "longitude": "-82.98804",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -232,9 +214,7 @@ define(function (require) {
             "latitude": "39.92222",
             "longitude": "-82.97128",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -244,9 +224,7 @@ define(function (require) {
             "latitude": "39.96291",
             "longitude": "-83.0938",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -256,9 +234,7 @@ define(function (require) {
             "latitude": "39.9205",
             "longitude": "-83.05603",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -268,9 +244,7 @@ define(function (require) {
             "latitude": "39.98174",
             "longitude": "-82.91254",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TD",
@@ -280,9 +254,7 @@ define(function (require) {
             "latitude": "39.94724",
             "longitude": "-82.9152",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Columbus",
-            "areaName": "Columbus"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TC",
@@ -292,9 +264,7 @@ define(function (require) {
             "latitude": "39.87916667",
             "longitude": "-82.88222222",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Ohio",
-            "areaName": "Groveport"
+            "hasOpenCheckIns": "false"
         },
         {
             "stationType": "TC",
@@ -304,108 +274,59 @@ define(function (require) {
             "latitude": "39.86277777",
             "longitude": "-83.12072222",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Ohio",
-            "areaName": "Groveport"
+            "hasOpenCheckIns": "false"
         },
         {
-            "stationType": "TC",
             "stationId": "HAYEN",
-            "internalStationId": "HAYEN",
             "stationName": "Hayden TS",
             "latitude": "40.06005555",
             "longitude": "-83.19350000",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Ohio",
-            "areaName": "Groveport"
+            "hasOpenCheckIns": "false"
         },
         {
-            "stationType": "TC",
             "stationId": "CORDR",
-            "internalStationId": "CORDR",
             "stationName": "Corridor TS",
             "latitude": "40.12283333",
             "longitude": "-82.84627777",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Ohio",
-            "areaName": "Groveport"
+            "hasOpenCheckIns": "false"
         },
         {
-            "stationType": "TC",
             "stationId": "DCONT",
-            "internalStationId": "DCONT",
             "stationName": "DCON IT Telecom Training Center",
             "latitude": "39.99596345",
             "longitude": "-82.72873539",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Ohio",
-            "areaName": "Groveport"
+            "hasOpenCheckIns": "false"
         },
         {
-            "stationType": "TC",
             "stationId": "ETN",
-            "internalStationId": "ETN",
             "stationName": "Etna TS",
             "latitude": "39.94325000",
             "longitude": "-82.70519444",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Ohio",
-            "areaName": "Groveport"
+            "hasOpenCheckIns": "false"
         },
         {
-            "stationType": "TC",
             "stationId": "MTSTG",
-            "internalStationId": "MTSTG",
             "stationName": "Mt Sterling TS",
             "latitude": "39.72883333",
             "longitude": "-83.21436111",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Ohio",
-            "areaName": "Groveport"
+            "hasOpenCheckIns": "false"
         },
         {
-            "stationType": "TC",
             "stationId": "DELWR",
-            "internalStationId": "DELWR",
             "stationName": "Delaware TS",
             "latitude": "40.27000000",
             "longitude": "-83.08194444",
             "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Ohio",
-            "areaName": "Groveport"
-        },
-        {
-            "stationType": "TC",
-            "stationId": "FRDIA",
-            "internalStationId": "FRDIA",
-            "stationName": "Fredonia TS",
-            "latitude": "40.16352778",
-            "longitude": "-82.61269444",
-            "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Ohio",
-            "areaName": "Groveport"
-        },
-        {
-            "stationType": "TC",
-            "stationId": "DELAW",
-            "internalStationId": "DELAW",
-            "stationName": "Delaware POP",
-            "latitude": "40.28777777",
-            "longitude": "-83.80555550",
-            "hasHazard": "false",
-            "hasOpenCheckIns": "false",
-            "regionName": "Ohio",
-            "areaName": "Groveport"
+            "hasOpenCheckIns": "false"
         }
     ];
 
+    var _userId = 'S251201';
     var _userRole = 'Admin';
 
     var _getById = function (stationId) {
@@ -432,8 +353,19 @@ define(function (require) {
         });
     };
 
-    var _getByCoords = function (coords) {
-        return _stations;
+    var _getByCoords = function (coords, distanceThreshold, searchResultsThreshold) {
+        utils.computeDistances(coords, _stations);
+        var nearbyStations = _.filter(_stations, function (station) {
+            return station.distance <= distanceThreshold
+        });
+        if (nearbyStations.length > searchResultsThreshold) {
+            nearbyStations = nearbyStations.slice(0, searchResultsThreshold);
+        }
+        var sortedNearbyStations = _.sortBy(nearbyStations, function (nearbyStation) {
+            return parseFloat(nearbyStation.distance);
+        });
+
+        return sortedNearbyStations;
     };
 
     var StationService = function (options) {
@@ -452,6 +384,13 @@ define(function (require) {
             var currentContext = this;
             var deferred = $.Deferred();
 
+            var userId;
+            if (options.userId) {
+                userId = options.userId;
+            } else {
+                userId = _userId;
+            }
+
             var userRole;
             if (options.userRole) {
                 userRole = options.userRole;
@@ -460,13 +399,14 @@ define(function (require) {
             }
 
             if (options.reject) {
-                var serverError = new Error({ errorCode: options.errorCode, errorMessage: options.errorMessage });
+                var serverError = new Error({errorCode: options.errorCode, errorMessage: options.errorMessage});
 
                 globals.window.setTimeout(function () {
                     deferred.rejectWith(currentContext, [serverError]);
                 }, 50);
             } else {
                 var results = {
+                    userId: userId,
                     userRole: userRole
                 };
 
@@ -492,9 +432,16 @@ define(function (require) {
             } else if (options.stationName) {
                 stations = _getByStationName(options.stationName);
             } else if (options.coords) {
-                stations = _getByCoords(options.coords);
+                stations = _getByCoords(options.coords, env.getDistanceThreshold(), env.getSearchResultsThreshold());
             } else {
                 stations = _stations;
+            }
+
+            var userId;
+            if (options.userId) {
+                userId = options.userId;
+            } else {
+                userId = _userId;
             }
 
             var userRole;
@@ -513,6 +460,7 @@ define(function (require) {
             } else {
                 var results = _.extend(options, {
                     stations: stations,
+                    userId: userId,
                     userRole: userRole
                 });
 

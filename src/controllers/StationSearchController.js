@@ -64,6 +64,8 @@ define(function (require) {
             currentContext.stationService.getStationSearchOptions()
                 .then(function (getStationSearchOptionsResponse) {
                     currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getStationSearchOptionsResponse.userRole);
+                    stationSearchViewInstance.setUserId(getStationSearchOptionsResponse.userId);
+                    stationSearchViewInstance.setUserRole(getStationSearchOptionsResponse.userRole);
                     stationSearchViewInstance.hideLoading();
                     deferred.resolve(stationSearchViewInstance);
                 })
@@ -96,18 +98,22 @@ define(function (require) {
             currentContext.stationService.getStations({stationId: stationId})
                 .then(function (getStationsResponse) {
                     currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getStationsResponse.userRole);
+                    stationViewInstance.setUserId(getStationsResponse.userId);
+                    stationViewInstance.setUserRole(getStationsResponse.userRole);
                     if (getStationsResponse.stations && getStationsResponse.stations.length > 0) {
                         currentContext.geoLocationService.getCurrentPosition()
                             .then(function (position) {
                                 utils.computeDistances(position.coords, getStationsResponse.stations);
                                 stationModelInstance.reset(getStationsResponse.stations[0]);
                                 stationViewInstance.hideLoading();
+                                stationViewInstance.refreshStationEntryLogs();
                                 deferred.resolve(stationViewInstance);
                             });
                     } else {
                         stationModelInstance.reset();
                         stationViewInstance.showError(utils.getResource('stationNotFoundErrorMessage'));
                         stationViewInstance.hideLoading();
+                        stationViewInstance.refreshStationEntryLogs();
                         deferred.reject(stationViewInstance);
                     }
                 })
@@ -132,6 +138,10 @@ define(function (require) {
                     currentContext.geoLocationService.getCurrentPosition()
                         .then(function (position) {
                             utils.computeDistances(position.coords, getStationsResponse.stations);
+                            stationCollectionInstance.reset(getStationsResponse.stations);
+                            deferred.resolve(stationCollectionInstance);
+                        })
+                        .fail(function() {
                             stationCollectionInstance.reset(getStationsResponse.stations);
                             deferred.resolve(stationCollectionInstance);
                         });

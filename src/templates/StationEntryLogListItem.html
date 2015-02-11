@@ -1,12 +1,28 @@
 <div class="station-entry-log-list-item-view">
-    <div class="row collapse">
-        <div class="small-12 columns">
-            <a class="go-to-station-button" data-station-id="{{stationId}}" href="#">{{withDefault stationName "&nbsp;"}}</a>
+    <div class="row">
+        <div class="small-3 columns">
+            <a class="go-to-station-button hidden" data-station-id="{{stationId}}" href="#">{{withDefault stationName "&nbsp;"}}</a>
+            <a class="go-to-personnel-button" data-personnel-id="{{personnelId}}" href="#">{{withDefault personnelName "&nbsp;"}}</a>
+        </div>
+        <div class="small-3 columns">
+            <span class="in-time-label"></span>
+        </div>
+        <div class="small-3 columns">
+            <span class="purpose-label"></span>
+            <span class="duration-label hidden"></span>
+        </div>
+        <div class="small-3 columns">
+            <span class="out-time-label"></span>
         </div>
     </div>
-    <div class="row collapse">
+    <div class="row hidden">
         <div class="small-12 columns">
             <span class="distance-label">{{withDefault distance "&nbsp;"}}</span>&nbsp;&#124;&nbsp;<a class="go-to-directions-button" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{resource "goToDirectionsButtonText"}}&nbsp;<i class="fa fa-map-marker"></i></a><span class="directions-unavailable-label hidden">{{resource "directionsUnavailableErrorMessage"}}</span>
+        </div>
+    </div>
+    <div class="row hidden">
+        <div class="small-12 columns">
+            <span class="additional-info-label">{{withDefault additionalInfo "&nbsp;"}}</span>
         </div>
     </div>
 </div>

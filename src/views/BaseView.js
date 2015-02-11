@@ -16,6 +16,9 @@ define(function (require) {
     };
 
     _.extend(BaseView.prototype, CompositeView.prototype, {
+        setUserId: function (userId) {
+            this.userId = userId;
+        },
         setUserRole: function (userRole) {
             this.userRole = userRole;
         },
