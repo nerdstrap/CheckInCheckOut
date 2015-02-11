@@ -31,8 +31,8 @@ define(function(require) {
         'outageIconSrc': 'images/outage_180x180.png',
         'outageIconSvgSrc': 'images/outage_180x180.svg',
 
-        'goToStationSearchButtonText': 'Stations',
-        'goToStationWithIdButtonText': 'View Station',
+        'goToLocusButtonText': 'Stations',
+        'goToLocusWithIdButtonText': 'View Station',
         'goToDirectionsButtonText': 'directions',
 
         'gpsSearchButtonText': 'GPS',
@@ -47,30 +47,30 @@ define(function(require) {
         'saveButtonText': 'Save',
         'searchButtonText': 'Search',
 
-        'stationIdHeaderText': 'Station',
-        'stationNameHeaderText': 'Station',
+        'locusIdHeaderText': 'Station',
+        'locusNameHeaderText': 'Station',
         'regionNameHeaderText': 'Region',
         'areaNameHeaderText': 'Area',
         'latitudeHeaderText': 'Latitude',
         'longitudeHeaderText': 'Longitude',
         'distanceHeaderText': 'Distance',
-        'openStationEntryLogListHeader': 'Open Station Entry Logs',
+        'openListingListHeader': 'Open Station Entry Logs',
 
-        'station.manualSearchPlaceholderText': 'enter a station name',
+        'locus.manualSearchPlaceholderText': 'enter a station name',
 
-        'stationSearch.viewTitleText': 'Find a Station',
+        'locusSearch.viewTitleText': 'Find a Station',
 
-        'stationSearch.loadingMessage': 'loading search',
-        'stationList.loadingMessage': 'loading stations',
-        'stationEntryLogList.loadingMessage': 'loading station entry logs',
-        'station.loadingMessage': 'loading station',
+        'locusSearch.loadingMessage': 'loading search',
+        'locusList.loadingMessage': 'loading stations',
+        'listingList.loadingMessage': 'loading station entry logs',
+        'locus.loadingMessage': 'loading station',
         'calculatingDistanceLoadingMessage': 'calculating distance',
 
         'distanceFormatString': '{0} miles',
-        'linkedStationHeaderText': 'Linked to',
+        'linkedLocusHeaderText': 'Linked to',
         
         'criticalSystemErrorMessage': 'critical error',
-        'stationNotFoundErrorMessage': 'station not found',
+        'locusNotFoundErrorMessage': 'station not found',
         'distanceUnknownErrorMessage': 'distance unknown',
         'directionsUnavailableErrorMessage': 'directions unavailable',
 

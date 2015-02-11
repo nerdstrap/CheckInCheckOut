@@ -6,52 +6,52 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseView = require('views/BaseView'),
-        StationEntryLogCollection = require('collections/StationEntryLogCollection'),
-        StationEntryLogListView = require('views/StationEntryLogListView'),
+        ListingCollection = require('collections/ListingCollection'),
+        ListingListView = require('views/ListingListView'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         utils = require('utils'),
-        template = require('hbs!templates/Station');
+        template = require('hbs!templates/Locus');
 
-    var StationView = BaseView.extend({
+    var LocusView = BaseView.extend({
         initialize: function (options) {
-            console.trace('StationView.initialize');
+            console.trace('LocusView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
-            this.stationEntryLogCollection = new StationEntryLogCollection();
+            this.listingCollection = new ListingCollection();
 
             this.listenTo(this.model, 'reset', this.updateViewFromModel);
-            this.listenTo(this.stationEntryLogCollection, 'reset', this.updateCheckInView);
+            this.listenTo(this.listingCollection, 'reset', this.updateCheckInView);
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
-            console.trace('StationView.render()');
+            console.trace('LocusView.render()');
             var currentContext = this;
 
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
             currentContext.$el.html(template(renderModel));
 
-            currentContext.stationEntryLogListViewInstance = new StationEntryLogListView({
+            currentContext.listingListViewInstance = new ListingListView({
                 controller: currentContext.controller,
                 dispatcher: currentContext.dispatcher,
-                collection: currentContext.stationEntryLogCollection
+                collection: currentContext.listingCollection
             });
-            this.appendChildTo(currentContext.stationEntryLogListViewInstance, '#station-entry-log-list-view-container');
+            this.appendChildTo(currentContext.listingListViewInstance, '#locus-entry-log-list-view-container');
 
             return this;
         },
         events: {
-            'click .go-to-linked-station-button': 'goToLinkedStationWithId',
+            'click .go-to-linked-locus-button': 'goToLinkedLocusWithId',
             'click .go-to-directions-button': 'goToDirectionsWithLatLng'
         },
         updateViewFromModel: function () {
-            if (this.model.has('stationName')) {
-                this.$('.station-name-label').html(this.model.get('stationName'));
+            if (this.model.has('locusName')) {
+                this.$('.locus-name-label').html(this.model.get('locusName'));
             }
-            if (this.model.has('linkedStationId')) {
-                this.$('.linked-station-view').removeClass('hidden');
-                this.$('.go-to-linked-station-button').attr('data-linked-station-id', this.model.get('linkedStationId')).html(this.model.get('linkedStationName'));
+            if (this.model.has('linkedLocusId')) {
+                this.$('.linked-locus-view').removeClass('hidden');
+                this.$('.go-to-linked-locus-button').attr('data-linked-locus-id', this.model.get('linkedLocusId')).html(this.model.get('linkedLocusName'));
             } else {
-                this.$('.linked-station-view').addClass('hidden');
+                this.$('.linked-locus-view').addClass('hidden');
             }
             if (this.model.has('distance')) {
                 this.$('.distance-label').html(utils.formatString(utils.getResource('distanceFormatString'), [this.model.get('distance')]));
@@ -66,27 +66,27 @@ define(function (require) {
                 this.$('.directions-unavailable-label').removeClass('hidden');
             }
             //if (this.model.has('hasHazard') && this.model.get('hasHazard') === "true") {
-            //    this.$('.station-name-label').parent().append('<i class="fa fa-warning"></i>');
+            //    this.$('.locus-name-label').parent().append('<i class="fa fa-warning"></i>');
             //}
             //if (this.model.has('hasOpenCheckIns') && this.model.get('hasOpenCheckIns') === "true") {
-            //    this.$('.station-name-label').parent().append('<i class="fa fa-user-plus"></i>');
+            //    this.$('.locus-name-label').parent().append('<i class="fa fa-user-plus"></i>');
             //}
-            //if (this.model.has('linkedStationId')) {
-            //    this.$('.station-name-label').parent().append('<i class="fa fa-arrows-h"></i>');
+            //if (this.model.has('linkedLocusId')) {
+            //    this.$('.locus-name-label').parent().append('<i class="fa fa-arrows-h"></i>');
             //}
         },
         updateCheckInView: function () {
             var currentContext = this;
-            var userOpenStationEntryLog = currentContext.stationEntryLogCollection.find(function (stationEntryLog) {
-                return stationEntryLog.get('personnelId') === currentContext.userId && !stationEntryLog.hasOwnProperty('outTime');
+            var userOpenListing = currentContext.listingCollection.find(function (listing) {
+                return listing.get('personnelId') === currentContext.userId && !listing.hasOwnProperty('outTime');
             });
 
-            if (userOpenStationEntryLog) {
-                if (userOpenStationEntryLog.get('stationId') === this.model.get('stationId')) {
+            if (userOpenListing) {
+                if (userOpenListing.get('locusId') === this.model.get('locusId')) {
                     //show checkout
                     console.log('check-out');
                 } else {
-                    //show go to checked-in station
+                    //show go to checked-in locus
                     console.log('already checked-in other');
                 }
             } else {
@@ -114,13 +114,13 @@ define(function (require) {
         //},
         //showHazardView: function () {
         //},
-        goToLinkedStationWithId: function (event) {
+        goToLinkedLocusWithId: function (event) {
             if (event) {
                 event.preventDefault();
             }
 
-            var linkedStationId = this.model.get('linkedStationId');
-            this.dispatcher.trigger(AppEventNamesEnum.goToStationWithId, linkedStationId);
+            var linkedLocusId = this.model.get('linkedLocusId');
+            this.dispatcher.trigger(AppEventNamesEnum.goToLocusWithId, linkedLocusId);
         },
         goToDirectionsWithLatLng: function (event) {
             if (event) {
@@ -131,24 +131,24 @@ define(function (require) {
             var longitude = this.model.get('longitude');
             this.dispatcher.trigger(AppEventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
         },
-        refreshStationEntryLogs: function (event) {
+        refreshListingList: function (event) {
             if (event) {
                 event.preventDefault();
             }
 
-            this.stationEntryLogListViewInstance.showLoading();
+            this.listingListViewInstance.showLoading();
 
             var options = {
-                stationId: this.model.get('stationId')
+                locusId: this.model.get('locusId')
             };
 
-            this.dispatcher.trigger(AppEventNamesEnum.refreshStationEntryLogs, this.stationEntryLogCollection, options);
+            this.dispatcher.trigger(AppEventNamesEnum.refreshListingList, this.listingCollection, options);
         },
         onLeave: function () {
-            console.trace('StationView.onLeave');
+            console.trace('LocusView.onLeave');
         }
     });
 
-    return StationView;
+    return LocusView;
 
 });

@@ -16,12 +16,12 @@ define(function (require) {
 
     var injector = new Squire();
     var builder = injector.mock({
-        'models/StationEntryLogModel': MockModel,
-        'collections/StationEntryLogCollection': MockCollection,
-        'views/StationEntryLogView': MockView
+        'models/LocusModel': MockModel,
+        'collections/LocusCollection': MockCollection,
+        'views/LocusView': MockView
     });
 
-    describe('refresh station entry logs by gps', function () {
+    describe('refresh loci by gps', function () {
         var self = this;
 
         beforeEach(function (done) {
@@ -30,42 +30,42 @@ define(function (require) {
             self.mockEventBusSingleton = new EventBus();
             self.mockEventBusSingleton.trigger = jasmine.createSpy();
 
-            builder.require(['controllers/StationEntryLogSearchController'], function (StationEntryLogSearchController) {
-                self.stationEntryLogSearchControllerInstance = new StationEntryLogSearchController({
+            builder.require(['controllers/LocusController'], function (LocusController) {
+                self.locusSearchControllerInstance = new LocusController({
                     router: self.mockRouterInstance,
                     dispatcher: self.mockEventBusSingleton
                 });
                 done();
             }, function (err) {
-                this.fail('require controllers/StationEntryLogSearchController failed to load!');
+                this.fail('require controllers/LocusController failed to load!');
             });
         });
 
         it('should update the collection', function (done) {
             //arrange
-            var fakeStationEntryLogId1 = 1976;
-            var fakeStationEntryLog1 = {
-                'stationEntryLogId': fakeStationEntryLogId1
+            var fakeLocusId1 = 1976;
+            var fakeLocus1 = {
+                'locusId': fakeLocusId1
             };
-            var fakeStationEntryLogId2 = 1978;
-            var fakeStationEntryLog2 = {
-                'stationEntryLogId': fakeStationEntryLogId2
+            var fakeLocusId2 = 1978;
+            var fakeLocus2 = {
+                'locusId': fakeLocusId2
             };
-            var fakeStationEntryLogId3 = 2002;
-            var fakeStationEntryLog3 = {
-                'stationEntryLogId': fakeStationEntryLogId3
+            var fakeLocusId3 = 2002;
+            var fakeLocus3 = {
+                'locusId': fakeLocusId3
             };
-            var fakeStationEntryLogs = [fakeStationEntryLog1, fakeStationEntryLog2, fakeStationEntryLog3];
+            var fakeLoci = [fakeLocus1, fakeLocus2, fakeLocus3];
             var fakeUserRole = UserRolesEnum.Admin;
 
-            var fakeStationEntryLogServiceInstance = {};
-            fakeStationEntryLogServiceInstance.getStationEntryLogs = function (options) {
+            var fakeLocusServiceInstance = {};
+            fakeLocusServiceInstance.getLoci = function (options) {
                 options || (options = {});
                 var currentContext = this;
                 var deferred = $.Deferred();
 
                 var results = {
-                    stationEntryLogs: fakeStationEntryLogs,
+                    loci: fakeLoci,
                     userRole: fakeUserRole
                 };
 
@@ -75,8 +75,8 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeStationEntryLogServiceInstance, 'getStationEntryLogs').and.callThrough();
-            self.stationEntryLogSearchControllerInstance.stationEntryLogService = fakeStationEntryLogServiceInstance;
+            spyOn(fakeLocusServiceInstance, 'getLoci').and.callThrough();
+            self.locusSearchControllerInstance.locusService = fakeLocusServiceInstance;
 
             var fakeGeoLocationServiceInstance = {};
             fakeGeoLocationServiceInstance.getCurrentPosition = function (options) {
@@ -98,22 +98,22 @@ define(function (require) {
                 return deferred.promise();
             };
             spyOn(fakeGeoLocationServiceInstance, 'getCurrentPosition').and.callThrough();
-            self.stationEntryLogSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
+            self.locusSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
 
-            var mockStationEntryLogCollectionInstance = new MockCollection();
+            var mockLocusCollectionInstance = new MockCollection();
             var fakeOptions = {};
 
             //act
-            var promise = self.stationEntryLogSearchControllerInstance.refreshStationEntryLogsByGps(mockStationEntryLogCollectionInstance, fakeOptions);
+            var promise = self.locusSearchControllerInstance.refreshLocusListByGps(mockLocusCollectionInstance, fakeOptions);
 
-            promise.then(function (stationEntryLogCollection) {
+            promise.then(function (locusCollection) {
                 //assert
-                expect(self.stationEntryLogSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
-                expect(self.stationEntryLogSearchControllerInstance.stationEntryLogService.getStationEntryLogs).toHaveBeenCalled();
-                expect(stationEntryLogCollection.reset).toHaveBeenCalledWith(fakeStationEntryLogs);
+                expect(self.locusSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
+                expect(self.locusSearchControllerInstance.locusService.getLoci).toHaveBeenCalled();
+                expect(locusCollection.reset).toHaveBeenCalledWith(fakeLoci);
                 done();
             }, function () {
-                this.fail(new Error('stationEntryLogSearchControllerInstance.refreshStationEntryLogs call failed'));
+                this.fail(new Error('locusSearchControllerInstance.refreshLocusList call failed'));
                 done();
             });
         });
@@ -122,8 +122,8 @@ define(function (require) {
             //arrange
             var fakeUserRole = UserRolesEnum.Admin;
 
-            var fakeStationEntryLogServiceInstance = {};
-            fakeStationEntryLogServiceInstance.getStationEntryLogs = function (options) {
+            var fakeLocusServiceInstance = {};
+            fakeLocusServiceInstance.getLoci = function (options) {
                 var currentContext = this;
                 var deferred = $.Deferred();
 
@@ -135,8 +135,8 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeStationEntryLogServiceInstance, 'getStationEntryLogs').and.callThrough();
-            self.stationEntryLogSearchControllerInstance.geoLocationService = fakeStationEntryLogServiceInstance;
+            spyOn(fakeLocusServiceInstance, 'getLoci').and.callThrough();
+            self.locusSearchControllerInstance.geoLocationService = fakeLocusServiceInstance;
 
             var fakeGeoLocationServiceInstance = {};
             fakeGeoLocationServiceInstance.getCurrentPosition = function (options) {
@@ -157,21 +157,21 @@ define(function (require) {
                 return deferred.promise();
             };
             spyOn(fakeGeoLocationServiceInstance, 'getCurrentPosition').and.callThrough();
-            self.stationEntryLogSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
+            self.locusSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
 
-            var mockStationEntryLogCollectionInstance = new MockCollection();
+            var mockLocusCollectionInstance = new MockCollection();
             var fakeOptions = {};
 
             //act
-            var promise = self.stationEntryLogSearchControllerInstance.refreshStationEntryLogsByGps(mockStationEntryLogCollectionInstance, fakeOptions);
+            var promise = self.locusSearchControllerInstance.refreshLocusListByGps(mockLocusCollectionInstance, fakeOptions);
 
-            promise.fail(function (stationEntryLogCollection) {
+            promise.fail(function (locusCollection) {
                 //assert
-                expect(self.stationEntryLogSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
-                expect(stationEntryLogCollection.reset).toHaveBeenCalledWith();
+                expect(self.locusSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
+                expect(locusCollection.reset).toHaveBeenCalledWith();
                 done();
             }, function () {
-                this.fail(new Error('stationEntryLogSearchControllerInstance.refreshStationEntryLogs call failed'));
+                this.fail(new Error('locusSearchControllerInstance.refreshLocusList call failed'));
                 done();
             });
         });

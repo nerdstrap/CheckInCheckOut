@@ -9,11 +9,11 @@ define(function (require) {
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         utils = require('utils'),
         handlebarsHelpers = require('handlebars.helpers'),
-        template = require('hbs!templates/StationEntryLogListItem');
+        template = require('hbs!templates/ListingListItem');
 
-    var StationEntryLogListItemView = CompositeView.extend({
+    var ListingListItemView = CompositeView.extend({
         initialize: function (options) {
-            console.trace('StationEntryLogListItemView.initialize');
+            console.trace('ListingListItemView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
 
@@ -21,7 +21,7 @@ define(function (require) {
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
-            console.trace('StationEntryLogListItemView.render()');
+            console.trace('ListingListItemView.render()');
             var currentContext = this;
 
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
@@ -32,13 +32,13 @@ define(function (require) {
             return this;
         },
         events: {
-            'click .go-to-station-button': 'goToStationWithId',
+            'click .go-to-locus-button': 'goToLocusWithId',
             'click .go-to-personnel-button': 'goToPersonnelWithId',
             'click .go-to-directions-button': 'goToDirectionsWithLatLng'
         },
         updateViewFromModel: function () {
-            if (this.model.has('stationName')) {
-                this.$('.go-to-station-button').html(this.model.get('stationName'));
+            if (this.model.has('locusName')) {
+                this.$('.go-to-locus-button').html(this.model.get('locusName'));
             }
             if (this.model.has('userName')) {
                 this.$('.go-to-personnel-button').attr('', this.model.get('personnelId')).html(this.model.get('personnelName'));
@@ -56,13 +56,13 @@ define(function (require) {
                 this.$('.directions-unavailable-label').removeClass('hidden');
             }
             //if (this.model.has('hasHazard') && this.model.get('hasHazard') === "true") {
-            //    this.$('.go-to-station-button').parent().append('<i class="fa fa-warning"></i>');
+            //    this.$('.go-to-locus-button').parent().append('<i class="fa fa-warning"></i>');
             //}
             //if (this.model.has('hasOpenCheckIns') && this.model.get('hasOpenCheckIns') === "true") {
-            //    this.$('.go-to-station-button').parent().append('<i class="fa fa-user-plus"></i>');
+            //    this.$('.go-to-locus-button').parent().append('<i class="fa fa-user-plus"></i>');
             //}
-            //if (this.model.has('linkedStationEntryLogId')) {
-            //    this.$('.go-to-station-button').parent().append('<i class="fa fa-arrows-h"></i>');
+            //if (this.model.has('linkedListingId')) {
+            //    this.$('.go-to-locus-button').parent().append('<i class="fa fa-arrows-h"></i>');
             //}
             if (this.model.has('purpose')) {
                 this.$('.purpose-label').html(this.model.get('purpose'));
@@ -77,13 +77,13 @@ define(function (require) {
                 this.$('.out-time-label').html(handlebarsHelpers.formatDateWithDefault(this.model.get('outime'), 'format', 'nbsp;'));
             }
         },
-        goToStationWithId: function (event) {
+        goToLocusWithId: function (event) {
             if (event) {
                 event.preventDefault();
             }
 
-            var stationId = this.model.get('stationId');
-            this.dispatcher.trigger(AppEventNamesEnum.goToStationWithId, stationId);
+            var locusId = this.model.get('locusId');
+            this.dispatcher.trigger(AppEventNamesEnum.goToLocusWithId, locusId);
         },
         goToPersonnelWithId: function (event) {
             if (event) {
@@ -103,10 +103,10 @@ define(function (require) {
             this.dispatcher.trigger(AppEventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
         },
         onLeave: function () {
-            console.trace('StationEntryLogListItemView.onLeave');
+            console.trace('ListingListItemView.onLeave');
         }
     });
 
-    return StationEntryLogListItemView;
+    return ListingListItemView;
 
 });

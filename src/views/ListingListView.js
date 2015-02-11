@@ -5,15 +5,15 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseView = require('views/BaseView'),
-        StationListItemView = require('views/StationListItemView'),
+        ListingListItemView = require('views/ListingListItemView'),
         globals = require('globals'),
         env = require('env'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
-        template = require('hbs!templates/StationList');
+        template = require('hbs!templates/ListingList');
 
-    var StationListView = BaseView.extend({
+    var ListingListView = BaseView.extend({
         initialize: function (options) {
-            console.trace('StationListView.initialize');
+            console.trace('ListingListView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
 
@@ -21,7 +21,7 @@ define(function (require) {
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
-            console.trace('StationListView.render()');
+            console.trace('ListingListView.render()');
             var currentContext = this;
 
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
@@ -37,24 +37,18 @@ define(function (require) {
             _.each(this.collection.models, this.addOne, this);
             this.hideLoading();
         },
-        addOne: function (station) {
+        addOne: function (listing) {
             var currentContext = this;
-            var stationListItemViewInstance = new StationListItemView({
-                model: station,
-                dispatcher: currentContext.dispatcher,
-                userRole: currentContext.userRole
+            var listingListItemViewInstance = new ListingListItemView({
+                model: listing,
+                dispatcher: currentContext.dispatcher
             });
-            this.appendChildTo(stationListItemViewInstance, '#station-list-item-view-container');
-        },
-        removeAll: function () {
-            this.showLoading();
-            this._leaveChildren();
-            this.hideLoading();
+            this.appendChildTo(listingListItemViewInstance, '#locus-entry-log-list-item-view-container');
         },
         onLeave: function () {
-            console.trace('StationListView.onLeave');
+            console.trace('ListingListView.onLeave');
         }
     });
 
-    return StationListView;
+    return ListingListView;
 });

@@ -5,15 +5,15 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseView = require('views/BaseView'),
-        StationEntryLogListItemView = require('views/StationEntryLogListItemView'),
+        LocusListItemView = require('views/LocusListItemView'),
         globals = require('globals'),
         env = require('env'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
-        template = require('hbs!templates/StationEntryLogList');
+        template = require('hbs!templates/LocusList');
 
-    var StationEntryLogListView = BaseView.extend({
+    var LocusListView = BaseView.extend({
         initialize: function (options) {
-            console.trace('StationEntryLogListView.initialize');
+            console.trace('LocusListView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
 
@@ -21,7 +21,7 @@ define(function (require) {
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
-            console.trace('StationEntryLogListView.render()');
+            console.trace('LocusListView.render()');
             var currentContext = this;
 
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
@@ -37,18 +37,24 @@ define(function (require) {
             _.each(this.collection.models, this.addOne, this);
             this.hideLoading();
         },
-        addOne: function (stationEntryLog) {
+        addOne: function (locus) {
             var currentContext = this;
-            var stationEntryLogListItemViewInstance = new StationEntryLogListItemView({
-                model: stationEntryLog,
-                dispatcher: currentContext.dispatcher
+            var locusListItemViewInstance = new LocusListItemView({
+                model: locus,
+                dispatcher: currentContext.dispatcher,
+                userRole: currentContext.userRole
             });
-            this.appendChildTo(stationEntryLogListItemViewInstance, '#station-entry-log-list-item-view-container');
+            this.appendChildTo(locusListItemViewInstance, '#locus-list-item-view-container');
+        },
+        removeAll: function () {
+            this.showLoading();
+            this._leaveChildren();
+            this.hideLoading();
         },
         onLeave: function () {
-            console.trace('StationEntryLogListView.onLeave');
+            console.trace('LocusListView.onLeave');
         }
     });
 
-    return StationEntryLogListView;
+    return LocusListView;
 });

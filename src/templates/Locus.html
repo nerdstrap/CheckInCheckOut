@@ -1,17 +1,17 @@
-<div class="station-view">
+<div class="locus-view">
     <div class="row">
         <div class="small-12 columns">
-            <h3 class="station-name-label" data-station-id="{{stationId}}">{{stationName}}</h3>
+            <h3 class="locus-name-label" data-locus-id="{{locusId}}">{{locusName}}</h3>
         </div>
     </div>
-    <div class="row linked-station-view hidden">
+    <div class="row linked-locus-view hidden">
         <div class="small-12 columns">
-            <span class="linked-station-header">{{resource "linkedStationHeaderText"}}</span>&nbsp;<a class="go-to-linked-station-button" data-linked-station-id href="#">{{withDefault linkedStationName "&nbsp;"}}<i class="fa fa-arrows-h"></i></a>
+            <span class="linked-locus-header">{{resource "linkedLocusHeaderText"}}</span>&nbsp;<a class="go-to-linked-locus-button" data-linked-locus-id href="#">{{withDefault linkedLocusName "&nbsp;"}}<i class="fa fa-arrows-h"></i></a>
         </div>
     </div>
     <div class="row loading {{cid}} hidden">
         <div class="small-12 columns">
-            <span class="loading-message">{{resource "station.loadingMessage"}}</span>
+            <span class="loading-message">{{resource "locus.loadingMessage"}}</span>
             <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
         </div>
     </div>
@@ -31,12 +31,12 @@
         <div class="small-12 columns">
             <div class="row table-view-header">
                 <div class="small-12 columns">
-                    <span>{{resource "openStationEntryLogListHeader"}}</span>
+                    <span>{{resource "openListingListHeader"}}</span>
                 </div>
             </div>
             <div class="row table-view-list-items">
                 <div class="small-12 columns">
-                    <div id="station-entry-log-list-view-container"></div>
+                    <div id="locus-entry-log-list-view-container"></div>
                 </div>
             </div>
         </div>

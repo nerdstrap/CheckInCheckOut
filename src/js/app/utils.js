@@ -99,12 +99,12 @@ define(function (require) {
         return distance;
     };
 
-    utils.computeDistances = function (start, locations) {
+    utils.computeDistances = function (start, locusArray) {
         var currentContext = this;
-        _.each(locations, function (location) {
-            var distance = utils.computeDistanceBetween(start, location);
+        _.each(locusArray, function (locus) {
+            var distance = utils.computeDistanceBetween(start, locus);
             if (distance) {
-                location.distance = distance;
+                locus.distance = distance;
             }
         });
     }

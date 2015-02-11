@@ -16,12 +16,12 @@ define(function (require) {
 
     var injector = new Squire();
     var builder = injector.mock({
-        'models/StationEntryLogModel': MockModel,
-        'collections/StationEntryLogCollection': MockCollection,
-        'views/StationEntryLogView': MockView
+        'models/ListingModel': MockModel,
+        'collections/ListingCollection': MockCollection,
+        'views/ListingView': MockView
     });
 
-    describe('refresh stationEntryLogs', function () {
+    describe('refresh listings', function () {
         var self = this;
 
         beforeEach(function (done) {
@@ -30,42 +30,42 @@ define(function (require) {
             self.mockEventBusSingleton = new EventBus();
             self.mockEventBusSingleton.trigger = jasmine.createSpy();
 
-            builder.require(['controllers/StationEntryLogSearchController'], function (StationEntryLogSearchController) {
-                self.stationEntryLogSearchControllerInstance = new StationEntryLogSearchController({
+            builder.require(['controllers/ListingController'], function (ListingController) {
+                self.listingSearchControllerInstance = new ListingController({
                     router: self.mockRouterInstance,
                     dispatcher: self.mockEventBusSingleton
                 });
                 done();
             }, function (err) {
-                this.fail('require controllers/StationEntryLogSearchController failed to load!');
+                this.fail('require controllers/ListingController failed to load!');
             });
         });
 
         it('should update the collection', function (done) {
             //arrange
-            var fakeStationEntryLogId1 = 1976;
-            var fakeStationEntryLog1 = {
-                'stationEntryLogId': fakeStationEntryLogId1
+            var fakeListingId1 = 1976;
+            var fakeListing1 = {
+                'listingId': fakeListingId1
             };
-            var fakeStationEntryLogId2 = 1978;
-            var fakeStationEntryLog2 = {
-                'stationEntryLogId': fakeStationEntryLogId2
+            var fakeListingId2 = 1978;
+            var fakeListing2 = {
+                'listingId': fakeListingId2
             };
-            var fakeStationEntryLogId3 = 2002;
-            var fakeStationEntryLog3 = {
-                'stationEntryLogId': fakeStationEntryLogId3
+            var fakeListingId3 = 2002;
+            var fakeListing3 = {
+                'listingId': fakeListingId3
             };
-            var fakeStationEntryLogs = [fakeStationEntryLog1, fakeStationEntryLog2, fakeStationEntryLog3];
+            var fakeListings = [fakeListing1, fakeListing2, fakeListing3];
             var fakeUserRole = UserRolesEnum.Admin;
 
-            var fakeStationEntryLogServiceInstance = {};
-            fakeStationEntryLogServiceInstance.getStationEntryLogs = function (options) {
+            var fakeListingServiceInstance = {};
+            fakeListingServiceInstance.getListings = function (options) {
                 options || (options = {});
                 var currentContext = this;
                 var deferred = $.Deferred();
 
                 var results = {
-                    stationEntryLogs: fakeStationEntryLogs,
+                    listings: fakeListings,
                     userRole: fakeUserRole
                 };
 
@@ -75,8 +75,8 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeStationEntryLogServiceInstance, 'getStationEntryLogs').and.callThrough();
-            self.stationEntryLogSearchControllerInstance.stationEntryLogService = fakeStationEntryLogServiceInstance;
+            spyOn(fakeListingServiceInstance, 'getListings').and.callThrough();
+            self.listingSearchControllerInstance.listingService = fakeListingServiceInstance;
 
             var fakeGeoLocationServiceInstance = {};
             fakeGeoLocationServiceInstance.getCurrentPosition = function (options) {
@@ -98,22 +98,22 @@ define(function (require) {
                 return deferred.promise();
             };
             spyOn(fakeGeoLocationServiceInstance, 'getCurrentPosition').and.callThrough();
-            self.stationEntryLogSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
+            self.listingSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
 
-            var mockStationEntryLogCollectionInstance = new MockCollection();
+            var mockListingCollectionInstance = new MockCollection();
             var fakeOptions = {};
 
             //act
-            var promise = self.stationEntryLogSearchControllerInstance.refreshStationEntryLogs(mockStationEntryLogCollectionInstance, fakeOptions);
+            var promise = self.listingSearchControllerInstance.refreshListingList(mockListingCollectionInstance, fakeOptions);
 
-            promise.then(function (stationEntryLogCollection) {
+            promise.then(function (listingCollection) {
                 //assert
-                expect(self.stationEntryLogSearchControllerInstance.stationEntryLogService.getStationEntryLogs).toHaveBeenCalled();
-                expect(self.stationEntryLogSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
-                expect(stationEntryLogCollection.reset).toHaveBeenCalledWith(fakeStationEntryLogs);
+                expect(self.listingSearchControllerInstance.listingService.getListings).toHaveBeenCalled();
+                expect(self.listingSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
+                expect(listingCollection.reset).toHaveBeenCalledWith(fakeListings);
                 done();
             }, function () {
-                this.fail(new Error('stationEntryLogSearchControllerInstance.refreshStationEntryLogs call failed'));
+                this.fail(new Error('listingSearchControllerInstance.refreshListingList call failed'));
                 done();
             });
         });
@@ -122,8 +122,8 @@ define(function (require) {
             //arrange
             var fakeUserRole = UserRolesEnum.Admin;
 
-            var fakeStationEntryLogServiceInstance = {};
-            fakeStationEntryLogServiceInstance.getStationEntryLogs = function (options) {
+            var fakeListingServiceInstance = {};
+            fakeListingServiceInstance.getListings = function (options) {
                 var currentContext = this;
                 var deferred = $.Deferred();
 
@@ -135,22 +135,22 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeStationEntryLogServiceInstance, 'getStationEntryLogs').and.callThrough();
-            self.stationEntryLogSearchControllerInstance.stationEntryLogService = fakeStationEntryLogServiceInstance;
+            spyOn(fakeListingServiceInstance, 'getListings').and.callThrough();
+            self.listingSearchControllerInstance.listingService = fakeListingServiceInstance;
 
-            var mockStationEntryLogCollectionInstance = new MockCollection();
+            var mockListingCollectionInstance = new MockCollection();
             var fakeOptions = {};
 
             //act
-            var promise = self.stationEntryLogSearchControllerInstance.refreshStationEntryLogs(mockStationEntryLogCollectionInstance, fakeOptions);
+            var promise = self.listingSearchControllerInstance.refreshListingList(mockListingCollectionInstance, fakeOptions);
 
-            promise.fail(function (stationEntryLogCollection) {
+            promise.fail(function (listingCollection) {
                 //assert
-                expect(self.stationEntryLogSearchControllerInstance.stationEntryLogService.getStationEntryLogs).toHaveBeenCalled();
-                expect(stationEntryLogCollection.reset).toHaveBeenCalledWith();
+                expect(self.listingSearchControllerInstance.listingService.getListings).toHaveBeenCalled();
+                expect(listingCollection.reset).toHaveBeenCalledWith();
                 done();
             }, function () {
-                this.fail(new Error('stationEntryLogSearchControllerInstance.refreshStationEntryLogs call failed'));
+                this.fail(new Error('listingSearchControllerInstance.refreshListingList call failed'));
                 done();
             });
         });

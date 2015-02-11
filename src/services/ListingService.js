@@ -7,10 +7,10 @@ define(function (require) {
         env = require('env'),
         utils = require('utils');
 
-    var _stationEntryLogs = [
+    var _listings = [
         {
-            "stationEntryLogId": "380",
-            "stationId": "840",
+            "listingId": "380",
+            "locusId": "840",
             "personnelId": "S251201",
             "personnelName": "baltic, michael",
             "purpose": "milkawhat",
@@ -19,14 +19,14 @@ define(function (require) {
             "contactNumber": "6145551212",
             "email": "mebaltic@aep.com",
             "duration": "60",
-            "stationName": "Station One",
+            "locusName": "Locus One",
             "latitude": "40.45",
             "longitude": "-75.50",
             "hasCrew": "true"
         },
         {
-            "stationEntryLogId": "381",
-            "stationId": "840",
+            "listingId": "381",
+            "locusId": "840",
             "personnelId": "S251202",
             "personnelName": "walden, heather",
             "purpose": "what a milk",
@@ -35,14 +35,14 @@ define(function (require) {
             "contactNumber": "6145551212",
             "email": "hmwalden@aep.com",
             "duration": "60",
-            "stationName": "Station One",
+            "locusName": "Locus One",
             "latitude": "40.45",
             "longitude": "-75.50",
             "hasCrew": "true"
         },
         {
-            "stationEntryLogId": "382",
-            "stationId": "840",
+            "listingId": "382",
+            "locusId": "840",
             "personnelId": "S251203",
             "personnelName": "shu, shujing",
             "purpose": "burgers",
@@ -51,14 +51,14 @@ define(function (require) {
             "contactNumber": "6145551212",
             "email": "sshu@aep.com",
             "duration": "60",
-            "stationName": "Station One",
+            "locusName": "Locus One",
             "latitude": "40.45",
             "longitude": "-75.50",
             "hasCrew": "true"
         },
         {
-            "stationEntryLogId": "383",
-            "stationId": "840",
+            "listingId": "383",
+            "locusId": "840",
             "personnelId": "S251204",
             "personnelName": "veit, alex",
             "purpose": "cake",
@@ -67,7 +67,7 @@ define(function (require) {
             "contactNumber": "6145551212",
             "email": "aaveit@aep.com",
             "duration": "60",
-            "stationName": "Station One",
+            "locusName": "Locus One",
             "latitude": "40.45",
             "longitude": "-75.50",
             "hasCrew": "true"
@@ -77,40 +77,40 @@ define(function (require) {
     var _userId = 'S251201';
     var _userRole = 'Admin';
 
-    var _getById = function (stationEntryLogId) {
-        return _.where(_stationEntryLogs, function (stationEntryLog) {
-            return stationEntryLog.stationEntryLogId === stationEntryLogId;
+    var _getById = function (listingId) {
+        return _.where(_listings, function (listing) {
+            return listing.listingId === listingId;
         });
     };
 
-    var _getByStationId = function (stationId) {
-        return _.where(_stationEntryLogs, function (stationEntryLog) {
-            return stationEntryLog.stationId === stationId;
+    var _getByLocusId = function (locusId) {
+        return _.where(_listings, function (listing) {
+            return listing.locusId === locusId;
         });
     };
 
     var _getByPersonnelId = function (personnelId) {
-        return _.where(_stationEntryLogs, function (stationEntryLog) {
-            return stationEntryLog.personnelId === personnelId;
+        return _.where(_listings, function (listing) {
+            return listing.personnelId === personnelId;
         });
     };
 
-    var _getByStatus = function (stationEntryLogs, status) {
-        return _.where(stationEntryLogs, function (stationEntryLog) {
-            return stationEntryLog.hasOwnProperty('outTime') === status;
+    var _getByStatus = function (listings, status) {
+        return _.where(listings, function (listing) {
+            return listing.hasOwnProperty('outTime') === status;
         });
     };
 
-    var _postCheckIn = function (stationEntryLog) {
-        stationEntryLog.id = utils.getNewGuid();
-        stationEntryLog.inTime = new Date().getTime();
-        _stationEntryLogs.push(stationEntryLog);
-        return stationEntryLog;
+    var _postCheckIn = function (listing) {
+        listing.id = utils.getNewGuid();
+        listing.inTime = new Date().getTime();
+        _listings.push(listing);
+        return listing;
     };
 
-    var _postEditCheckIn = function (stationEntryLogId, duration, additionalInfo) {
-        var match = _.find(_stationEntryLogs, function (stationEntryLog) {
-            return stationEntryLog.stationEntryLogId === stationEntryLogId;
+    var _postEditCheckIn = function (listingId, duration, additionalInfo) {
+        var match = _.find(_listings, function (listing) {
+            return listing.listingId === listingId;
         })
 
         if (match) {
@@ -121,9 +121,9 @@ define(function (require) {
         return match;
     };
 
-    var _postCheckOut = function (stationEntryLogId) {
-        var match = _.find(_stationEntryLogs, function (stationEntryLog) {
-            return stationEntryLog.stationEntryLogId === stationEntryLogId;
+    var _postCheckOut = function (listingId) {
+        var match = _.find(_listings, function (listing) {
+            return listing.listingId === listingId;
         })
 
         if (match) {
@@ -134,32 +134,32 @@ define(function (require) {
     };
 
     var _getByCoords = function (coords, distanceThreshold, searchResultsThreshold) {
-        utils.computeDistances(coords, _stationEntryLogs);
-        var nearbyStationEntryLogs = _.filter(_stationEntryLogs, function (stationEntryLog) {
-            return stationEntryLog.distance <= distanceThreshold
+        utils.computeDistances(coords, _listings);
+        var nearbyListings = _.filter(_listings, function (listing) {
+            return listing.distance <= distanceThreshold
         });
-        if (nearbyStationEntryLogs.length > searchResultsThreshold) {
-            nearbyStationEntryLogs = nearbyStationEntryLogs.slice(0, searchResultsThreshold);
+        if (nearbyListings.length > searchResultsThreshold) {
+            nearbyListings = nearbyListings.slice(0, searchResultsThreshold);
         }
-        var sortedNearbyStationEntryLogs = _.sortBy(nearbyStationEntryLogs, function (nearbyStationEntryLog) {
-            return parseFloat(nearbyStationEntryLog.distance);
+        var sortedNearbyListings = _.sortBy(nearbyListings, function (nearbyListing) {
+            return parseFloat(nearbyListing.distance);
         });
 
-        return sortedNearbyStationEntryLogs;
+        return sortedNearbyListings;
     };
 
-    var StationEntryLogService = function (options) {
-        console.trace('new StationEntryLogService()');
+    var ListingService = function (options) {
+        console.trace('new ListingService()');
         options || (options = {});
         this.initialize.apply(this, arguments);
     };
 
-    _.extend(StationEntryLogService.prototype, {
+    _.extend(ListingService.prototype, {
         initialize: function (options) {
-            console.trace('StationEntryLogService.initialize');
+            console.trace('ListingService.initialize');
             options || (options = {});
         },
-        getStationEntryLogSearchOptions: function (options) {
+        getListingOptions: function (options) {
             options || (options = {});
             var currentContext = this;
             var deferred = $.Deferred();
@@ -178,29 +178,29 @@ define(function (require) {
 
             return deferred.promise();
         },
-        getStationEntryLogs: function (options) {
+        getListings: function (options) {
             options || (options = {});
             var currentContext = this;
             var deferred = $.Deferred();
 
-            var stationEntryLogs;
-            if (options.stationEntryLogId) {
-                stationEntryLogs = _getById(options.stationEntryLogId);
-            } else if (options.stationId) {
-                stationEntryLogs = _getByStationId(options.stationId);
+            var listings;
+            if (options.listingId) {
+                listings = _getById(options.listingId);
+            } else if (options.locusId) {
+                listings = _getByLocusId(options.locusId);
             } else if (options.personnelId) {
-                stationEntryLogs = _getByPersonnelId(options.stationId);
+                listings = _getByPersonnelId(options.personnelId);
             } else if (options.coords) {
-                stationEntryLogs = _getByCoords(options.coords, env.getDistanceThreshold(), env.getSearchResultsThreshold());
+                listings = _getByCoords(options.coords, env.getDistanceThreshold(), env.getSearchResultsThreshold());
             } else {
-                stationEntryLogs = _stationEntryLogs;
+                listings = _listings;
             }
 
             var userId = _userId;
             var userRole = _userRole;
 
             var results = _.extend(options, {
-                stationEntryLogs: stationEntryLogs,
+                listings: listings,
                 userId: userId,
                 userRole: userRole
             });
@@ -216,12 +216,12 @@ define(function (require) {
             var currentContext = this;
             var deferred = $.Deferred();
 
-            var stationEntryLog = _postCheckIn(options);
+            var listing = _postCheckIn(options);
             var userId = _userId;
             var userRole = _userRole;
 
             var results = {
-                stationEntryLog: stationEntryLog,
+                listing: listing,
                 userId: userId,
                 userRole: userRole
             };
@@ -234,5 +234,5 @@ define(function (require) {
         }
     });
 
-    return StationEntryLogService;
+    return ListingService;
 });

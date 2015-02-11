@@ -4,14 +4,14 @@ define(function (require) {
     var $ = require('jquery'),
         _ = require('underscore'),
         Backbone = require('backbone'),
-        StationEntryLogModel = require('models/StationEntryLogModel');
+        LocusModel = require('models/LocusModel');
 
-    var StationEntryLogCollection = Backbone.Collection.extend({
-        model: StationEntryLogModel,
+    var LocusCollection = Backbone.Collection.extend({
+        model: LocusModel,
         initialize: function (options) {
             options || (options = {});
         }
     });
 
-    return StationEntryLogCollection;
+    return LocusCollection;
 });

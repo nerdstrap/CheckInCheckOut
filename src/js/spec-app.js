@@ -6,10 +6,10 @@ define(function (require) {
             Backbone = require('backbone');
 
     var specs = [];
-    //specs.push('specs/goToStationSearchSpec');
-    //specs.push('specs/goToStationWithIdSpec');
-    //specs.push('specs/refreshStationsSpec');
-    //specs.push('specs/refreshStationsByGpsSpec');
+    //specs.push('specs/goToLocusSpec');
+    //specs.push('specs/goToLocusWithIdSpec');
+    //specs.push('specs/refreshLocusListSpec');
+    //specs.push('specs/refreshLocusListByGpsSpec');
     specs.push('specs/checkInSpec');
 
     $(document).ready(function () {

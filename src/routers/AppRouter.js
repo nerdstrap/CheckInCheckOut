@@ -6,8 +6,8 @@ define(function (require) {
         Backbone = require('backbone'),
         SwappingRouter = require('routers/SwappingRouter'),
         ShellView = require('views/ShellView'),
-        StationSearchController = require('controllers/StationSearchController'),
-        StationEntryLogSearchController = require('controllers/StationEntryLogSearchController'),
+        LocusController = require('controllers/LocusController'),
+        ListingController = require('controllers/ListingController'),
         eventBusSingleton = require('eventBusSingleton');
 
     var AppRouter = SwappingRouter.extend({
@@ -26,30 +26,30 @@ define(function (require) {
             this.contentViewEl = shellViewInstance.contentViewEl();
 
             //controllers
-            this.stationSearchControllerInstance = new StationSearchController({
+            this.locusControllerInstance = new LocusController({
                 router: currentContext,
                 dispatcher: eventBusSingleton
             });
-            this.stationEntryLogSearchControllerInstance = new StationEntryLogSearchController({
+            this.listingControllerInstance = new ListingController({
                 router: currentContext,
                 dispatcher: eventBusSingleton
             });
         },
 
         routes: {
-            '': 'goToStationSearch',
-            'station': 'goToStationSearch',
-            'station/:id': 'goToStationWithId'
+            '': 'goToLocusSearch',
+            'locus': 'goToLocusSearch',
+            'locus/:id': 'goToLocusWithId'
         },
 
-        goToStationSearch: function () {
-            console.trace('appRouter.goToStationSearch');
-            this.stationSearchControllerInstance.goToStationSearch();
+        goToLocusSearch: function () {
+            console.trace('appRouter.goToLocusSearch');
+            this.locusControllerInstance.goToLocusSearch();
         },
 
-        goToStationWithId: function (stationId) {
-            console.trace('appRouter.goToStationWithId');
-            this.stationSearchControllerInstance.goToStationWithId(stationId);
+        goToLocusWithId: function (locusId) {
+            console.trace('appRouter.goToLocusWithId');
+            this.locusControllerInstance.goToLocusWithId(locusId);
         }
     });
 

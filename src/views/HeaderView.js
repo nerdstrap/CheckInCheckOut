@@ -20,7 +20,7 @@ define(function (require) {
         },
         events: {
             'click #app-title-button': 'titleButtonClick',
-            'click #go-to-station-list-button': 'goToStationList'
+            'click #go-to-locus-list-button': 'goToLocusList'
         },
         render: function () {
             console.trace('HeaderView.render');
@@ -43,11 +43,11 @@ define(function (require) {
                 event.preventDefault();
             }
         },
-        goToStationList: function (event) {
+        goToLocusList: function (event) {
             if (event) {
                 event.preventDefault();
             }
-            this.dispatcher.trigger(AppEventNamesEnum.goToStationList);
+            this.dispatcher.trigger(AppEventNamesEnum.goToLocusList);
         },
         onLeave: function() {
             console.trace('HeaderView.onLeave');

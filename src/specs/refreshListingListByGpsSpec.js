@@ -16,12 +16,12 @@ define(function (require) {
 
     var injector = new Squire();
     var builder = injector.mock({
-        'models/StationModel': MockModel,
-        'collections/StationCollection': MockCollection,
-        'views/StationView': MockView
+        'models/ListingModel': MockModel,
+        'collections/ListingCollection': MockCollection,
+        'views/ListingView': MockView
     });
 
-    describe('refresh stations by gps', function () {
+    describe('refresh locus entry logs by gps', function () {
         var self = this;
 
         beforeEach(function (done) {
@@ -30,42 +30,42 @@ define(function (require) {
             self.mockEventBusSingleton = new EventBus();
             self.mockEventBusSingleton.trigger = jasmine.createSpy();
 
-            builder.require(['controllers/StationSearchController'], function (StationSearchController) {
-                self.stationSearchControllerInstance = new StationSearchController({
+            builder.require(['controllers/ListingController'], function (ListingController) {
+                self.listingSearchControllerInstance = new ListingController({
                     router: self.mockRouterInstance,
                     dispatcher: self.mockEventBusSingleton
                 });
                 done();
             }, function (err) {
-                this.fail('require controllers/StationSearchController failed to load!');
+                this.fail('require controllers/ListingController failed to load!');
             });
         });
 
         it('should update the collection', function (done) {
             //arrange
-            var fakeStationId1 = 1976;
-            var fakeStation1 = {
-                'stationId': fakeStationId1
+            var fakeListingId1 = 1976;
+            var fakeListing1 = {
+                'listingId': fakeListingId1
             };
-            var fakeStationId2 = 1978;
-            var fakeStation2 = {
-                'stationId': fakeStationId2
+            var fakeListingId2 = 1978;
+            var fakeListing2 = {
+                'listingId': fakeListingId2
             };
-            var fakeStationId3 = 2002;
-            var fakeStation3 = {
-                'stationId': fakeStationId3
+            var fakeListingId3 = 2002;
+            var fakeListing3 = {
+                'listingId': fakeListingId3
             };
-            var fakeStations = [fakeStation1, fakeStation2, fakeStation3];
+            var fakeListings = [fakeListing1, fakeListing2, fakeListing3];
             var fakeUserRole = UserRolesEnum.Admin;
 
-            var fakeStationServiceInstance = {};
-            fakeStationServiceInstance.getStations = function (options) {
+            var fakeListingServiceInstance = {};
+            fakeListingServiceInstance.getListings = function (options) {
                 options || (options = {});
                 var currentContext = this;
                 var deferred = $.Deferred();
 
                 var results = {
-                    stations: fakeStations,
+                    listings: fakeListings,
                     userRole: fakeUserRole
                 };
 
@@ -75,8 +75,8 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeStationServiceInstance, 'getStations').and.callThrough();
-            self.stationSearchControllerInstance.stationService = fakeStationServiceInstance;
+            spyOn(fakeListingServiceInstance, 'getListings').and.callThrough();
+            self.listingSearchControllerInstance.listingService = fakeListingServiceInstance;
 
             var fakeGeoLocationServiceInstance = {};
             fakeGeoLocationServiceInstance.getCurrentPosition = function (options) {
@@ -98,22 +98,22 @@ define(function (require) {
                 return deferred.promise();
             };
             spyOn(fakeGeoLocationServiceInstance, 'getCurrentPosition').and.callThrough();
-            self.stationSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
+            self.listingSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
 
-            var mockStationCollectionInstance = new MockCollection();
+            var mockListingCollectionInstance = new MockCollection();
             var fakeOptions = {};
 
             //act
-            var promise = self.stationSearchControllerInstance.refreshStationsByGps(mockStationCollectionInstance, fakeOptions);
+            var promise = self.listingSearchControllerInstance.refreshListingListByGps(mockListingCollectionInstance, fakeOptions);
 
-            promise.then(function (stationCollection) {
+            promise.then(function (listingCollection) {
                 //assert
-                expect(self.stationSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
-                expect(self.stationSearchControllerInstance.stationService.getStations).toHaveBeenCalled();
-                expect(stationCollection.reset).toHaveBeenCalledWith(fakeStations);
+                expect(self.listingSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
+                expect(self.listingSearchControllerInstance.listingService.getListings).toHaveBeenCalled();
+                expect(listingCollection.reset).toHaveBeenCalledWith(fakeListings);
                 done();
             }, function () {
-                this.fail(new Error('stationSearchControllerInstance.refreshStations call failed'));
+                this.fail(new Error('listingSearchControllerInstance.refreshListingList call failed'));
                 done();
             });
         });
@@ -122,8 +122,8 @@ define(function (require) {
             //arrange
             var fakeUserRole = UserRolesEnum.Admin;
 
-            var fakeStationServiceInstance = {};
-            fakeStationServiceInstance.getStations = function (options) {
+            var fakeListingServiceInstance = {};
+            fakeListingServiceInstance.getListings = function (options) {
                 var currentContext = this;
                 var deferred = $.Deferred();
 
@@ -135,8 +135,8 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeStationServiceInstance, 'getStations').and.callThrough();
-            self.stationSearchControllerInstance.geoLocationService = fakeStationServiceInstance;
+            spyOn(fakeListingServiceInstance, 'getListings').and.callThrough();
+            self.listingSearchControllerInstance.geoLocationService = fakeListingServiceInstance;
 
             var fakeGeoLocationServiceInstance = {};
             fakeGeoLocationServiceInstance.getCurrentPosition = function (options) {
@@ -157,21 +157,21 @@ define(function (require) {
                 return deferred.promise();
             };
             spyOn(fakeGeoLocationServiceInstance, 'getCurrentPosition').and.callThrough();
-            self.stationSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
+            self.listingSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
 
-            var mockStationCollectionInstance = new MockCollection();
+            var mockListingCollectionInstance = new MockCollection();
             var fakeOptions = {};
 
             //act
-            var promise = self.stationSearchControllerInstance.refreshStationsByGps(mockStationCollectionInstance, fakeOptions);
+            var promise = self.listingSearchControllerInstance.refreshListingListByGps(mockListingCollectionInstance, fakeOptions);
 
-            promise.fail(function (stationCollection) {
+            promise.fail(function (listingCollection) {
                 //assert
-                expect(self.stationSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
-                expect(stationCollection.reset).toHaveBeenCalledWith();
+                expect(self.listingSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
+                expect(listingCollection.reset).toHaveBeenCalledWith();
                 done();
             }, function () {
-                this.fail(new Error('stationSearchControllerInstance.refreshStations call failed'));
+                this.fail(new Error('listingSearchControllerInstance.refreshListingList call failed'));
                 done();
             });
         });

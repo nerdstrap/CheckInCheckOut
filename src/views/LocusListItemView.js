@@ -8,11 +8,11 @@ define(function (require) {
         CompositeView = require('views/CompositeView'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         utils = require('utils'),
-        template = require('hbs!templates/StationListItem');
+        template = require('hbs!templates/LocusListItem');
 
-    var StationListItemView = CompositeView.extend({
+    var LocusListItemView = CompositeView.extend({
         initialize: function (options) {
-            console.trace('StationListItemView.initialize');
+            console.trace('LocusListItemView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
 
@@ -20,7 +20,7 @@ define(function (require) {
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
-            console.trace('StationListItemView.render()');
+            console.trace('LocusListItemView.render()');
             var currentContext = this;
 
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
@@ -31,12 +31,12 @@ define(function (require) {
             return this;
         },
         events: {
-            'click .go-to-station-button': 'goToStationWithId',
+            'click .go-to-locus-button': 'goToLocusWithId',
             'click .go-to-directions-button': 'goToDirectionsWithLatLng'
         },
         updateViewFromModel: function () {
-            if (this.model.has('stationName')) {
-                this.$('.go-to-station-button').html(this.model.get('stationName'));
+            if (this.model.has('locusName')) {
+                this.$('.go-to-locus-button').html(this.model.get('locusName'));
             }
             if (this.model.has('distance')) {
                 this.$('.distance-label').html(utils.formatString(utils.getResource('distanceFormatString'), [this.model.get('distance')]));
@@ -51,22 +51,22 @@ define(function (require) {
                 this.$('.directions-unavailable-label').removeClass('hidden');
             }
             if (this.model.has('hasHazard') && this.model.get('hasHazard') === "true") {
-                this.$('.go-to-station-button').parent().append('<i class="fa fa-warning"></i>');
+                this.$('.go-to-locus-button').parent().append('<i class="fa fa-warning"></i>');
             }
             if (this.model.has('hasOpenCheckIns') && this.model.get('hasOpenCheckIns') === "true") {
-                this.$('.go-to-station-button').parent().append('<i class="fa fa-user-plus"></i>');
+                this.$('.go-to-locus-button').parent().append('<i class="fa fa-user-plus"></i>');
             }
-            if (this.model.has('linkedStationId')) {
-                this.$('.go-to-station-button').parent().append('<i class="fa fa-arrows-h"></i>');
+            if (this.model.has('linkedLocusId')) {
+                this.$('.go-to-locus-button').parent().append('<i class="fa fa-arrows-h"></i>');
             }
         },
-        goToStationWithId: function (event) {
+        goToLocusWithId: function (event) {
             if (event) {
                 event.preventDefault();
             }
 
-            var stationId = this.model.get('stationId');
-            this.dispatcher.trigger(AppEventNamesEnum.goToStationWithId, stationId);
+            var locusId = this.model.get('locusId');
+            this.dispatcher.trigger(AppEventNamesEnum.goToLocusWithId, locusId);
         },
         goToDirectionsWithLatLng: function (event) {
             if (event) {
@@ -78,10 +78,10 @@ define(function (require) {
             this.dispatcher.trigger(AppEventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
         },
         onLeave: function () {
-            console.trace('StationListItemView.onLeave');
+            console.trace('LocusListItemView.onLeave');
         }
     });
 
-    return StationListItemView;
+    return LocusListItemView;
 
 });

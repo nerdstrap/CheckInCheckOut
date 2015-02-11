@@ -10,8 +10,8 @@ define(function (require) {
             options || (options = {});
             this.navigate = jasmine.createSpy();
             this.swapContent = jasmine.createSpy();
-            this.goToStationSearch = jasmine.createSpy();
-            this.goToStationWithId = jasmine.createSpy();
+            this.goToLocus = jasmine.createSpy();
+            this.goToLocusWithId = jasmine.createSpy();
         }
     });
     return MockRouter;

@@ -5,35 +5,35 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseView = require('views/BaseView'),
-        StationCollection = require('collections/StationCollection'),
-        StationListView = require('views/StationListView'),
+        LocusCollection = require('collections/LocusCollection'),
+        LocusListView = require('views/LocusListView'),
         globals = require('globals'),
         env = require('env'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
-        template = require('hbs!templates/StationSearch');
+        template = require('hbs!templates/LocusSearch');
 
-    var StationSearchView = BaseView.extend({
+    var LocusSearchView = BaseView.extend({
         initialize: function (options) {
-            console.trace('StationSearchView.initialize');
+            console.trace('LocusSearchView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
 
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
-            console.trace('StationListView.render()');
+            console.trace('LocusListView.render()');
             var currentContext = this;
 
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
-            currentContext.stationCollection = new StationCollection();
-            currentContext.stationListViewInstance = new StationListView({
+            currentContext.locusCollection = new LocusCollection();
+            currentContext.locusListViewInstance = new LocusListView({
                 controller: currentContext.controller,
                 dispatcher: currentContext.dispatcher,
-                collection: currentContext.stationCollection
+                collection: currentContext.locusCollection
             });
-            this.appendChildTo(currentContext.stationListViewInstance, '#station-list-view-container');
+            this.appendChildTo(currentContext.locusListViewInstance, '#locus-list-view-container');
 
             return this;
         },
@@ -49,16 +49,16 @@ define(function (require) {
                 event.preventDefault();
             }
 
-            this.stationCollection.reset();
+            this.locusCollection.reset();
             this.hideManualSearchForm();
-            this.refreshStationsByGps();
+            this.refreshLocusListByGps();
         },
         showManualSearchForm: function (event) {
             if (event) {
                 event.preventDefault();
             }
 
-            this.stationCollection.reset();
+            this.locusCollection.reset();
             this.$('#manual-search-form').removeClass('hidden');
             this.$('#manual-search-input').focus();
         },
@@ -71,22 +71,22 @@ define(function (require) {
                 event.preventDefault();
             }
 
-            this.stationCollection.reset();
+            this.locusCollection.reset();
             this.hideManualSearchForm();
-            this.refreshStations();
+            this.refreshLocusList();
         },
         dispatchManualSearch: function(event) {
             if (event) {
                 event.preventDefault();
             }
 
-            this.stationCollection.reset();
-            this.refreshStations();
+            this.locusCollection.reset();
+            this.refreshLocusList();
             //var validPattern = /^[A-Za-z0-9\s]*$/;
             //if (event) {
             //    if (event.keyCode === 13) {
             //        /* enter key pressed */
-            //        this.refreshStations();
+            //        this.refreshLocusList();
             //    }
             //    var charCode = event.charCode || event.keyCode || event.which;
             //    var inputChar = String.fromCharCode(charCode);
@@ -96,27 +96,27 @@ define(function (require) {
             //    }
             //}
         },
-        refreshStations: function () {
-            var stationName = this.$('#manual-search-input').val();
-            if (stationName && stationName.length > 1) {
+        refreshLocusList: function () {
+            var locusName = this.$('#manual-search-input').val();
+            if (locusName && locusName.length > 1) {
                 var options = {
-                    stationName: stationName
+                    locusName: locusName
                 }
-                this.stationListViewInstance.showLoading();
-                this.dispatcher.trigger(AppEventNamesEnum.refreshStations, this.stationCollection, options);
+                this.locusListViewInstance.showLoading();
+                this.dispatcher.trigger(AppEventNamesEnum.refreshLocusList, this.locusCollection, options);
             }
         },
-        refreshStationsByGps: function () {
+        refreshLocusListByGps: function () {
             var options = {
                 gps: true
             }
-            this.stationListViewInstance.showLoading();
-            this.dispatcher.trigger(AppEventNamesEnum.refreshStationsByGps, this.stationCollection, options);
+            this.locusListViewInstance.showLoading();
+            this.dispatcher.trigger(AppEventNamesEnum.refreshLocusListByGps, this.locusCollection, options);
         },
         onLeave: function () {
-            console.trace('StationSearchView.onLeave');
+            console.trace('LocusSearchView.onLeave');
         }
     });
 
-    return StationSearchView;
+    return LocusSearchView;
 });

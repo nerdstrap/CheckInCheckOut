@@ -16,9 +16,9 @@ define(function (require) {
 
     var injector = new Squire();
     var builder = injector.mock({
-        'models/StationEntryLogModel': MockModel,
-        'collections/StationEntryLogCollection': MockCollection,
-        'views/StationEntryLogView': MockView
+        'models/ListingModel': MockModel,
+        'collections/ListingCollection': MockCollection,
+        'views/ListingView': MockView
     });
 
     describe('check in', function () {
@@ -30,33 +30,33 @@ define(function (require) {
             self.mockEventBusSingleton = new EventBus();
             self.mockEventBusSingleton.trigger = jasmine.createSpy();
 
-            builder.require(['controllers/StationEntryLogSearchController'], function (StationEntryLogSearchController) {
-                self.stationEntryLogSearchControllerInstance = new StationEntryLogSearchController({
+            builder.require(['controllers/ListingController'], function (ListingController) {
+                self.listingSearchControllerInstance = new ListingController({
                     router: self.mockRouterInstance,
                     dispatcher: self.mockEventBusSingleton
                 });
                 done();
             }, function (err) {
-                this.fail('require controllers/StationEntryLogSearchController failed to load!');
+                this.fail('require controllers/ListingController failed to load!');
             });
         });
 
         it('should post the model attributes', function (done) {
             //arrange
-            var fakeStationEntryLogId = 1976;
-            var fakeStationEntryLog = {
-                'stationEntryLogId': fakeStationEntryLogId
+            var fakeListingId = 1976;
+            var fakeListing = {
+                'listingId': fakeListingId
             };
             var fakeUserRole = UserRolesEnum.Admin;
 
-            var fakeStationEntryLogServiceInstance = {};
-            fakeStationEntryLogServiceInstance.postCheckIn = function (options) {
+            var fakeListingServiceInstance = {};
+            fakeListingServiceInstance.postCheckIn = function (options) {
                 options || (options = {});
                 var currentContext = this;
                 var deferred = $.Deferred();
 
                 var results = {
-                    stationEntryLog: fakeStationEntryLog,
+                    listing: fakeListing,
                     userRole: fakeUserRole
                 };
 
@@ -66,22 +66,22 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeStationEntryLogServiceInstance, 'postCheckIn').and.callThrough();
-            self.stationEntryLogSearchControllerInstance.stationEntryLogService = fakeStationEntryLogServiceInstance;
+            spyOn(fakeListingServiceInstance, 'postCheckIn').and.callThrough();
+            self.listingSearchControllerInstance.listingService = fakeListingServiceInstance;
 
-            var mockStationEntryLogModelInstance = new MockModel();
+            var mockListingModelInstance = new MockModel();
 
             //act
-            var promise = self.stationEntryLogSearchControllerInstance.checkIn(mockStationEntryLogModelInstance);
+            var promise = self.listingSearchControllerInstance.checkIn(mockListingModelInstance);
 
-            promise.then(function (stationEntryLogModel) {
+            promise.then(function (listingModel) {
                 //assert
-                expect(self.stationEntryLogSearchControllerInstance.stationEntryLogService.postCheckIn).toHaveBeenCalledWith(mockStationEntryLogModelInstance.attributes);
-                expect(mockStationEntryLogModelInstance.reset).toHaveBeenCalledWith(fakeStationEntryLog);
-                expect(self.stationEntryLogSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.checkInSuccess, mockStationEntryLogModelInstance);
+                expect(self.listingSearchControllerInstance.listingService.postCheckIn).toHaveBeenCalledWith(mockListingModelInstance.attributes);
+                expect(mockListingModelInstance.reset).toHaveBeenCalledWith(fakeListing);
+                expect(self.listingSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.checkInSuccess, mockListingModelInstance);
                 done();
             }, function () {
-                this.fail(new Error('stationEntryLogSearchControllerInstance.checkIn call failed'));
+                this.fail(new Error('listingSearchControllerInstance.checkIn call failed'));
                 done();
             });
         });

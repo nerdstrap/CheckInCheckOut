@@ -16,12 +16,12 @@ define(function (require) {
 
     var injector = new Squire();
     var builder = injector.mock({
-        'models/StationModel': MockModel,
-        'collections/StationCollection': MockCollection,
-        'views/StationView': MockView
+        'models/LocusModel': MockModel,
+        'collections/LocusCollection': MockCollection,
+        'views/LocusView': MockView
     });
 
-    describe('refresh stations', function () {
+    describe('refresh loci', function () {
         var self = this;
 
         beforeEach(function (done) {
@@ -30,42 +30,42 @@ define(function (require) {
             self.mockEventBusSingleton = new EventBus();
             self.mockEventBusSingleton.trigger = jasmine.createSpy();
 
-            builder.require(['controllers/StationSearchController'], function (StationSearchController) {
-                self.stationSearchControllerInstance = new StationSearchController({
+            builder.require(['controllers/LocusController'], function (LocusController) {
+                self.locusSearchControllerInstance = new LocusController({
                     router: self.mockRouterInstance,
                     dispatcher: self.mockEventBusSingleton
                 });
                 done();
             }, function (err) {
-                this.fail('require controllers/StationSearchController failed to load!');
+                this.fail('require controllers/LocusController failed to load!');
             });
         });
 
         it('should update the collection', function (done) {
             //arrange
-            var fakeStationId1 = 1976;
-            var fakeStation1 = {
-                'stationId': fakeStationId1
+            var fakeLocusId1 = 1976;
+            var fakeLocus1 = {
+                'locusId': fakeLocusId1
             };
-            var fakeStationId2 = 1978;
-            var fakeStation2 = {
-                'stationId': fakeStationId2
+            var fakeLocusId2 = 1978;
+            var fakeLocus2 = {
+                'locusId': fakeLocusId2
             };
-            var fakeStationId3 = 2002;
-            var fakeStation3 = {
-                'stationId': fakeStationId3
+            var fakeLocusId3 = 2002;
+            var fakeLocus3 = {
+                'locusId': fakeLocusId3
             };
-            var fakeStations = [fakeStation1, fakeStation2, fakeStation3];
+            var fakeLoci = [fakeLocus1, fakeLocus2, fakeLocus3];
             var fakeUserRole = UserRolesEnum.Admin;
 
-            var fakeStationServiceInstance = {};
-            fakeStationServiceInstance.getStations = function (options) {
+            var fakeLocusServiceInstance = {};
+            fakeLocusServiceInstance.getLoci = function (options) {
                 options || (options = {});
                 var currentContext = this;
                 var deferred = $.Deferred();
 
                 var results = {
-                    stations: fakeStations,
+                    loci: fakeLoci,
                     userRole: fakeUserRole
                 };
 
@@ -75,8 +75,8 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeStationServiceInstance, 'getStations').and.callThrough();
-            self.stationSearchControllerInstance.stationService = fakeStationServiceInstance;
+            spyOn(fakeLocusServiceInstance, 'getLoci').and.callThrough();
+            self.locusSearchControllerInstance.locusService = fakeLocusServiceInstance;
 
             var fakeGeoLocationServiceInstance = {};
             fakeGeoLocationServiceInstance.getCurrentPosition = function (options) {
@@ -98,22 +98,22 @@ define(function (require) {
                 return deferred.promise();
             };
             spyOn(fakeGeoLocationServiceInstance, 'getCurrentPosition').and.callThrough();
-            self.stationSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
+            self.locusSearchControllerInstance.geoLocationService = fakeGeoLocationServiceInstance;
 
-            var mockStationCollectionInstance = new MockCollection();
+            var mockLocusCollectionInstance = new MockCollection();
             var fakeOptions = {};
 
             //act
-            var promise = self.stationSearchControllerInstance.refreshStations(mockStationCollectionInstance, fakeOptions);
+            var promise = self.locusSearchControllerInstance.refreshLocusList(mockLocusCollectionInstance, fakeOptions);
 
-            promise.then(function (stationCollection) {
+            promise.then(function (locusCollection) {
                 //assert
-                expect(self.stationSearchControllerInstance.stationService.getStations).toHaveBeenCalled();
-                expect(self.stationSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
-                expect(stationCollection.reset).toHaveBeenCalledWith(fakeStations);
+                expect(self.locusSearchControllerInstance.locusService.getLoci).toHaveBeenCalled();
+                expect(self.locusSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
+                expect(locusCollection.reset).toHaveBeenCalledWith(fakeLoci);
                 done();
             }, function () {
-                this.fail(new Error('stationSearchControllerInstance.refreshStations call failed'));
+                this.fail(new Error('locusSearchControllerInstance.refreshLocusList call failed'));
                 done();
             });
         });
@@ -122,8 +122,8 @@ define(function (require) {
             //arrange
             var fakeUserRole = UserRolesEnum.Admin;
 
-            var fakeStationServiceInstance = {};
-            fakeStationServiceInstance.getStations = function (options) {
+            var fakeLocusServiceInstance = {};
+            fakeLocusServiceInstance.getLoci = function (options) {
                 var currentContext = this;
                 var deferred = $.Deferred();
 
@@ -135,22 +135,22 @@ define(function (require) {
 
                 return deferred.promise();
             };
-            spyOn(fakeStationServiceInstance, 'getStations').and.callThrough();
-            self.stationSearchControllerInstance.stationService = fakeStationServiceInstance;
+            spyOn(fakeLocusServiceInstance, 'getLoci').and.callThrough();
+            self.locusSearchControllerInstance.locusService = fakeLocusServiceInstance;
 
-            var mockStationCollectionInstance = new MockCollection();
+            var mockLocusCollectionInstance = new MockCollection();
             var fakeOptions = {};
 
             //act
-            var promise = self.stationSearchControllerInstance.refreshStations(mockStationCollectionInstance, fakeOptions);
+            var promise = self.locusSearchControllerInstance.refreshLocusList(mockLocusCollectionInstance, fakeOptions);
 
-            promise.fail(function (stationCollection) {
+            promise.fail(function (locusCollection) {
                 //assert
-                expect(self.stationSearchControllerInstance.stationService.getStations).toHaveBeenCalled();
-                expect(stationCollection.reset).toHaveBeenCalledWith();
+                expect(self.locusSearchControllerInstance.locusService.getLoci).toHaveBeenCalled();
+                expect(locusCollection.reset).toHaveBeenCalledWith();
                 done();
             }, function () {
-                this.fail(new Error('stationSearchControllerInstance.refreshStations call failed'));
+                this.fail(new Error('locusSearchControllerInstance.refreshLocusList call failed'));
                 done();
             });
         });

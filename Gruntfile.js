@@ -4,7 +4,7 @@ module.exports = function (grunt) {
     // Project configuration.
     grunt.initConfig({
         jasmine: {
-            src: 'src/controllers/StationSearchController.js',
+            src: 'src/controllers/LocusController.js',
             options: {
                 specs: 'src/specs/**/*.js',
                 template: require('grunt-template-jasmine-requirejs'),
