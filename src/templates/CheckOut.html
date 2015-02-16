@@ -1,7 +1,7 @@
-<div class="check-in-view">
+<div class="check-out-view">
     <div class="row">
         <div class="small-12 columns">
-            <h3>{{resource "checkIn.viewTitleText"}}</h3>
+            <h3>{{resource "checkOut.viewTitleText"}}</h3>
         </div>
     </div>
     <div class="row">
@@ -77,13 +77,13 @@
     </div>
     <div class="row">
         <div class="small-3 columns">
-            <label for="group-check-in-input">{{resource "groupCheckInHeaderText"}}</label>
+            <label for="group-check-out-input">{{resource "groupCheckOutHeaderText"}}</label>
         </div>
         <div class="small-9 columns">
             <span>no</span>
-            <div id="group-check-in-input-container" class="switch radius tiny" tabindex="0">
-                <input id="group-check-in-input" name="groupCheckIn" type="checkBox" />
-                <label for="group-check-in-input"></label>
+            <div id="group-check-out-input-container" class="switch radius tiny" tabindex="0">
+                <input id="group-check-out-input" name="groupCheckOut" type="checkBox" />
+                <label for="group-check-out-input"></label>
             </div>
             <span>yes</span>
         </div>
@@ -98,7 +98,7 @@
     </div>
     <div class="row loading {{cid}} hidden">
         <div class="small-9 columns">
-            <span class="loading-message">{{resource "checkIn.loadingMessage"}}</span>
+            <span class="loading-message">{{resource "checkOut.loadingMessage"}}</span>
             <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
         </div>
     </div>
@@ -107,7 +107,7 @@
     </div>
     <div class="row">
         <div class="small-12 columns">
-            <div class="confirm-check-in-view hidden">
+            <div class="confirm-check-out-view hidden">
                 <span>You will be required to confirm or clear the following warnings before checking-out of this station:</span>
                 <ul>
                     <li>snakes</li>
@@ -116,7 +116,7 @@
                 </ul>
             </div>
             <a id="cancel-button" class="button radius secondary" href="#">{{resource "cancelButtonText"}}</a>
-            <a id="check-in-button" class="button radius success" href="#">{{resource "checkInButtonText"}}<i class="fa fa-check-circle-o"></i></a>
+            <a id="check-out-button" class="button radius success" href="#">{{resource "checkOutButtonText"}}<i class="fa fa-check-circle-o"></i></a>
         </div>
     </div>
 </div>

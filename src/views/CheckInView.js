@@ -9,6 +9,9 @@ define(function (require) {
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         globals = require('globals'),
         env = require('env'),
+        utils = require('utils'),
+        helpers = require('handlebars.helpers'),
+        optionTemplate = require('hbs!templates/Option'),
         template = require('hbs!templates/CheckIn');
 
     var CheckInView = BaseView.extend({
@@ -18,7 +21,6 @@ define(function (require) {
             this.dispatcher = options.dispatcher || this;
             this.locusModel = options.locusModel;
 
-            this.listenTo(this.model, 'change', this.updateViewFromModel);
             this.listenTo(this.model, 'validated', this.onValidated);
             this.listenTo(this, 'leave', this.onLeave);
         },
@@ -35,38 +37,71 @@ define(function (require) {
 
             return this;
         },
+        renderPurposes: function(purposes) {
+            var optionsHtml = '';
+            _.each(purposes, function (purpose) {
+                optionsHtml += optionTemplate({
+                    'value': purpose['defaultDuration'],
+                    'text': purpose['purpose']
+                });
+            })
+            this.$('#purpose-input').append(optionsHtml);
+        },
+        renderDurations: function(durations) {
+            var optionsHtml = '';
+            _.each(durations, function (duration) {
+                optionsHtml += optionTemplate({
+                    'value': duration['minutes'],
+                    'text': duration['description']
+                });
+            })
+            this.$('#duration-input').append(optionsHtml);
+        },
         events: {
+            'change #purpose-input': 'purposeChanged',
+            'change #duration-input': 'durationChanged',
             'click #cancel-button': 'cancelCheckIn',
             'click #check-in-button': 'validateModelAndCheckIn'
         },
         updateViewFromModel: function () {
             if (this.locusModel.has('locusId') && this.locusModel.has('locusName')) {
-                this.$('#locus-name-input').attr('data-locus-id', this.locusModel.get('locusId')).val(this.locusModel.get('locusName'));
+                this.$('#locus-name-label').attr('data-locus-id', this.locusModel.get('locusId')).html(this.locusModel.get('locusName'));
             }
-            if (this.locusModel.has('latitude') && this.locusModel.has('longitude')) {
-                this.$('#distance-input').attr('data-latitude', this.locusModel.get('latitude')).attr('data-longitude', this.locusModel.get('longitude')).val('determining distance');
-            }
-            if (this.identityModel.has('identityId') && this.identityModel.has('identityName')) {
-                this.$('#identity-name-input').attr('data-identity-id', this.identityModel.get('identityId')).val(this.identityModel.get('identityName'));
+            if (this.locusModel.has('distance')) {
+                this.$('#distance-label').html(this.locusModel.get('distance'));
             }
             if (this.identityModel.has('contactNumber')) {
-                this.$('#contact-number-input').val(this.identityModel.get('contactNumber'));
+                this.$('#contact-number-input').val(helpers.formatPhone(this.identityModel.get('contactNumber')));
             }
             if (this.identityModel.has('email')) {
                 this.$('#email-input').val(this.identityModel.get('email'));
             }
-            if (this.model.has('purpose')) {
-                this.$('#purpose-input').val(this.identityModel.get('purpose'));
+        },
+        purposeChanged: function(event) {
+            if (event) {
+                event.preventDefault();
             }
-            if (this.model.has('duration')) {
-                this.$('#duration-input').val(this.model.get('duration'));
+            var purpose = this.$('#purpose-input option:selected').text();
+            this.togglePurposeOther(purpose === 'Other');
+            if (!this.manualDurationEntry) {
+                var defaultDuration = this.$('#purpose-input').val();
+                this.$('#duration-input').val(defaultDuration);
             }
-            if (this.model.has('groupCheckIn')) {
-                this.$('#group-check-in-input').val(this.model.get('groupCheckIn'));
+        },
+        togglePurposeOther: function(show) {
+            if (show) {
+                this.$('#purpose-other-input-container').removeClass('hidden');
+            } else {
+                this.$('#purpose-other-input-container').addClass('hidden');
             }
-            if (this.model.has('additionalInfo')) {
-                this.$('#additional-info-input').val(this.model.get('additionalInfo'));
+        },
+        durationChanged: function(event) {
+            if (event) {
+                event.preventDefault();
             }
+
+            var duration = this.$('#duration-input').val();
+            this.manualDurationEntry = true;
         },
         validateModelAndCheckIn: function(event) {
             if (event) {
@@ -79,35 +114,51 @@ define(function (require) {
             var attributes = {};
 
             if (this.locusModel.has('locusId')) {
-                attributes['locusId'] = this.locusModel.get('locusId');
+                attributes.locusId = this.locusModel.get('locusId');
             }
             if (this.locusModel.has('locusName')) {
-                attributes['locusName'] = this.locusModel.get('locusName');
+                attributes.locusName = this.locusModel.get('locusName');
             }
             if (this.locusModel.has('latitude')) {
-                attributes['latitude'] = this.locusModel.get('latitude');
+                attributes.latitude = this.locusModel.get('latitude');
             }
             if (this.locusModel.has('longitude')) {
-                attributes['longitude'] = this.locusModel.get('longitude');
+                attributes.longitude = this.locusModel.get('longitude');
             }
             if (this.identityModel.has('identityId')) {
-                attributes['identityId'] = this.identityModel.get('identityId');
+                attributes.identityId = this.identityModel.get('identityId');
             }
             if (this.identityModel.has('identityName')) {
-                attributes['identityName'] = this.identityModel.get('identityName');
+                attributes.identityName = this.identityModel.get('identityName');
             }
-            attributes['contactNumber'] = this.$('#contact-number-input').val();
-            attributes['email'] = this.$('#email-input').val();
+            var rawContactNumber = this.$('#contact-number-input').val();
+            attributes.contactNumber = utils.cleanPhone(rawContactNumber);
+            attributes.email = this.$('#email-input').val();
+            attributes.purpose = this.$('#purpose-input option:selected').text();
+            if (this.$('#purpose-input').prop('selectedIndex') === 0) {
+                attributes.purpose = '';
+            }
+            if (attributes.purpose === 'Other') {
+                attributes.purposeOther = this.$('#purpose-other-input').val();
+            }
+            attributes.duration = this.$('#duration-input').val();
+            attributes.groupCheckIn = this.$('#group-check-in-input').is(':checked');
+            attributes.additionalInfo = this.$('#additional-info-input').val();
 
             this.model.set(attributes);
         },
         onValidated: function(isValid, model, errors) {
             var currentContext = this;
+
+            currentContext.$('.validate').each(function() {
+                $(this).parent().parent().removeClass('invalid');
+            })
+
             if (isValid) {
-                this.checkIn();
+                this.dispatchCheckIn();
             } else {
                 for(var error in errors) {
-                    currentContext.$('.' + error + '-input').parent().parent().addClass('invalid');
+                    currentContext.$('[name="' + error + '"]').parent().parent().addClass('invalid');
                 }
             }
         },

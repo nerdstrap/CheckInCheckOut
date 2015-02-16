@@ -1,7 +1,9 @@
 define(function (require) {
     'use strict';
 
-    var resources = require('resources');
+    var $ = require('jquery'),
+        _ = require('underscore'),
+        resources = require('resources');
 
     var s4 = function () {
         return Math.floor((1 + Math.random()) * 0x10000)
@@ -107,7 +109,7 @@ define(function (require) {
                 locus.distance = distance;
             }
         });
-    }
+    };
 
     return utils;
 });

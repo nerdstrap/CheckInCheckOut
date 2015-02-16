@@ -129,6 +129,8 @@ define(function (require) {
                                 locusModelInstance.unset('distance');
                             }
                             checkInViewInstance.updateViewFromModel();
+                            checkInViewInstance.renderPurposes(getCheckInOptionsResponse.purposes);
+                            checkInViewInstance.renderDurations(getCheckInOptionsResponse.durations);
                             checkInViewInstance.completeLoading();
                             deferred.resolve(checkInViewInstance);
                         })

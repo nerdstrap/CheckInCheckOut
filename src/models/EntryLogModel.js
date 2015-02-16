@@ -46,8 +46,7 @@ define(function (require) {
                 }
             },
             duration: {
-                required: true,
-                minLength: 1
+                required: true
             }
         },
         set: function (key, val, options) {

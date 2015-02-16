@@ -99,28 +99,32 @@ define(function (require) {
         {
             "defaultDuration": "480",
             "purpose": "turn it off"
+        },
+        {
+            "defaultDuration": "",
+            "purpose": "Other"
         }
     ];
     var _durations = [
         {
-            "value": "30",
+            "minutes": "30",
             "description": "30 minutes"
         },
         {
-            "value": "60",
+            "minutes": "60",
             "description": "1 hour"
         },
         {
 
-            "value": "120",
+            "minutes": "120",
             "description": "2 hours"
         },
         {
-            "value": "360",
+            "minutes": "360",
             "description": "3 hours"
         },
         {
-            "value": "480",
+            "minutes": "480",
             "description": "4 hours"
         }
     ];

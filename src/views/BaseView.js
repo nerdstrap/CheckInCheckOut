@@ -9,8 +9,7 @@ define(function (require) {
         AlertModel = require('models/AlertModel'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         globals = require('globals'),
-        env = require('env'),
-        utils = require('utils');
+        env = require('env');
 
     var BaseView = function (options) {
         CompositeView.apply(this, [options]);
