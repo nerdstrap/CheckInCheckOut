@@ -10510,4 +10510,9 @@ body:before {
   border-bottom: #000000 1px solid;
 }
 
+.invalid {
+  border: solid red 1px;
+  color: red;
+}
+
 /*# sourceMappingURL=index.css.map */

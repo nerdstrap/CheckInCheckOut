@@ -5,6 +5,7 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         CompositeView = require('views/CompositeView'),
+        EntryLogCollection = require('collections/EntryLogCollection'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         UserRolesEnum = require('enums/UserRolesEnum'),
         template = require('hbs!templates/Header');
@@ -14,13 +15,16 @@ define(function (require) {
             console.trace('HeaderView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
+            this.entryLogCollection = new EntryLogCollection();
 
-            //this.listenTo(appEvents, AppEventNamesEnum.userRoleUpdated, this.userRoleUpdated);
+            this.listenTo(this.dispatcher, AppEventNamesEnum.identityUpdated, this.onIdentityUpdated);
+            this.listenTo(this.entryLogCollection, 'reset', this.updateHeaderControls);
             this.listenTo(this, 'leave', this.onLeave);
         },
         events: {
             'click #app-title-button': 'titleButtonClick',
-            'click #go-to-locus-list-button': 'goToLocusList'
+            'click #go-to-locus-search-button': 'goToLocusList',
+            'click #go-to-open-entry-button': 'goToLocusList'
         },
         render: function () {
             console.trace('HeaderView.render');
@@ -31,23 +35,33 @@ define(function (require) {
 
             return this;
         },
-        userRoleUpdated: function (userRole) {
-            if (userRole === UserRolesEnum.Admin) {
-                //show admin functions
-            } else {
-                //hide admin functions
+        updateHeaderControls: function() {
+            if (this.entryLogCollection.length > 0) {
+                this.$('.go-to-open-check-in-button-container').removeClass('hidden');
             }
+        },
+        onIdentityUpdated: function (identityModel) {
+            var options = {
+                identityId: identityModel.get('identityId')
+            };
+            this.dispatcher.trigger(AppEventNamesEnum.refreshEntryLogList, this.entryLogCollection, options);
         },
         titleButtonClick: function (event) {
             if (event) {
                 event.preventDefault();
             }
         },
-        goToLocusList: function (event) {
+        goToLocusSearch: function (event) {
             if (event) {
                 event.preventDefault();
             }
-            this.dispatcher.trigger(AppEventNamesEnum.goToLocusList);
+            this.dispatcher.trigger(AppEventNamesEnum.goToLocusSearch);
+        },
+        goToLocusWithId: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+            this.dispatcher.trigger(AppEventNamesEnum.goToLocusWithId);
         },
         onLeave: function() {
             console.trace('HeaderView.onLeave');

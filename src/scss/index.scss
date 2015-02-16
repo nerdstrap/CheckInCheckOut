@@ -121,3 +121,8 @@ body:before {
 .table-view-header {
   border-bottom: #000000 1px solid;
 }
+
+.invalid {
+  border: solid red 1px;
+  color: red;
+}

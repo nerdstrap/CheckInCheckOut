@@ -4,6 +4,7 @@ define(function (require) {
     var $ = require('jquery'),
         _ = require('underscore'),
         CompositeView = require('views/CompositeView'),
+        IdentityModel = require('models/IdentityModel'),
         AlertView = require('views/AlertView'),
         AlertModel = require('models/AlertModel'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
@@ -16,14 +17,22 @@ define(function (require) {
     };
 
     _.extend(BaseView.prototype, CompositeView.prototype, {
-        setUserId: function (userId) {
-            this.userId = userId;
-        },
-        setUserRole: function (userRole) {
-            this.userRole = userRole;
+        setIdentityModel: function (identity) {
+            if (this.identityModel) {
+                if (identity.hasOwnProperty('identityId')) {
+                    delete identity.identityId;
+                }
+                this.identityModel.set(identity, {silent: true});
+            } else {
+                this.identityModel = new IdentityModel(identity);
+            }
         },
         showLoading: function () {
             this.$('.loading.' + this.cid).removeClass('hidden');
+        },
+        completeLoading: function () {
+            this.hideLoading();
+            this.trigger('loaded');
         },
         hideLoading: function () {
             this.$('.loading.' + this.cid).addClass('hidden');

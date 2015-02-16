@@ -57,21 +57,21 @@ define(function (require) {
             });
 
             currentContext.router.swapContent(locusSearchViewInstance);
-            var fragmentAlreadyMatches = (Backbone.history.fragment === 'locus' || Backbone.history.fragment === '');
-            currentContext.router.navigate('locus', {replace: fragmentAlreadyMatches});
+            var routerFragment = utils.getResource('locus.fragment');
+            var fragmentAlreadyMatches = (Backbone.history.fragment === routerFragment || Backbone.history.fragment === '');
+            currentContext.router.navigate(routerFragment, {replace: fragmentAlreadyMatches});
 
             locusSearchViewInstance.showLoading();
             currentContext.locusService.getLocusSearchOptions()
                 .then(function (getLocusSearchOptionsResponse) {
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getLocusSearchOptionsResponse.userRole);
-                    locusSearchViewInstance.setUserId(getLocusSearchOptionsResponse.userId);
-                    locusSearchViewInstance.setUserRole(getLocusSearchOptionsResponse.userRole);
-                    locusSearchViewInstance.hideLoading();
+                    locusSearchViewInstance.setIdentityModel(getLocusSearchOptionsResponse.identity);
+                    currentContext.dispatcher.trigger(AppEventNamesEnum.identityUpdated, locusSearchViewInstance.identityModel);
+                    locusSearchViewInstance.completeLoading();
                     deferred.resolve(locusSearchViewInstance);
                 })
                 .fail(function (error) {
                     locusSearchViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
-                    locusSearchViewInstance.hideLoading();
+                    locusSearchViewInstance.completeLoading();
                     deferred.reject(locusSearchViewInstance);
                 });
 
@@ -91,34 +91,34 @@ define(function (require) {
             });
 
             currentContext.router.swapContent(locusViewInstance);
-            var fragmentAlreadyMatches = (Backbone.history.fragment === 'locus/' + locusId || Backbone.history.fragment === '');
-            currentContext.router.navigate('locus/' + locusId, {replace: fragmentAlreadyMatches});
+            var routerFragment = utils.getResource('locusWithId.fragment');
+            var fragmentAlreadyMatches = (Backbone.history.fragment === routerFragment + locusId || Backbone.history.fragment === '');
+            currentContext.router.navigate(routerFragment + locusId, {replace: fragmentAlreadyMatches});
 
             locusViewInstance.showLoading();
             currentContext.locusService.getLocusList({locusId: locusId})
                 .then(function (getLocusListResponse) {
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.userRoleUpdated, getLocusListResponse.userRole);
-                    locusViewInstance.setUserId(getLocusListResponse.userId);
-                    locusViewInstance.setUserRole(getLocusListResponse.userRole);
+                    locusViewInstance.setIdentityModel(getLocusListResponse.identity);
+                    currentContext.dispatcher.trigger(AppEventNamesEnum.identityUpdated, locusViewInstance.identityModel);
                     if (getLocusListResponse.locusList && getLocusListResponse.locusList.length > 0) {
                         currentContext.geoLocationService.getCurrentPosition()
                             .then(function (position) {
                                 utils.computeDistances(position.coords, getLocusListResponse.locusList);
                                 locusModelInstance.reset(getLocusListResponse.locusList[0]);
-                                locusViewInstance.hideLoading();
+                                locusViewInstance.completeLoading();
                                 deferred.resolve(locusViewInstance);
                             });
                     } else {
                         locusModelInstance.reset();
                         locusViewInstance.showError(utils.getResource('locusNotFoundErrorMessage'));
-                        locusViewInstance.hideLoading();
+                        locusViewInstance.completeLoading();
                         deferred.reject(locusViewInstance);
                     }
                 })
                 .fail(function (error) {
                     locusModelInstance.reset();
                     locusViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
-                    locusViewInstance.hideLoading();
+                    locusViewInstance.completeLoading();
                     deferred.reject(locusViewInstance);
                 });
 

@@ -1,0 +1,114 @@
+<div class="check-in-view">
+    <div class="row">
+        <div class="small-12 columns">
+            <h3>{{resource "checkIn.viewTitleText"}}</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="locus-name-input">{{resource "locusNameHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <input id="locus-name-input" name="locusName" readonly type="text" class="locus-name-input" data-locus-id="{{locusId}}" placeholder="{{resource "locusNamePlaceholder"}}" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="distance-input">{{resource "distanceHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <input id="distance-input" name="distance" readonly type="text" class="distance-input" data-latitude="{{latitude}}" data-longitude="{{longitude}}" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="identity-name-input">{{resource "identityNameHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <input id="identity-name-input" name="identityName" readonly type="text" class="identity-name-input" data-identity-id="{{identityId}}" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="contact-number-input">{{resource "contactNumberHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <input id="contact-number-input" name="contactNumber" type="text" class="contact-number-input" placeholder="{{resource "contactNumberPlaceholder"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="email-input">{{resource "emailHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <input id="email-input" name="email" type="text" class="email-input" placeholder="{{resource "emailPlaceholder"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="purpose-input">{{resource "purposeHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <select id="purpose-input" name="purpose" class="purpose-input">
+                <option disabled="disabled" selected="selected" value="">{{resource "purposePlaceholder"}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="purpose-other-input">{{resource "purposeOtherHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <input id="purpose-other-input" name="purposeOther" type="text" class="purpose-other-input" placeholder="{{resource "purposeOtherPlaceholder"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="duration-input">{{resource "durationHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <select id="duration-input" name="duration" class="duration-input">
+                <option disabled="disabled" selected="selected" value="">{{resource "durationPlaceholder"}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="group-check-in-input">{{resource "groupCheckInHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <input id="group-check-in-input" name="groupCheckIn" type="text" class="group-check-in-input" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="additional-info-input">{{resource "additionalInfoHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <input id="additional-info-input" name="additionalInfo" type="text" class="additional-info-input" placeholder="{{resource "additionalInfoPlaceholder"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off" />
+        </div>
+    </div>
+    <div class="row loading {{cid}} hidden">
+        <div class="small-9 columns">
+            <span class="loading-message">{{resource "checkIn.loadingMessage"}}</span>
+            <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
+        </div>
+    </div>
+    <div class="row alert-view-container {{cid}}">
+        <div class="small-9 columns"></div>
+    </div>
+    <div class="row">
+        <div class="small-12 columns">
+            <div class="confirm-check-in-view hidden">
+                <span>You will be required to confirm or clear the following warnings before checking-out of this station:</span>
+                <ul>
+                    <li>snakes</li>
+                    <li>icicles</li>
+                    <li>ninjas</li>
+                </ul>
+            </div>
+            <a id="cancel-button" class="button radius secondary" href="#">{{resource "cancelButtonText"}}</a>
+            <a id="check-in-button" class="button radius success" href="#">{{resource "checkInButtonText"}}<i class="fa fa-check-circle-o"></i></a>
+        </div>
+    </div>
+</div>

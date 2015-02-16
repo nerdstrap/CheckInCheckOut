@@ -7,19 +7,106 @@ define(function(require) {
 
     var resources = {
         'appTitleText': 'Check-in&#124;Check-out',
+        'locus.fragment': 'station',
+        'locusWithId.fragment': 'station/',
+        'identity.fragment': 'person',
+        'identityWithId.fragment': 'person/',
+        'entryLog.fragment': 'entryLog/',
+        'checkIn.fragment': 'checkIn',
 
         'loadingIconSrc': 'images/loading.gif',
         'loadingIconAlt': 'loading',
+
+        'goToLocusSearchButtonText': 'Stations',
+        'goToLocusWithIdButtonText': 'View Station',
+
+        'goToIdentitySearchButtonText': 'People',
+        'goToIdentityWithIdButtonText': 'View Person',
+
+        'locusSearch.viewTitleText': 'Find a Station',
+        'identitySearch.viewTitleText': 'Find a Person',
+        'checkIn.viewTitleText': 'Check-in to Station',
+
+        'gpsSearchButtonText': 'GPS',
+        'manualSearchButtonText': 'Manual',
+        'recentSearchButtonText': 'Recent',
+
+        'locus.manualSearchPlaceholderText': 'enter a station name',
+        'identity.manualSearchPlaceholderText': 'enter a person name',
+
+        'searchButtonText': 'Search',
+        'resetButtonText': 'Reset',
+
+        'locusSearch.loadingMessage': 'loading station search',
+        'locusList.loadingMessage': 'loading stations',
+        'locus.loadingMessage': 'loading station',
+
+        'locusNameHeaderText': 'Station Name',
+        'locusNamePlaceholder': 'enter a location description',
+        'latitudeHeaderText': 'Latitude',
+        'longitudeHeaderText': 'Longitude',
+        'distanceHeaderText': 'Distance',
+        'identityNameHeaderText': 'Personnel Name',
+        'contactNumberHeaderText': 'Contact Number',
+        'contactNumberPlaceholder': 'enter a phone number',
+        'emailHeaderText': 'E-mail',
+        'emailPlaceholder': 'enter a valid e-mail',
+        'purposeHeaderText': 'Purpose',
+        'purposePlaceholder': 'select a purpose',
+        'purposeOtherHeaderText': 'Other',
+        'purposeOtherPlaceholder': 'enter a reason',
+        'durationHeaderText': 'Duration',
+        'durationPlaceholder': 'select a duration',
+        'groupCheckInHeaderText': 'With Crew?',
+        'additionalInfoHeaderText': 'Additional Info',
+        'additionalInfoPlaceholder': 'enter your notes',
+        'distanceFormatString': '{0} miles',
+        'goToDirectionsButtonText': 'directions',
+        'goToLinkedLocusButtonTextFormatString': 'Linked Station: {0}',
+
+        'identitySearch.loadingMessage': 'loading person search',
+        'identityList.loadingMessage': 'loading people',
+        'identity.loadingMessage': 'loading person',
+
+        'goToPhoneButtonText': 'call number',
+        'goToMessagingButtonText': 'send message',
+
+        'cancelButtonText': 'Cancel',
+        'checkInButtonText': 'Check-in',
+        'checkOutButtonText': 'Check-out',
+        'editCheckInButtonText': 'Edit Check-in',
+        'goToOpenCheckInButtonText': 'Open Check-in',
+
+        'distance.loadingMessage': 'calculating distance',
+        'entryLogStatus.loadingMessage': 'determining entry log status',
+        'checkIn.loadingMessage': 'loading check-in prerequisites',
+
+        'entryLogList.loadingMessage': 'loading entry logs',
+        'entryLog.loadingMessage': 'loading entry log',
+
+        'entryLogListHeaderText': 'Entry Logs',
+
+        'goToHelpButtonText': 'Help',
+        'goToLogOutButtonText': 'Log out',
+
+        'saveButtonText': 'Save',
+        
+        'criticalSystemErrorMessage': 'critical error',
+        'locusNotFoundErrorMessage': 'station not found',
+        'identityNotFoundErrorMessage': 'person not found',
+        'entryLogNotFoundErrorMessage': 'check-in not found',
+        'distanceUnknownErrorMessage': 'distance unknown',
+        'directionsUnavailableErrorMessage': 'directions unavailable',
 
         'logoImageAlt': 'AEP',
         'logoImageSrc': 'images/aep_logo_180x180.png',
         'logoImageSvgSrc': 'images/aep_logo_180x180.svg',
 
-        'checkedInIconAlt': 'station currently has personnel checked-in',
+        'checkedInIconAlt': 'station currently has people checked-in',
         'checkedInIconSrc': 'images/checked-in_180x180.png',
         'checkedInIconSvgSrc': 'images/checked-in_180x180.svg',
 
-        'checkedInWithCrewIconAlt': 'station currently has personnel checked-in',
+        'checkedInWithCrewIconAlt': 'station currently has people checked-in',
         'checkedInWithCrewIconSrc': 'images/checked-in_with_crew_180x180.png',
         'checkedInWithCrewIconSvgSrc': 'images/checked-in_with_crew_180x180.svg',
 
@@ -30,49 +117,6 @@ define(function(require) {
         'outageIconAlt': 'station currently has an outage',
         'outageIconSrc': 'images/outage_180x180.png',
         'outageIconSvgSrc': 'images/outage_180x180.svg',
-
-        'goToLocusButtonText': 'Stations',
-        'goToLocusWithIdButtonText': 'View Station',
-        'goToDirectionsButtonText': 'directions',
-
-        'gpsSearchButtonText': 'GPS',
-        'manualSearchButtonText': 'Manual',
-        'recentSearchButtonText': 'Recent',
-
-        'helpButtonText': 'Help',
-        'logOutButtonText': 'Log out',
-
-        'cancelButtonText': 'Cancel',
-        'resetButtonText': 'Reset',
-        'saveButtonText': 'Save',
-        'searchButtonText': 'Search',
-
-        'locusIdHeaderText': 'Station',
-        'locusNameHeaderText': 'Station',
-        'regionNameHeaderText': 'Region',
-        'areaNameHeaderText': 'Area',
-        'latitudeHeaderText': 'Latitude',
-        'longitudeHeaderText': 'Longitude',
-        'distanceHeaderText': 'Distance',
-        'openEntryLogListHeader': 'Open Station Entry Logs',
-
-        'locus.manualSearchPlaceholderText': 'enter a station name',
-
-        'locusSearch.viewTitleText': 'Find a Station',
-
-        'locusSearch.loadingMessage': 'loading search',
-        'locusList.loadingMessage': 'loading stations',
-        'entryLogList.loadingMessage': 'loading station entry logs',
-        'locus.loadingMessage': 'loading station',
-        'calculatingDistanceLoadingMessage': 'calculating distance',
-
-        'distanceFormatString': '{0} miles',
-        'linkedLocusHeaderText': 'Linked to',
-        
-        'criticalSystemErrorMessage': 'critical error',
-        'locusNotFoundErrorMessage': 'station not found',
-        'distanceUnknownErrorMessage': 'distance unknown',
-        'directionsUnavailableErrorMessage': 'directions unavailable',
 
         'goToGpsSearchButtonText': 'Nearby',
         'goToManualSearchButtonText': 'Search',

@@ -38,8 +38,8 @@ define(function (require) {
 
         routes: {
             '': 'goToLocusSearch',
-            'locus': 'goToLocusSearch',
-            'locus/:id': 'goToLocusWithId'
+            'station': 'goToLocusSearch',
+            'station/:id': 'goToLocusWithId'
         },
 
         goToLocusSearch: function () {

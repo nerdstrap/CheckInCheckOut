@@ -8,20 +8,19 @@ define(function (require) {
         CompositeView = require('views/CompositeView'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         utils = require('utils'),
-        handlebarsHelpers = require('handlebars.helpers'),
-        template = require('hbs!templates/EntryLogListItem');
+        template = require('hbs!templates/IdentityListItem');
 
-    var EntryLogListItemView = CompositeView.extend({
+    var IdentityListItemView = CompositeView.extend({
         initialize: function (options) {
-            console.trace('EntryLogListItemView.initialize');
+            console.trace('IdentityListItemView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
 
-            this.listenTo(this.model, 'change', this.updateViewFromModel);
+            this.listenTo(this.model, 'reset', this.updateViewFromModel);
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
-            console.trace('EntryLogListItemView.render()');
+            console.trace('IdentityListItemView.render()');
             var currentContext = this;
 
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
@@ -32,16 +31,12 @@ define(function (require) {
             return this;
         },
         events: {
-            'click .go-to-locus-button': 'goToLocusWithId',
             'click .go-to-identity-button': 'goToIdentityWithId',
             'click .go-to-directions-button': 'goToDirectionsWithLatLng'
         },
         updateViewFromModel: function () {
-            if (this.model.has('locusName')) {
-                this.$('.go-to-locus-button').html(this.model.get('locusName'));
-            }
-            if (this.model.has('userName')) {
-                this.$('.go-to-identity-button').attr('', this.model.get('identityId')).html(this.model.get('identityName'));
+            if (this.model.has('identityName')) {
+                this.$('.go-to-identity-button').html(this.model.get('identityName'));
             }
             if (this.model.has('distance')) {
                 this.$('.distance-label').html(utils.formatString(utils.getResource('distanceFormatString'), [this.model.get('distance')]));
@@ -55,35 +50,15 @@ define(function (require) {
                 this.$('.go-to-directions-button').addClass('hidden');
                 this.$('.directions-unavailable-label').removeClass('hidden');
             }
-            //if (this.model.has('hasHazard') && this.model.get('hasHazard') === "true") {
-            //    this.$('.go-to-locus-button').parent().append('<i class="fa fa-warning"></i>');
-            //}
-            //if (this.model.has('hasOpenCheckIns') && this.model.get('hasOpenCheckIns') === "true") {
-            //    this.$('.go-to-locus-button').parent().append('<i class="fa fa-user-plus"></i>');
-            //}
-            //if (this.model.has('linkedEntryLogId')) {
-            //    this.$('.go-to-locus-button').parent().append('<i class="fa fa-arrows-h"></i>');
-            //}
-            if (this.model.has('purpose')) {
-                this.$('.purpose-label').html(this.model.get('purpose'));
+            if (this.model.has('hasHazard') && this.model.get('hasHazard') === "true") {
+                this.$('.go-to-identity-button').parent().append('<i class="fa fa-warning"></i>');
             }
-            if (this.model.has('duration')) {
-                this.$('.duration-label').html(this.model.get('duration'));
+            if (this.model.has('hasOpenCheckIns') && this.model.get('hasOpenCheckIns') === "true") {
+                this.$('.go-to-identity-button').parent().append('<i class="fa fa-user-plus"></i>');
             }
-            if (this.model.has('inTime')) {
-                this.$('.in-time-label').html(handlebarsHelpers.formatDateWithDefault(this.model.get('inTime'), 'dd-mm-YYYY hh:mm', '&nbsp;'));
+            if (this.model.has('linkedIdentityId')) {
+                this.$('.go-to-identity-button').parent().append('<i class="fa fa-arrows-h"></i>');
             }
-            if (this.model.has('outTime')) {
-                this.$('.out-time-label').html(handlebarsHelpers.formatDateWithDefault(this.model.get('outTime'), 'dd-mm-YYYY hh:mm', '&nbsp;'));
-            }
-        },
-        goToLocusWithId: function (event) {
-            if (event) {
-                event.preventDefault();
-            }
-
-            var locusId = this.model.get('locusId');
-            this.dispatcher.trigger(AppEventNamesEnum.goToLocusWithId, locusId);
         },
         goToIdentityWithId: function (event) {
             if (event) {
@@ -103,10 +78,10 @@ define(function (require) {
             this.dispatcher.trigger(AppEventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
         },
         onLeave: function () {
-            console.trace('EntryLogListItemView.onLeave');
+            console.trace('IdentityListItemView.onLeave');
         }
     });
 
-    return EntryLogListItemView;
+    return IdentityListItemView;
 
 });

@@ -11,8 +11,8 @@ define(function (require) {
         {
             "entryLogId": "380",
             "locusId": "840",
-            "personnelId": "S251201",
-            "personnelName": "baltic, michael",
+            "identityId": "S251201",
+            "identityName": "baltic, michael",
             "purpose": "milkawhat",
             "additionalInfo": "ermahgerd",
             "inTime": "1416959468287",
@@ -27,8 +27,8 @@ define(function (require) {
         {
             "entryLogId": "381",
             "locusId": "840",
-            "personnelId": "S251202",
-            "personnelName": "walden, heather",
+            "identityId": "S251202",
+            "identityName": "walden, heather",
             "purpose": "what a milk",
             "additionalInfo": "ermahgerd",
             "inTime": "1416959468487",
@@ -43,11 +43,12 @@ define(function (require) {
         {
             "entryLogId": "382",
             "locusId": "840",
-            "personnelId": "S251203",
-            "personnelName": "shu, shujing",
+            "identityId": "S251203",
+            "identityName": "shu, shujing",
             "purpose": "burgers",
             "additionalInfo": "ermahgerd",
             "inTime": "1416959498287",
+            "outTime": "1416959498287",
             "contactNumber": "6145551212",
             "email": "sshu@aep.com",
             "duration": "60",
@@ -59,11 +60,12 @@ define(function (require) {
         {
             "entryLogId": "383",
             "locusId": "840",
-            "personnelId": "S251204",
-            "personnelName": "veit, alex",
+            "identityId": "S251204",
+            "identityName": "veit, alex",
             "purpose": "cake",
             "additionalInfo": "ermahgerd",
             "inTime": "1419959468287",
+            "outTime": "1419959468287",
             "contactNumber": "6145551212",
             "email": "aaveit@aep.com",
             "duration": "60",
@@ -74,8 +76,54 @@ define(function (require) {
         }
     ];
 
-    var _userId = 'S251201';
-    var _userRole = 'Admin';
+    var _userIdentity = {
+        "identityId": "S251201",
+        "identityName": "Baltic, Michael",
+        "firstName": "Michael",
+        "lastName": "Baltic",
+        "middleInitial": "E",
+        "contactNumber": "6143239560",
+        "email": "mebaltic@aep.com",
+        "role": "Admin"
+    };
+
+    var _purposes = [
+        {
+            "defaultDuration": "60",
+            "purpose": "change something"
+        },
+        {
+            "defaultDuration": "120",
+            "purpose": "fix it"
+        },
+        {
+            "defaultDuration": "480",
+            "purpose": "turn it off"
+        }
+    ];
+    var _durations = [
+        {
+            "value": "30",
+            "description": "30 minutes"
+        },
+        {
+            "value": "60",
+            "description": "1 hour"
+        },
+        {
+
+            "value": "120",
+            "description": "2 hours"
+        },
+        {
+            "value": "360",
+            "description": "3 hours"
+        },
+        {
+            "value": "480",
+            "description": "4 hours"
+        }
+    ];
 
     var _getById = function (entryLogId) {
         return _.where(_entryLogList, function (entryLog) {
@@ -89,9 +137,9 @@ define(function (require) {
         });
     };
 
-    var _getByPersonnelId = function (personnelId) {
+    var _getByidentityId = function (identityId) {
         return _.where(_entryLogList, function (entryLog) {
-            return entryLog.personnelId === personnelId;
+            return entryLog.identityId === identityId;
         });
     };
 
@@ -108,22 +156,22 @@ define(function (require) {
         return entryLog;
     };
 
-    var _postEditCheckIn = function (entryLogId, duration, additionalInfo) {
+    var _postEditCheckIn = function (entryLogAttributes) {
         var match = _.find(_entryLogList, function (entryLog) {
-            return entryLog.entryLogId === entryLogId;
+            return entryLog.entryLogId === entryLogAttributes.entryLogId;
         })
 
         if (match) {
-            match.duration = duration;
-            match.additionalInfo = additionalInfo;
+            match.duration = entryLogAttributes.duration;
+            match.additionalInfo = entryLogAttributes.additionalInfo;
         }
 
         return match;
     };
 
-    var _postCheckOut = function (entryLogId) {
+    var _postCheckOut = function (entryLogAttributes) {
         var match = _.find(_entryLogList, function (entryLog) {
-            return entryLog.entryLogId === entryLogId;
+            return entryLog.entryLogId === entryLogAttributes.entryLogId;
         })
 
         if (match) {
@@ -159,25 +207,6 @@ define(function (require) {
             console.trace('EntryLogService.initialize');
             options || (options = {});
         },
-        getEntryLogOptions: function (options) {
-            options || (options = {});
-            var currentContext = this;
-            var deferred = $.Deferred();
-
-            var userId = _userId;
-            var userRole = _userRole;
-
-            var results = {
-                userId: userId,
-                userRole: userRole
-            };
-
-            globals.window.setTimeout(function () {
-                deferred.resolveWith(currentContext, [results]);
-            }, 50);
-
-            return deferred.promise();
-        },
         getEntryLogList: function (options) {
             options || (options = {});
             var currentContext = this;
@@ -188,22 +217,35 @@ define(function (require) {
                 entryLogList = _getById(options.entryLogId);
             } else if (options.locusId) {
                 entryLogList = _getByLocusId(options.locusId);
-            } else if (options.personnelId) {
-                entryLogList = _getByPersonnelId(options.personnelId);
+            } else if (options.identityId) {
+                entryLogList = _getByidentityId(options.identityId);
             } else if (options.coords) {
                 entryLogList = _getByCoords(options.coords, env.getDistanceThreshold(), env.getSearchResultsThreshold());
             } else {
                 entryLogList = _entryLogList;
             }
 
-            var userId = _userId;
-            var userRole = _userRole;
-
-            var results = _.extend(options, {
+            var results = {
                 entryLogList: entryLogList,
-                userId: userId,
-                userRole: userRole
-            });
+                identity: _userIdentity
+            };
+
+            globals.window.setTimeout(function () {
+                deferred.resolveWith(currentContext, [results]);
+            }, 50);
+
+            return deferred.promise();
+        },
+        getCheckInOptions: function (options) {
+            options || (options = {});
+            var currentContext = this;
+            var deferred = $.Deferred();
+
+            var results = {
+                identity: _userIdentity,
+                purposes: _purposes,
+                durations: _durations
+            };
 
             globals.window.setTimeout(function () {
                 deferred.resolveWith(currentContext, [results]);
@@ -217,13 +259,46 @@ define(function (require) {
             var deferred = $.Deferred();
 
             var entryLog = _postCheckIn(options);
-            var userId = _userId;
-            var userRole = _userRole;
 
             var results = {
                 entryLog: entryLog,
-                userId: userId,
-                userRole: userRole
+                identity: _userIdentity
+            };
+
+            globals.window.setTimeout(function () {
+                deferred.resolveWith(currentContext, [results]);
+            }, 50);
+
+            return deferred.promise();
+        },
+        postEditCheckIn: function (options) {
+            options || (options = {});
+            var currentContext = this;
+            var deferred = $.Deferred();
+
+            var entryLog = _postEditCheckIn(options);
+
+            var results = {
+                entryLog: entryLog,
+                identity: _userIdentity
+            };
+
+            globals.window.setTimeout(function () {
+                deferred.resolveWith(currentContext, [results]);
+            }, 50);
+
+            return deferred.promise();
+        },
+        postCheckOut: function (options) {
+            options || (options = {});
+            var currentContext = this;
+            var deferred = $.Deferred();
+
+            var entryLog = _postCheckOut(options);
+
+            var results = {
+                entryLog: entryLog,
+                identity: _userIdentity
             };
 
             globals.window.setTimeout(function () {

@@ -5,7 +5,7 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseModel = require('models/BaseModel'),
-        env = require('env');
+        utils = require('utils');
 
     var LocusModel = BaseModel.extend({
         idAttribute: 'locusId',
@@ -24,14 +24,14 @@ define(function (require) {
                         attributes.latitude = Number(latitude);
                     }
                 }
-                
+
                 if (attributes.hasOwnProperty('longitude')) {
                     var longitude = attributes.longitude;
                     if (longitude && !isNaN(longitude)) {
                         attributes.longitude = Number(longitude);
                     }
                 }
-                
+
                 if (attributes.hasOwnProperty('distance')) {
                     var distance = attributes.distance;
                     if (distance && !isNaN(distance)) {

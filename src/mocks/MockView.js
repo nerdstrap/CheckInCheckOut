@@ -12,6 +12,7 @@ define(function (require) {
             this.setUserId = jasmine.createSpy();
             this.setUserRole = jasmine.createSpy();
             this.showLoading = jasmine.createSpy();
+            this.completeLoading = jasmine.createSpy();
             this.hideLoading = jasmine.createSpy();
             this.showSuccess = jasmine.createSpy();
             this.showError = jasmine.createSpy();

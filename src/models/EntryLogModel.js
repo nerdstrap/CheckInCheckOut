@@ -9,6 +9,47 @@ define(function (require) {
 
     var EntryLogModel = BaseModel.extend({
         idAttribute: 'entryLogId',
+        validation: {
+            locusId: {
+                required: true,
+                minLength: 1
+            },
+            locusName: {
+                required: true,
+                minLength: 1
+            },
+            identityId: {
+                required: true,
+                minLength: 1
+            },
+            identityName: {
+                required: true,
+                minLength: 1
+            },
+            contactNumber: {
+                required: true,
+                pattern: 'digits',
+                minLength: 10,
+                maxLength: 11
+            },
+            email: {
+                required: true,
+                pattern: 'email'
+            },
+            purpose: {
+                required: true,
+                minLength: 1
+            },
+            purposeOther: {
+                required: function() {
+                    return (this.get('purpose') === 'Other');
+                }
+            },
+            duration: {
+                required: true,
+                minLength: 1
+            }
+        },
         set: function (key, val, options) {
             var attributes;
             if (typeof key === 'object') {
@@ -56,7 +97,7 @@ define(function (require) {
                 if (attributes.hasOwnProperty('outTime')) {
                     var outTime = attributes.outTime;
                     if (outTime && !isNaN(outTime)) {
-                        attributes.outTime = new Date(outTime);
+                        attributes.outTime = new Date(Number(outTime));
                     }
                 }
             }

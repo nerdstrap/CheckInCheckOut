@@ -14,7 +14,7 @@ define(function (require) {
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
 
-            //this.listenTo(appEvents, AppEventNamesEnum.userRoleUpdated, this.userRoleUpdated);
+            //this.listenTo(appEvents, AppEventNamesEnum.identityUpdated, this.identityUpdated);
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
@@ -29,7 +29,7 @@ define(function (require) {
         events: {
             'click #footer-button': 'footerButtonClick'
         },
-        userRoleUpdated: function (userRole) {
+        identityUpdated: function (userRole) {
             if (userRole === UserRolesEnum.Admin) {
                 //show admin functions
             } else {

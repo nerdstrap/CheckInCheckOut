@@ -1,25 +1,16 @@
-<div class="locus-view">
+<div class="identity-view">
     <div class="row">
         <div class="small-12 columns">
-            <h3 class="locus-name-label" data-locus-id="{{locusId}}">{{locusName}}</h3>
-        </div>
-    </div>
-    <div class="row linked-locus-view hidden">
-        <div class="small-12 columns">
-            <a class="go-to-linked-locus-button" data-linked-locus-id href="#">{{resource "goToLinkedLocusButtonTextFormatString"}}<i class="fa fa-arrows-h"></i></a>
+            <h3 class="identity-name-label" data-identity-id="{{identityId}}">{{identityName}}</h3>
         </div>
     </div>
     <div class="row loading {{cid}} hidden">
         <div class="small-12 columns">
-            <span class="loading-message">{{resource "locus.loadingMessage"}}</span>
+            <span class="loading-message">{{resource "identity.loadingMessage"}}</span>
             <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
         </div>
     </div>
-    <div class="row hazard-view hidden">
-        <div class="small-12 columns">
-            hazard
-        </div>
-    </div>
+
     <div class="row entry-log-status-view">
         <div class="small-12 columns">
             <div class="entry-log-status-loading-view">
@@ -29,7 +20,7 @@
             <a class="button radius success check-in-button hidden" href="#">{{resource "checkInButtonText"}}<i class="fa fa-check"></i></a>
             <a class="button radius warning check-out-button hidden" data-entry-log-id href="#">{{resource "checkOutButtonText"}}<i class="fa fa-times"></i></a>
             <a class="button radius edit-check-in-button hidden" data-entry-log-id href="#">{{resource "editCheckInButtonText"}}<i class="fa fa-pencil-square-o"></i></a>
-            <a class="go-to-locus-button hidden" data-locus-id href="#">{{resource "goToOpenCheckInButtonText"}}</a>
+            <a class="go-to-identity-button hidden" data-identity-id href="#">{{resource "goToIdentityButtonText"}}</a>
         </div>
     </div>
     <div class="row alert-view-container {{cid}}">
@@ -38,10 +29,6 @@
     <div class="row">
         <div class="small-12 columns">
             <span class="distance-label">{{withDefault distance "&nbsp;"}}</span>&nbsp;&#124;&nbsp;<a class="go-to-directions-button" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{resource "goToDirectionsButtonText"}}&nbsp;<i class="fa fa-map-marker"></i></a><span class="directions-unavailable-label hidden">{{resource "directionsUnavailableErrorMessage"}}</span>
-        </div>
-    </div>
-    <div class="row">
-        <div id="warning-list-view-container" class="small-12 columns">
         </div>
     </div>
     <div class="row">

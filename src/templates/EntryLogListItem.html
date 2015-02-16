@@ -2,17 +2,17 @@
     <div class="row">
         <div class="small-3 columns">
             <a class="go-to-locus-button hidden" data-locus-id="{{locusId}}" href="#">{{withDefault locusName "&nbsp;"}}</a>
-            <a class="go-to-personnel-button" data-personnel-id="{{personnelId}}" href="#">{{withDefault personnelName "&nbsp;"}}</a>
+            <a class="go-to-identity-button" data-identity-id="{{identityId}}" href="#">{{withDefault identityName "&nbsp;"}}</a>
         </div>
         <div class="small-3 columns">
-            <span class="in-time-label"></span>
+            <span class="in-time-label">{{formatDateWithDefault inTime "dd-mm-YYYY hh:mm" "&nbsp;"}}</span>
         </div>
         <div class="small-3 columns">
-            <span class="purpose-label"></span>
-            <span class="duration-label hidden"></span>
+            <span class="purpose-label">{{withDefault purpose "&nbsp;"}}</span>
+            <span class="duration-label hidden">{{withDefault duration "&nbsp;"}}</span>
         </div>
         <div class="small-3 columns">
-            <span class="out-time-label"></span>
+            <span class="out-time-label">{{formatDateWithDefault outTime "dd-mm-YYYY hh:mm" "&nbsp;"}}</span>
         </div>
     </div>
     <div class="row hidden">

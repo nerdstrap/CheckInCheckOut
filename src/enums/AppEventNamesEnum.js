@@ -4,21 +4,30 @@ define(function (require) {
     var AppEventNamesEnum = {
         login: 'login',
         logout: 'logout',
-        userRoleUpdated: 'userRoleUpdated',
+        identityUpdated: 'identityUpdated',
 
         goToLocusSearch: 'goToLocusSearch',
         goToLocusWithId: 'goToLocusWithId',
         refreshLocusListByGps: 'refreshLocusListByGps',
         refreshLocusList: 'refreshLocusList',
 
-        goToEntryLogWithId: 'goToEntryLogWithId',
         refreshEntryLogListByGps: 'refreshEntryLogListByGps',
         refreshEntryLogList: 'refreshEntryLogList',
 
-        goToNewEntryLog: 'goToNewEntryLog',
+        goToCheckIn: 'goToCheckIn',
         checkIn: 'checkIn',
         checkInSuccess: 'checkInSuccess',
         checkInError: 'checkInError',
+
+        goToEditCheckIn: 'goToEditCheckIn',
+        editCheckIn: 'editCheckIn',
+        editCheckInSuccess: 'editCheckInSuccess',
+        editCheckInError: 'editCheckInError',
+
+        goToCheckOut: 'goToCheckOut',
+        checkOut: 'checkOut',
+        checkOutSuccess: 'checkOutSuccess',
+        checkOutError: 'checkOutError',
 
         goToDirectionsWithLatLng: 'goToDirectionsWithLatLng'
     };

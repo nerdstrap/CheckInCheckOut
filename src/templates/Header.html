@@ -1,10 +1,13 @@
 <div class="header-view">
     <div class="row">
-        <div class="small-8 columns" id="header-title-container">
+        <div class="small-6 columns" id="header-title-container">
             <h5 class="app-title-label">{{resource "appTitleText"}}</h5>
         </div>
-        <div class="small-4 columns">
-            <a id="go-to-locus-search-button" class="large-link" href="#">{{resource "goToLocusButtonText"}}</a>
+        <div class="small-3 columns go-to-open-check-in-button-container hidden">
+            <a id="go-to-open-check-in-button" class="button radius tiny warning" href="#">{{resource "goToOpenCheckInButtonText"}}<i class="fa fa-check-circle-o"></i></a>
+        </div>
+        <div class="small-3 columns">
+            <a id="go-to-locus-search-button" class="button radius tiny" href="#">{{resource "goToLocusSearchButtonText"}}<i class="fa fa-search"></i></a>
         </div>
     </div>
 </div>

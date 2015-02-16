@@ -72,7 +72,7 @@ define(function (require) {
                 expect(self.locusSearchControllerInstance.router.navigate).toHaveBeenCalledWith('locus', jasmine.any(Object));
                 expect(locusSearchView.showLoading).toHaveBeenCalled();
                 expect(self.locusSearchControllerInstance.locusService.getLocusSearchOptions).toHaveBeenCalled();
-                expect(self.locusSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.userRoleUpdated, fakeUserRole);
+                expect(self.locusSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.identityUpdated, fakeUserRole);
                 expect(locusSearchView.hideLoading).toHaveBeenCalled();
                 done();
             }, function () {
