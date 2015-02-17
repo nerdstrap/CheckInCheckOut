@@ -37,6 +37,30 @@ define(function (require) {
         return phone;
     };
 
+    utils.formatPhone = function (phone, format) {
+        if (phone) {
+            var cleanedPhone = utils.cleanPhone(phone);
+            var formattedPhone = cleanedPhone;
+            if (cleanedPhone.length === 10) {
+                formattedPhone = '(' + cleanedPhone.substr(0, 3) + ') ' + cleanedPhone.substr(3, 3) + '-' + cleanedPhone.substr(6, 4);
+            }
+            if (cleanedPhone.length === 7) {
+                formattedPhone = cleanedPhone.substr(0, 3) + '-' + cleanedPhone.substr(3, 4);
+            }
+            return formattedPhone;
+        }
+        return phone;
+    };
+
+    utils.formatDate = function (date) {
+        var day = date.getDate();
+        var month = date.getMonth();
+        var fullYear = date.getFullYear();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        return month + '/' + day + '/' + fullYear + ' ' + hours + ':' + minutes;
+    };
+
     utils.formatString = function (formatString, args) {
         return formatString.replace(/{(\d+)}/g, function (match, number) {
 

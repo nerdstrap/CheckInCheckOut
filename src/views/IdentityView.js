@@ -10,6 +10,7 @@ define(function (require) {
         EntryLogListView = require('views/EntryLogListView'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         utils = require('utils'),
+        helpers = require('handlebars.helpers'),
         template = require('hbs!templates/Identity');
 
     var IdentityView = BaseView.extend({
@@ -39,20 +40,42 @@ define(function (require) {
         events: {
         },
         updateViewFromModel: function () {
-            if (this.model.has('identityName')) {
-                this.$('.identity-name-label').html(this.model.get('identityName'));
+            var currentContext = this;
+
+            var identityName;
+            if (currentContext.model.has('identityName')) {
+                identityName = currentContext.model.get('identityName');
             }
-            if (this.model.has('contactNumber')) {
-                this.$('#call-identity-button').attr('href', 'tel:' + this.model.get('contactNumber')).removeClass('hidden');
-                this.$('#message-identity-button').attr('href', 'sms:' + this.model.get('contactNumber')).removeClass('hidden');
-            } else {
-                this.$('#call-identity-button').addClass('hidden');
-                this.$('#message-identity-button').addClass('hidden');
+            currentContext.$('#identity-name-header').html(identityName);
+
+            var cleanedContactNumber;
+            var formattedContactNumber;
+            if (currentContext.model.has('contactNumber')) {
+                currentContext.hasContactNumber = true;
+                var contactNumber = currentContext.identityModel.get('contactNumber');
+                cleanedContactNumber = utils.cleanPhone(contactNumber);
+                formattedContactNumber = utils.formatPhone(cleanedContactNumber);
             }
-            if (this.model.has('email')) {
-                this.$('#email-identity-button').attr('href', 'mailto:' + this.model.get('email')).removeClass('hidden');
+            if (currentContext.hasContactNumber) {
+                currentContext.$('#contact-number-label').html(formattedContactNumber);
+                currentContext.$('#message-contact-number-button').attr('href', 'sms:' + cleanedContactNumber);
+                currentContext.$('#call-contact-number-button').attr('href', 'tel:' + cleanedContactNumber);
+                currentContext.$('#contact-number-container').removeClass('hidden');
             } else {
-                this.$('#email-identity-button').addClass('hidden');
+                currentContext.$('#contact-number-container').addClass('hidden');
+            }
+           
+            var email;
+            if (currentContext.model.has('email')) {
+                currentContext.hasEmail = true
+                email = currentContext.model.get('email');
+            }
+            if (currentContext.hasEmail) {
+                currentContext.$('#email-label').html(email);
+                currentContext.$('#email-button').attr('href', 'mailto:' + email)
+                currentContext.$('#email-container').removeClass('hidden');
+            } else {
+                currentContext.$('#email-container').addClass('hidden');
             }
         },
         onLoaded: function () {
@@ -63,9 +86,7 @@ define(function (require) {
                 dispatcher: currentContext.dispatcher,
                 collection: currentContext.entryLogCollection,
                 showLocus: true,
-                showIdentity: false,
-                showPosition: true,
-                showContact: false
+                showIdentity: false
             });
             currentContext.appendChildTo(currentContext.entryLogListViewInstance, '#entry-log-list-view-container');
 

@@ -1,28 +1,48 @@
 <div class="identity-view">
     <div class="row">
         <div class="small-12 columns">
-            <h3 class="identity-name-label" data-identity-id="{{identityId}}">{{identityName}}</h3>
+            <h2 id="identity-name-header" class="t-heading -size-m -color-inherit" data-identity-id="{{identityId}}">{{identityName}}</h2><i class="fa fa-star-o"></i>
         </div>
     </div>
-    <div class="row">
-        <div class="small-12 columns">
-            <a id="call-identity-button" href="tel:{{contactNumber}}">{{resource "callButtonText"}}</a>
+    <div id="contact-number-container" class="row">
+        <div class="small-10 columns">
+            <div class="row">
+                <div class="small-12 columns">
+                    <span>{{resource "contactNumberHeaderText"}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="small-12 columns">
+                    <span id="contact-number-label">{{formatPhoneWithDefault contactNumber "&nbsp;"}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="small-2 columns">
+            <a id="message-contact-number-button" href="sms:{{contactNumber}}"><i class="fa fa-comment-o"></i></a>
+            <a id="call-contact-number-button" href="tel:{{contactNumber}}"><i class="fa fa-phone"></i></a>
         </div>
     </div>
-    <div class="row">
-        <div class="small-12 columns">
-            <a id="message-identity-button" href="sms:{{contactNumber}}">{{resource "messageButtonText"}}</a>
+    <div id="email-container" class="row">
+        <div class="small-10 columns">
+            <div class="row">
+                <div class="small-12 columns">
+                    <span>{{resource "emailHeaderText"}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="small-12 columns">
+                    <span id="email-label">{{withDefault email "&nbsp;"}}</span>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="small-12 columns">
-            <a id="email-identity-button" href="mailto:{{email}}">{{resource "emailButtonText"}}</a>
+        <div class="small-2 columns">
+            <a id="email-button" href="mailto:{{email}}"><i class="fa fa-envelope-o"></i></a>
         </div>
     </div>
     <div class="row loading {{cid}} hidden">
         <div class="small-12 columns">
             <span class="loading-message">{{resource "identity.loadingMessage"}}</span>
-            <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
+            <img src="{{resource 'loadingIconSrc'}}" class="loading-icon" />
         </div>
     </div>
     <div class="row alert-view-container {{cid}}">

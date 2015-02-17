@@ -1,46 +1,42 @@
 <div class="locus-entry-log-list-item-view">
-    <div class="row">
-        <div class="small-3 columns">
-            <a class="go-to-locus-button hidden" data-locus-id="{{locusId}}" href="#">{{withDefault locusName "&nbsp;"}}</a>
-            <a class="go-to-identity-button" data-identity-id="{{identityId}}" href="#">{{withDefault identityName "&nbsp;"}}</a>
+    <div class="row locus-container hidden">
+        <div class="small-10 columns">
+            <a class="go-to-locus-button" data-locus-id="{{locusId}}" href="#">{{withDefault locusName "&nbsp;"}}</a>
         </div>
-        <div class="small-3 columns">
+        <div class="small-2 columns">
+            <span class="coordinates-unavailable-label hidden">{{resource "coordinatesUnavailableErrorMessage"}}</span>
+            <a class="go-to-directions-button hidden" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{withDefault distance "&nbsp;"}}<i class="fa fa-map-marker"></i></a>
+        </div>
+    </div>
+    <div class="row identity-container">
+        <div class="small-10 columns">
+            <a class="go-to-identity-button" data-locus-id="{{identityId}}" href="#">{{withDefault identityName "&nbsp;"}}</a>
+        </div>
+        <div class="small-2 columns">
+            <a class="message-contact-number-button hidden" href="sms:{{contactNumber}}"><i class="fa fa-comment-o"></i></a>
+            <a class="call-contact-number-button hidden" href="tel:{{contactNumber}}"><i class="fa fa-phone"></i></a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-5 columns">
             <span class="in-time-label">{{formatDateWithDefault inTime "dd-mm-YYYY hh:mm" "&nbsp;"}}</span>
         </div>
-        <div class="small-3 columns">
+        <div class="small-5 columns">
             <span class="purpose-label">{{withDefault purpose "&nbsp;"}}</span>
-            <span class="duration-label hidden">{{withDefault duration "&nbsp;"}}</span>
         </div>
-        <div class="small-3 columns">
+        <div class="small-2 columns">
+            <span class="group-check-in-label"><i class="fa fa-user-plus"></i></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-10 columns">
             <span class="out-time-label">{{formatDateWithDefault outTime "dd-mm-YYYY hh:mm" "&nbsp;"}}</span>
         </div>
-    </div>
-    <div class="row">
-        <div class="small-12 columns">
-            <a class="call-identity-button hidden" href="tel:{{contactNumber}}">{{resource "callButtonText"}}</a>
+        <div class="small-2 columns">
+            <span class="expired-check-in-label"><i class="fa fa-exclamation-circle"></i></span>
         </div>
     </div>
-    <div class="row">
-        <div class="small-12 columns">
-            <a class="message-identity-button hidden" href="sms:{{contactNumber}}">{{resource "messageButtonText"}}</a>
-        </div>
-    </div>
-    <div class="row">
-        <div class="small-12 columns">
-            <a class="email-identity-button hidden" href="mailto:{{email}}">{{resource "emailButtonText"}}</a>
-        </div>
-    </div>
-    <div class="row">
-        <div class="small-12 columns">
-            <span class="distance-label hidden">{{withDefault distance "&nbsp;"}}</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="small-12 columns">
-            <a class="go-to-directions-button hidden" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{resource "goToDirectionsButtonText"}}<i class="fa fa-map-marker"></i></a>
-        </div>
-    </div>
-    <div class="row">
+    <div class="row hidden">
         <div class="small-12 columns">
             <span class="additional-info-label">{{withDefault additionalInfo "&nbsp;"}}</span>
         </div>

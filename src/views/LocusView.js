@@ -169,9 +169,7 @@ define(function (require) {
                 dispatcher: currentContext.dispatcher,
                 collection: currentContext.entryLogCollection,
                 showLocus: false,
-                showIdentity: true,
-                showPosition: false,
-                showContact: true
+                showIdentity: true
             });
             currentContext.appendChildTo(currentContext.entryLogListViewInstance, '#entry-log-list-view-container');
 

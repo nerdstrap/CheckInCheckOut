@@ -5,121 +5,139 @@
 /* -------- NocLog -------- */
 
 root {
-  display: block;
-  font-size: 1em;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    display: block;
+    font-size: 1em;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 ol, ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 fieldset {
-  margin: 0;
+    margin: 0;
 }
 
 /* stickey footer http://www.cssstickyfooter.com/using-sticky-footer-code.html*/
 html, body {
-  height: 100%;
+    height: 100%;
 }
 
 body {
-  font-size: 1em;
-  line-height: 1.5em;
+    font-size: 1em;
+    line-height: 1.5em;
 }
 
 .shell-view {
-  min-height: 100%;
-  background-color: #FFFFFF;
+    min-height: 100%;
+    background-color: #FFFFFF;
 }
 
 .shell-view {
-  overflow: auto;
-  padding-bottom: 40px;
+    overflow: auto;
+    padding-bottom: 40px;
 }
 
 /* must be same height as the footer */
 #footer-view {
-  position: relative;
-  margin-top: -40px;
-  /* negative value of footer height */
-  height: 40px;
-  line-height: 40px;
-  overflow: hidden;
-  clear: both;
-  background-color: #DEDEDE;
+    position: relative;
+    margin-top: -40px;
+    /* negative value of footer height */
+    height: 40px;
+    line-height: 40px;
+    overflow: hidden;
+    clear: both;
+    background-color: #DEDEDE;
 }
 
 .footer-logo {
-  width: 40px;
+    width: 40px;
 }
 
 /*Opera Fix*/
 body:before {
-  content: "";
-  height: 100%;
-  float: left;
-  width: 0;
-  margin-top: -32767px;
+    content: "";
+    height: 100%;
+    float: left;
+    width: 0;
+    margin-top: -32767px;
 }
 
 .hidden {
-  display: none;
+    display: none;
 }
 
 .invisible {
-  visibility: hidden;
+    visibility: hidden;
 }
 
 #header-view {
-  background-color: #DEDEDE;
+    background-color: #DEDEDE;
 }
 
 .locus-search-view,
 .locus-list-view,
 .locus-view {
-
 }
 
 .locus-list-item-view {
-  background-color: #DEDEDE;
-  border: solid 1px #C2C2C2;
-  padding: 5px;
+    background-color: #DEDEDE;
+    border: solid 1px #C2C2C2;
+    padding: 5px;
 }
 
 .alert-view-container {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 .alert-view-container .alert-box {
-  display: inline-block;
-  margin: 3px 3px 3px 0;
+    display: inline-block;
+    margin: 3px 3px 3px 0;
 }
 
 .fa-user-plus {
-  margin-left: 2px;
-  color: green;
+    margin-left: 2px;
+    color: green;
 }
 
 .fa-map-marker {
-  margin-left: 2px;
-  color: blue;
+    margin-left: 2px;
+    color: blue;
 }
 
 .fa-warning {
-  margin-left: 2px;
-  color: yellow;
+    margin-left: 2px;
+    color: yellow;
 }
 
 .fa-arrows-h {
-  margin-left: 2px;
-  color: red;
+    margin-left: 2px;
+    color: red;
 }
 
 .invalid {
-  border: solid red 1px;
-  color: red;
+    border: solid red 1px;
+    color: red;
+}
+
+.t-heading {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #444;
+    margin-bottom: 0.5em;
+    padding: 0;
+}
+
+.t-heading.-size-m {
+    font-size: 24px;
+}
+
+.t-heading.-color-inherit {
+    color: inherit;
 }

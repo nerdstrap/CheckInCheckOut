@@ -48,9 +48,9 @@ define(function(require) {
         'longitudePlaceholder': 'Longitude',
         'distanceHeaderText': 'Distance',
         'identityNameHeaderText': 'Personnel Name',
-        'contactNumberHeaderText': 'Contact Number',
+        'contactNumberHeaderText': 'mobile',
         'contactNumberPlaceholder': 'enter phone number',
-        'emailHeaderText': 'E-mail',
+        'emailHeaderText': 'email',
         'emailPlaceholder': 'enter valid e-mail',
         'purposeHeaderText': 'Purpose',
         'purposePlaceholder': 'select purpose',
@@ -68,10 +68,6 @@ define(function(require) {
         'identitySearch.loadingMessage': 'loading person search',
         'identityList.loadingMessage': 'loading people',
         'identity.loadingMessage': 'loading person',
-
-        'callButtonText': 'call user',
-        'messageButtonText': 'sms user',
-        'emailButtonText': 'email user',
 
         'cancelButtonText': 'Cancel',
         'checkInButtonText': 'Check-in',
@@ -97,6 +93,7 @@ define(function(require) {
         'locusNotFoundErrorMessage': 'station not found',
         'identityNotFoundErrorMessage': 'person not found',
         'entryLogNotFoundErrorMessage': 'check-in not found',
+        'coordinatesUnavailableErrorMessage': 'gps unavailable',
         'distanceUnknownErrorMessage': 'distance unknown',
         'directionsUnavailableErrorMessage': 'directions unavailable',
 

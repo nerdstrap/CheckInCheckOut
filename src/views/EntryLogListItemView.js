@@ -18,8 +18,6 @@ define(function (require) {
             this.dispatcher = options.dispatcher || this;
             this.showLocus = options.showLocus;
             this.showIdentity = options.showIdentity;
-            this.showPosition = options.showPosition;
-            this.showContact = options.showContact;
 
             this.listenTo(this.model, 'change', this.updateViewFromModel);
             this.listenTo(this, 'leave', this.onLeave);
@@ -41,85 +39,91 @@ define(function (require) {
             'click .go-to-directions-button': 'goToDirectionsWithLatLng'
         },
         updateViewFromModel: function () {
-            if (this.model.has('locusName')) {
-                this.$('.go-to-locus-button').html(this.model.get('locusName'));
-            }
-            if (this.showLocus) {
-                this.$('.go-to-locus-button').removeClass('hidden');
-            } else {
-                this.$('.go-to-locus-button').addClass('hidden');
-            }
+            var currentContext = this;
 
-            if (this.model.has('identityName')) {
-                this.$('.go-to-identity-button').attr('data-identity-id', this.model.get('identityId')).html(this.model.get('identityName'));
-            }
-            if (this.showIdentity) {
-                this.$('.go-to-identity-button').removeClass('hidden');
-            } else {
-                this.$('.go-to-identity-button').addClass('hidden');
-            }
-
-            if (this.model.has('distance')) {
-                this.$('.distance-label').html(utils.formatString(utils.getResource('distanceFormatString'), [this.model.get('distance')]));
-            } else {
-                this.$('.distance-label').html(utils.getResource('distanceUnknownErrorMessage'));
-            }
-            if (this.model.has('latitude') && this.model.has('longitude')) {
-                this.hasCoordinates = true;
-                this.$('.go-to-directions-button').attr('data-latitude', this.model.get('latitude')).attr('data-longitude', this.model.get('longitude'));
-            } else {
-                this.hasCoordinates = false;
-                this.$('.go-to-directions-button').addClass('hidden');
-            }
-            if (this.showPosition) {
-                this.$('.distance-label').removeClass('hidden');
-                if (this.hasCoordinates) {
-                    this.$('.go-to-directions-button').removeClass('hidden');
+            if (currentContext.showLocus) {
+                var locusName;
+                if (currentContext.model.has('locusName')) {
+                    locusName = currentContext.model.get('locusName');
                 }
-            }
-            else {
-                this.$('.distance-label').addClass('hidden');
-                this.$('.go-to-directions-button').addClass('hidden');
+                currentContext.$('.go-to-locus-button').html(locusName);
+
+                var distance;
+                var formattedDistance;
+                var latitude;
+                var longitude;
+                if (currentContext.model.has('distance') && currentContext.model.has('latitude') && currentContext.model.has('longitude')) {
+                    currentContext.hasCoordinates = true;
+                    formattedDistance = utils.formatString(utils.getResource('distanceFormatString'), [distance]);
+                    latitude = currentContext.model.get('latitude');
+                    longitude = currentContext.model.get('longitude');
+                }
+                if (currentContext.hasCoordinates) {
+                    currentContext.$('.coordinates-unavailable-label').addClass('hidden');
+                    currentContext.$('.go-to-directions-button').attr('data-latitude', latitude).attr('data-longitude', longitude).removeClass('hidden');
+                } else {
+                    currentContext.$('.coordinates-unavailable-label').removeClass('hidden');
+                    currentContext.$('.go-to-directions-button').addClass('hidden');
+                }
+                currentContext.$('.locus-container').removeClass('hidden');
+            } else {
+                currentContext.$('.locus-container').addClass('hidden');
             }
 
+            if (currentContext.showIdentity) {
+                var identityName;
+                if (currentContext.model.has('identityName')) {
+                    identityName = currentContext.model.get('identityName');
+                }
+                currentContext.$('.go-to-identity-button').html(identityName);
+
+                var cleanedContactNumber;
+                var formattedContactNumber;
+                if (currentContext.model.has('contactNumber')) {
+                    currentContext.hasContactNumber = true;
+                    var contactNumber = currentContext.model.get('contactNumber');
+                    cleanedContactNumber = utils.cleanPhone(contactNumber);
+                    formattedContactNumber = utils.formatPhone(cleanedContactNumber);
+                }
+                if (currentContext.hasContactNumber) {
+                    currentContext.$('.message-contact-number-button').attr('href', 'sms:' + cleanedContactNumber).removeClass('hidden');
+                    currentContext.$('.call-contact-number-button').attr('href', 'tel:' + cleanedContactNumber).removeClass('hidden');
+                } else {
+                    currentContext.$('.message-contact-number-button').addClass('hidden');
+                    currentContext.$('.call-contact-number-button').addClass('hidden');
+                }
+                currentContext.$('.identity-container').removeClass('hidden');
+            } else {
+                currentContext.$('.identity-container').addClass('hidden');
+            }
+
+            var purpose;
             if (this.model.has('purpose')) {
-                this.$('.purpose-label').html(this.model.get('purpose'));
+                purpose = this.model.get('purpose');
             }
-            if (this.model.has('duration')) {
-                this.$('.duration-label').html(this.model.get('duration'));
-            }
-            if (this.model.has('inTime')) {
-                this.$('.in-time-label').html(handlebarsHelpers.formatDateWithDefault(this.model.get('inTime'), 'dd-mm-YYYY hh:mm', '&nbsp;'));
-            }
-            if (this.model.has('outTime')) {
-                this.$('.out-time-label').html(handlebarsHelpers.formatDateWithDefault(this.model.get('outTime'), 'dd-mm-YYYY hh:mm', '&nbsp;'));
-            }
+            this.$('.purpose-label').html(purpose);
 
-            if (this.model.has('contactNumber')) {
-                this.hasContactNumber = true;
-                this.$('.call-identity-button').attr('href', 'tel:' + this.model.get('contactNumber'));
-                this.$('.message-identity-button').attr('href', 'sms:' + this.model.get('contactNumber'));
-            } else {
-                this.hasContactNumber = false;
-                this.$('.call-identity-button').addClass('hidden');
-                this.$('.message-identity-button').addClass('hidden');
-            }
-            if (this.model.has('email')) {
-                this.hasContactEmail = true;
-                this.$('.email-identity-button').attr('href', 'mailto:' + this.model.get('email'));
-            } else {
-                this.hasContactEmail = false;
-                this.$('.email-identity-button').addClass('hidden');
-            }
-            if (this.showContact) {
-                if (this.hasContactNumber) {
-                    this.$('.call-identity-button').removeClass('hidden');
-                    this.$('.message-identity-button').removeClass('hidden');
-                }
-                if (this.hasContactEmail) {
-                    this.$('.email-identity-button').removeClass('hidden');
+            var inTime;
+            var inTimeFormatted;
+            var duration;
+            var outTime;
+            var outTimeFormatted;
+            if (this.model.has('inTime')) {
+                inTime = this.model.get('inTime');
+                inTimeFormatted = utils.formatDate(inTime);
+                if (this.model.has('outTime')) {
+                    outTime = this.model.get('outTime');
+                    outTimeFormatted = utils.formatDate(outTime);
+                } else {
+                    if (this.model.has('duration')) {
+                        duration = this.model.get('duration');
+                        outTime = utils.addMinutes(inTime, duration);
+                        outTimeFormatted = 'Estimated Check-out: ' + utils.formatDate(outTime);
+                    }
                 }
             }
+            this.$('.in-time-label').html(inTimeFormatted);
+            this.$('.out-time-label').html(outTimeFormatted);
         },
         goToLocusWithId: function (event) {
             if (event) {
