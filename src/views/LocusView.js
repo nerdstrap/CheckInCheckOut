@@ -19,7 +19,6 @@ define(function (require) {
             this.dispatcher = options.dispatcher || this;
             this.entryLogCollection = new EntryLogCollection();
 
-            this.listenTo(this.model, 'change', this.updateViewFromModel);
             this.listenTo(this.entryLogCollection, 'reset', this.updateEntryLogStatusView);
             this.listenTo(this, 'loaded', this.onLoaded);
             this.listenTo(this, 'leave', this.onLeave);
@@ -35,13 +34,6 @@ define(function (require) {
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
             currentContext.$el.html(template(renderModel));
 
-            currentContext.entryLogListViewInstance = new EntryLogListView({
-                controller: currentContext.controller,
-                dispatcher: currentContext.dispatcher,
-                collection: currentContext.entryLogCollection
-            });
-            this.appendChildTo(currentContext.entryLogListViewInstance, '#entry-log-list-view-container');
-
             return this;
         },
         events: {
@@ -51,38 +43,6 @@ define(function (require) {
             'click .edit-check-in-button': 'goToEditCheckIn',
             'click .go-to-entry-log-with-id': 'goToLocusWithId',
             'click .go-to-directions-button': 'goToDirectionsWithLatLng'
-        },
-        updateViewFromModel: function () {
-            if (this.model.has('locusName')) {
-                this.$('.locus-name-label').html(this.model.get('locusName'));
-            }
-            if (this.model.has('linkedLocusId')) {
-                this.$('.linked-locus-view').removeClass('hidden');
-                this.$('.go-to-linked-locus-button').attr('data-linked-locus-id', this.model.get('linkedLocusId')).html(this.model.get('linkedLocusName'));
-            } else {
-                this.$('.linked-locus-view').addClass('hidden');
-            }
-            if (this.model.has('distance')) {
-                this.$('.distance-label').html(utils.formatString(utils.getResource('distanceFormatString'), [this.model.get('distance')]));
-            } else {
-                this.$('.distance-label').html(utils.getResource('distanceUnknownErrorMessage'));
-            }
-            if (this.model.has('latitude') && this.model.has('longitude')) {
-                this.$('.directions-unavailable-label').addClass('hidden');
-                this.$('.go-to-directions-button').removeClass('hidden').attr('data-latitude', this.model.get('latitude')).attr('data-longitude', this.model.get('longitude'));
-            } else {
-                this.$('.go-to-directions-button').addClass('hidden');
-                this.$('.directions-unavailable-label').removeClass('hidden');
-            }
-            //if (this.model.has('hasHazard') && this.model.get('hasHazard') === "true") {
-            //    this.$('.locus-name-label').parent().append('<i class="fa fa-warning"></i>');
-            //}
-            //if (this.model.has('hasOpenCheckIns') && this.model.get('hasOpenCheckIns') === "true") {
-            //    this.$('.locus-name-label').parent().append('<i class="fa fa-user-plus"></i>');
-            //}
-            //if (this.model.has('linkedLocusId')) {
-            //    this.$('.locus-name-label').parent().append('<i class="fa fa-arrows-h"></i>');
-            //}
         },
         updateEntryLogStatusView: function () {
             var currentContext = this;
@@ -94,6 +54,28 @@ define(function (require) {
                 this.showCheckOutButton(currentContext.userOpenEntryLog);
             } else {
                 this.showCheckInButton();
+            }
+        },
+        updateViewFromModel: function () {
+            if (this.model.has('locusName')) {
+                this.$('.locus-name-label').html(this.model.get('locusName'));
+            }
+            if (this.model.has('linkedLocusId')) {
+                this.$('.linked-locus-view').removeClass('hidden');
+                this.$('.go-to-linked-locus-button').attr('data-linked-locus-id', this.model.get('linkedLocusId')).html(this.model.get('linkedLocusName'));
+            } else {
+                this.$('.linked-locus-view').addClass('hidden');
+            }
+
+            if (this.model.has('distance')) {
+                this.$('.distance-label').html(utils.formatString(utils.getResource('distanceFormatString'), [this.model.get('distance')]));
+            } else {
+                this.$('.distance-label').html(utils.getResource('distanceUnknownErrorMessage'));
+            }
+            if (this.model.has('latitude') && this.model.has('longitude')) {
+                this.$('.go-to-directions-button').removeClass('hidden').attr('data-latitude', this.model.get('latitude')).attr('data-longitude', this.model.get('longitude'));
+            } else {
+                this.$('.go-to-directions-button').addClass('hidden');
             }
         },
         showCheckInButton: function () {
@@ -180,13 +162,24 @@ define(function (require) {
             this.dispatcher.trigger(AppEventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
         },
         onLoaded: function () {
-            this.entryLogListViewInstance.showLoading();
+            var currentContext = this;
+
+            currentContext.entryLogListViewInstance = new EntryLogListView({
+                controller: currentContext.controller,
+                dispatcher: currentContext.dispatcher,
+                collection: currentContext.entryLogCollection,
+                showLocus: false,
+                showIdentity: true,
+                showPosition: false
+            });
+            currentContext.appendChildTo(currentContext.entryLogListViewInstance, '#entry-log-list-view-container');
 
             var options = {
-                locusId: this.model.get('locusId')
+                locusId: currentContext.model.get('locusId')
             };
 
-            this.dispatcher.trigger(AppEventNamesEnum.refreshEntryLogList, this.entryLogCollection, options);
+            currentContext.entryLogListViewInstance.showLoading();
+            currentContext.dispatcher.trigger(AppEventNamesEnum.refreshEntryLogList, currentContext.entryLogCollection, options);
         },
         onLeave: function () {
             console.trace('LocusView.onLeave');

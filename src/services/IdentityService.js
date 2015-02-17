@@ -106,7 +106,8 @@ define(function (require) {
             if (options.identityId) {
                 identityList = _getById(options.identityId);
             } else if (options.identityName) {
-                identityList = _getByIdentityName(options.identityName);
+                identityList = _identityList;
+                //identityList = _getByIdentityName(options.identityName);
             } else {
                 identityList = _identityList;
             }

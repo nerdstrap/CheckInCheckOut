@@ -37,7 +37,12 @@
     </div>
     <div class="row">
         <div class="small-12 columns">
-            <span class="distance-label">{{withDefault distance "&nbsp;"}}</span>&nbsp;&#124;&nbsp;<a class="go-to-directions-button" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{resource "goToDirectionsButtonText"}}&nbsp;<i class="fa fa-map-marker"></i></a><span class="directions-unavailable-label hidden">{{resource "directionsUnavailableErrorMessage"}}</span>
+            <span class="distance-label">{{withDefault distance "&nbsp;"}}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-12 columns">
+            <a class="go-to-directions-button hidden" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{resource "goToDirectionsButtonText"}}<i class="fa fa-map-marker"></i></a>
         </div>
     </div>
     <div class="row">
@@ -45,17 +50,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="small-12 columns">
-            <div class="row table-view-header">
-                <div class="small-12 columns">
-                    <span>{{resource "entryLogListHeaderText"}}</span>
-                </div>
-            </div>
-            <div class="row table-view-list-items">
-                <div class="small-12 columns">
-                    <div id="entry-log-list-view-container"></div>
-                </div>
-            </div>
+        <div id="entry-log-list-view-container" class="small-12 columns">
         </div>
     </div>
 </div>

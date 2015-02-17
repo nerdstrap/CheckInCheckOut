@@ -32,7 +32,7 @@ body {
 
 .shell-view {
   min-height: 100%;
-  background-color: #DEDEDE;
+  background-color: #FFFFFF;
 }
 
 .shell-view {
@@ -73,19 +73,20 @@ body:before {
   visibility: hidden;
 }
 
+#header-view {
+  background-color: #DEDEDE;
+}
+
 .locus-search-view,
 .locus-list-view,
 .locus-view {
-  background-color: #FFFFFF;
-  margin: 5px;
-  padding: 5px;
+
 }
 
 .locus-list-item-view {
   background-color: #DEDEDE;
   border: solid 1px #C2C2C2;
-  padding: 3px;
-  margin: 5px 0;
+  padding: 5px;
 }
 
 .alert-view-container {
@@ -116,10 +117,6 @@ body:before {
 .fa-arrows-h {
   margin-left: 2px;
   color: red;
-}
-
-.table-view-header {
-  border-bottom: #000000 1px solid;
 }
 
 .invalid {

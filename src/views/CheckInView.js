@@ -68,7 +68,7 @@ define(function (require) {
                 this.$('#locus-name-label').attr('data-locus-id', this.locusModel.get('locusId')).html(this.locusModel.get('locusName'));
             }
             if (this.locusModel.has('distance')) {
-                this.$('#distance-label').html(this.locusModel.get('distance'));
+                this.$('#distance-label').html(utils.formatString(utils.getResource('distanceFormatString'), [this.locusModel.get('distance')]));
             }
             if (this.identityModel.has('contactNumber')) {
                 this.$('#contact-number-input').val(helpers.formatPhone(this.identityModel.get('contactNumber')));

@@ -15,12 +15,17 @@
             <span class="out-time-label">{{formatDateWithDefault outTime "dd-mm-YYYY hh:mm" "&nbsp;"}}</span>
         </div>
     </div>
-    <div class="row hidden">
+    <div class="row">
         <div class="small-12 columns">
-            <span class="distance-label">{{withDefault distance "&nbsp;"}}</span>&nbsp;&#124;&nbsp;<a class="go-to-directions-button" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{resource "goToDirectionsButtonText"}}&nbsp;<i class="fa fa-map-marker"></i></a><span class="directions-unavailable-label hidden">{{resource "directionsUnavailableErrorMessage"}}</span>
+            <span class="distance-label hidden">{{withDefault distance "&nbsp;"}}</span>
         </div>
     </div>
-    <div class="row hidden">
+    <div class="row">
+        <div class="small-12 columns">
+            <a class="go-to-directions-button hidden" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{resource "goToDirectionsButtonText"}}<i class="fa fa-map-marker"></i></a>
+        </div>
+    </div>
+    <div class="row">
         <div class="small-12 columns">
             <span class="additional-info-label">{{withDefault additionalInfo "&nbsp;"}}</span>
         </div>

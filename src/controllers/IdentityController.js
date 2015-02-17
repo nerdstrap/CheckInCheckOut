@@ -41,7 +41,6 @@ define(function (require) {
             this.listenTo(this.dispatcher, AppEventNamesEnum.goToIdentitySearch, this.goToIdentitySearch);
             this.listenTo(this.dispatcher, AppEventNamesEnum.goToIdentityWithId, this.goToIdentityWithId);
             this.listenTo(this.dispatcher, AppEventNamesEnum.refreshIdentityList, this.refreshIdentityList);
-            this.listenTo(this.dispatcher, AppEventNamesEnum.refreshIdentityListByGps, this.refreshIdentityListByGps);
 
             this.listenTo(this.dispatcher, AppEventNamesEnum.goToDirectionsWithLatLng, this.goToDirectionsWithLatLng);
         },
@@ -64,9 +63,8 @@ define(function (require) {
             identitySearchViewInstance.showLoading();
             currentContext.identityService.getIdentitySearchOptions()
                 .then(function (getIdentitySearchOptionsResponse) {
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.identityUpdated, getIdentitySearchOptionsResponse.userRole);
-                    identitySearchViewInstance.setUserId(getIdentitySearchOptionsResponse.userId);
-                    identitySearchViewInstance.setUserRole(getIdentitySearchOptionsResponse.userRole);
+                    identitySearchViewInstance.setIdentityModel(getIdentitySearchOptionsResponse.identity);
+                    currentContext.dispatcher.trigger(AppEventNamesEnum.identityUpdated, identitySearchViewInstance.identityModel);
                     identitySearchViewInstance.completeLoading();
                     deferred.resolve(identitySearchViewInstance);
                 })
@@ -99,26 +97,17 @@ define(function (require) {
             identityViewInstance.showLoading();
             currentContext.identityService.getIdentityList({identityId: identityId})
                 .then(function (getIdentityListResponse) {
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.identityUpdated, getIdentityListResponse.userRole);
-                    identityViewInstance.setUserId(getIdentityListResponse.userId);
-                    identityViewInstance.setUserRole(getIdentityListResponse.userRole);
+                    identityViewInstance.setIdentityModel(getIdentityListResponse.identity);
+                    currentContext.dispatcher.trigger(AppEventNamesEnum.identityUpdated, identityViewInstance.identityModel);
                     if (getIdentityListResponse.identityList && getIdentityListResponse.identityList.length > 0) {
-                        currentContext.geoLocationService.getCurrentPosition()
-                            .then(function (position) {
-                                utils.computeDistances(position.coords, getIdentityListResponse.identityList);
-                                identityModelInstance.reset(getIdentityListResponse.identityList[0]);
-                                identityViewInstance.completeLoading();
-                                deferred.resolve(identityViewInstance);
-                            });
-                    } else {
-                        identityModelInstance.reset();
-                        identityViewInstance.showError(utils.getResource('identityNotFoundErrorMessage'));
+                        identityModelInstance.set(getIdentityListResponse.identityList[0]);
+                        identityViewInstance.updateViewFromModel();
                         identityViewInstance.completeLoading();
-                        deferred.reject(identityViewInstance);
+                        deferred.resolve(identityViewInstance);
                     }
                 })
                 .fail(function (error) {
-                    identityModelInstance.reset();
+                    identityModelInstance.clear();
                     identityViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
                     identityViewInstance.completeLoading();
                     deferred.reject(identityViewInstance);
@@ -135,16 +124,8 @@ define(function (require) {
 
             currentContext.identityService.getIdentityList(options)
                 .then(function (getIdentityListResponse) {
-                    currentContext.geoLocationService.getCurrentPosition()
-                        .then(function (position) {
-                            utils.computeDistances(position.coords, getIdentityListResponse.identityList);
-                            identityCollectionInstance.reset(getIdentityListResponse.identityList);
-                            deferred.resolve(identityCollectionInstance);
-                        })
-                        .fail(function () {
-                            identityCollectionInstance.reset(getIdentityListResponse.identityList);
-                            deferred.resolve(identityCollectionInstance);
-                        });
+                    identityCollectionInstance.reset(getIdentityListResponse.identityList);
+                    deferred.resolve(identityCollectionInstance);
                 })
                 .fail(function (error) {
                     identityCollectionInstance.reset();
@@ -152,39 +133,6 @@ define(function (require) {
                 });
 
             return deferred.promise();
-        },
-
-        refreshIdentityListByGps: function (identityCollectionInstance, options) {
-            console.trace('IdentityController.refreshIdentityList');
-            options || (options = {});
-            var currentContext = this,
-                deferred = $.Deferred();
-
-            currentContext.geoLocationService.getCurrentPosition()
-                .then(function (position) {
-                    currentContext.identityService.getIdentityList(position)
-                        .then(function (getIdentityListResponse) {
-                            utils.computeDistances(position.coords, getIdentityListResponse.identityList);
-                            identityCollectionInstance.reset(getIdentityListResponse.identityList);
-                            deferred.resolve(identityCollectionInstance);
-                        })
-                        .fail(function (error) {
-                            identityCollectionInstance.reset();
-                            deferred.reject(identityCollectionInstance);
-                        });
-                })
-                .fail(function (error) {
-                    identityCollectionInstance.reset();
-                    deferred.reject(identityCollectionInstance);
-                });
-
-            return deferred.promise();
-        },
-
-        goToDirectionsWithLatLng: function (latitude, longitude) {
-            console.trace('IdentityController.goToDirectionsWithLatLng');
-            var directionsUri = 'http://maps.google.com?daddr=' + latitude + ',' + longitude;
-            globals.window.open(directionsUri);
         }
     });
 

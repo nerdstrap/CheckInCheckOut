@@ -44,11 +44,9 @@ define(function (require) {
                 this.$('.distance-label').html(utils.getResource('distanceUnknownErrorMessage'));
             }
             if (this.model.has('latitude') && this.model.has('longitude')) {
-                this.$('.directions-unavailable-label').addClass('hidden');
-                this.$('.go-to-directions-button').removeClass('hidden').attr('data-latitude', this.model.get('latitude')).attr('data-longitude', this.model.get('longitude'));
+                this.$('.go-to-directions-button').removeClass('hidden').removeClass('hidden').attr('data-latitude', this.model.get('latitude')).attr('data-longitude', this.model.get('longitude'));
             } else {
                 this.$('.go-to-directions-button').addClass('hidden');
-                this.$('.directions-unavailable-label').removeClass('hidden');
             }
             if (this.model.has('hasHazard') && this.model.get('hasHazard') === "true") {
                 this.$('.go-to-locus-button').parent().append('<i class="fa fa-warning"></i>');

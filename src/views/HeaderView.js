@@ -23,7 +23,8 @@ define(function (require) {
         },
         events: {
             'click #app-title-button': 'titleButtonClick',
-            'click #go-to-locus-search-button': 'goToLocusList',
+            'click #go-to-locus-search-button': 'goToLocusSearch',
+            'click #go-to-identity-search-button': 'goToIdentitySearch',
             'click #go-to-open-entry-button': 'goToLocusList'
         },
         render: function () {
@@ -56,6 +57,12 @@ define(function (require) {
                 event.preventDefault();
             }
             this.dispatcher.trigger(AppEventNamesEnum.goToLocusSearch);
+        },
+        goToIdentitySearch: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+            this.dispatcher.trigger(AppEventNamesEnum.goToIdentitySearch);
         },
         goToLocusWithId: function (event) {
             if (event) {

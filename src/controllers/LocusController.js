@@ -104,19 +104,20 @@ define(function (require) {
                         currentContext.geoLocationService.getCurrentPosition()
                             .then(function (position) {
                                 utils.computeDistances(position.coords, getLocusListResponse.locusList);
-                                locusModelInstance.reset(getLocusListResponse.locusList[0]);
+                                locusModelInstance.set(getLocusListResponse.locusList[0]);
+                                locusViewInstance.updateViewFromModel();
                                 locusViewInstance.completeLoading();
                                 deferred.resolve(locusViewInstance);
                             });
                     } else {
-                        locusModelInstance.reset();
+                        locusModelInstance.clear();
                         locusViewInstance.showError(utils.getResource('locusNotFoundErrorMessage'));
                         locusViewInstance.completeLoading();
                         deferred.reject(locusViewInstance);
                     }
                 })
                 .fail(function (error) {
-                    locusModelInstance.reset();
+                    locusModelInstance.clear();
                     locusViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
                     locusViewInstance.completeLoading();
                     deferred.reject(locusViewInstance);

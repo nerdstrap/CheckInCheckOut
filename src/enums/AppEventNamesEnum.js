@@ -11,6 +11,10 @@ define(function (require) {
         refreshLocusListByGps: 'refreshLocusListByGps',
         refreshLocusList: 'refreshLocusList',
 
+        goToIdentitySearch: 'goToIdentitySearch',
+        goToIdentityWithId: 'goToIdentityWithId',
+        refreshIdentityList: 'refreshIdentityList',
+
         refreshEntryLogListByGps: 'refreshEntryLogListByGps',
         refreshEntryLogList: 'refreshEntryLogList',
 

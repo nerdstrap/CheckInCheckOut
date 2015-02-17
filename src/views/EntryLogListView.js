@@ -16,6 +16,9 @@ define(function (require) {
             console.trace('EntryLogListView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
+            this.showLocus = options.showLocus;
+            this.showIdentity = options.showIdentity;
+            this.showPosition = options.showPosition;
 
             this.listenTo(this.collection, 'reset', this.addAll);
             this.listenTo(this, 'leave', this.onLeave);
@@ -41,7 +44,10 @@ define(function (require) {
             var currentContext = this;
             var entryLogListItemViewInstance = new EntryLogListItemView({
                 model: entryLog,
-                dispatcher: currentContext.dispatcher
+                dispatcher: currentContext.dispatcher,
+                showLocus: currentContext.showLocus,
+                showIdentity: currentContext.showIdentity,
+                showPosition: currentContext.showPosition
             });
             this.appendChildTo(entryLogListItemViewInstance, '#entry-log-list-item-view-container');
         },

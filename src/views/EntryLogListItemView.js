@@ -16,6 +16,9 @@ define(function (require) {
             console.trace('EntryLogListItemView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
+            this.showLocus = options.showLocus;
+            this.showIdentity = options.showIdentity;
+            this.showPosition = options.showPosition;
 
             this.listenTo(this.model, 'change', this.updateViewFromModel);
             this.listenTo(this, 'leave', this.onLeave);
@@ -40,30 +43,44 @@ define(function (require) {
             if (this.model.has('locusName')) {
                 this.$('.go-to-locus-button').html(this.model.get('locusName'));
             }
-            if (this.model.has('userName')) {
-                this.$('.go-to-identity-button').attr('', this.model.get('identityId')).html(this.model.get('identityName'));
+            if (this.showLocus) {
+                this.$('.go-to-locus-button').removeClass('hidden');
+            } else {
+                this.$('.go-to-locus-button').addClass('hidden');
             }
+
+            if (this.model.has('identityName')) {
+                this.$('.go-to-identity-button').attr('data-identity-id', this.model.get('identityId')).html(this.model.get('identityName'));
+            }
+            if (this.showIdentity) {
+                this.$('.go-to-identity-button').removeClass('hidden');
+            } else {
+                this.$('.go-to-identity-button').addClass('hidden');
+            }
+
             if (this.model.has('distance')) {
                 this.$('.distance-label').html(utils.formatString(utils.getResource('distanceFormatString'), [this.model.get('distance')]));
             } else {
                 this.$('.distance-label').html(utils.getResource('distanceUnknownErrorMessage'));
             }
             if (this.model.has('latitude') && this.model.has('longitude')) {
-                this.$('.directions-unavailable-label').addClass('hidden');
-                this.$('.go-to-directions-button').removeClass('hidden').attr('data-latitude', this.model.get('latitude')).attr('data-longitude', this.model.get('longitude'));
+                this.hasCoordinates = true;
+                this.$('.go-to-directions-button').attr('data-latitude', this.model.get('latitude')).attr('data-longitude', this.model.get('longitude'));
             } else {
+                this.hasCoordinates = false;
                 this.$('.go-to-directions-button').addClass('hidden');
-                this.$('.directions-unavailable-label').removeClass('hidden');
             }
-            //if (this.model.has('hasHazard') && this.model.get('hasHazard') === "true") {
-            //    this.$('.go-to-locus-button').parent().append('<i class="fa fa-warning"></i>');
-            //}
-            //if (this.model.has('hasOpenCheckIns') && this.model.get('hasOpenCheckIns') === "true") {
-            //    this.$('.go-to-locus-button').parent().append('<i class="fa fa-user-plus"></i>');
-            //}
-            //if (this.model.has('linkedEntryLogId')) {
-            //    this.$('.go-to-locus-button').parent().append('<i class="fa fa-arrows-h"></i>');
-            //}
+            if (this.showPosition) {
+                this.$('.distance-label').removeClass('hidden');
+                if (this.hasCoordinates) {
+                    this.$('.go-to-directions-button').removeClass('hidden');
+                }
+            }
+            else {
+                this.$('.distance-label').addClass('hidden');
+                this.$('.go-to-directions-button').addClass('hidden');
+            }
+
             if (this.model.has('purpose')) {
                 this.$('.purpose-label').html(this.model.get('purpose'));
             }

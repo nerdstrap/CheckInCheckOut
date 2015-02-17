@@ -7,6 +7,7 @@ define(function (require) {
         SwappingRouter = require('routers/SwappingRouter'),
         ShellView = require('views/ShellView'),
         LocusController = require('controllers/LocusController'),
+        IdentityController = require('controllers/IdentityController'),
         EntryLogController = require('controllers/EntryLogController'),
         eventBusSingleton = require('eventBusSingleton');
 
@@ -30,6 +31,10 @@ define(function (require) {
                 router: currentContext,
                 dispatcher: eventBusSingleton
             });
+            this.identityControllerInstance = new IdentityController({
+                router: currentContext,
+                dispatcher: eventBusSingleton
+            });
             this.entryLogControllerInstance = new EntryLogController({
                 router: currentContext,
                 dispatcher: eventBusSingleton
@@ -39,7 +44,9 @@ define(function (require) {
         routes: {
             '': 'goToLocusSearch',
             'station': 'goToLocusSearch',
-            'station/:id': 'goToLocusWithId'
+            'station/:id': 'goToLocusWithId',
+            'person': 'goToIdentitySearch',
+            'person/:id': 'goToIdentityWithId'
         },
 
         goToLocusSearch: function () {
@@ -50,6 +57,16 @@ define(function (require) {
         goToLocusWithId: function (locusId) {
             console.trace('appRouter.goToLocusWithId');
             this.locusControllerInstance.goToLocusWithId(locusId);
+        },
+
+        goToIdentitySearch: function () {
+            console.trace('appRouter.goToIdentitySearch');
+            this.identityControllerInstance.goToIdentitySearch();
+        },
+
+        goToIdentityWithId: function (identityId) {
+            console.trace('appRouter.goToIdentityWithId');
+            this.identityControllerInstance.goToIdentityWithId(identityId);
         }
     });
 
