@@ -5,7 +5,8 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseModel = require('models/BaseModel'),
-        env = require('env');
+        env = require('env'),
+        utils = require('utils');
 
     var EntryLogModel = BaseModel.extend({
         idAttribute: 'entryLogId',
@@ -79,10 +80,13 @@ define(function (require) {
                     }
                 }
 
+                var inTimeParsed = false;
+                var durationParsed = false;
                 if (attributes.hasOwnProperty('inTime')) {
                     var inTime = attributes.inTime;
                     if (inTime && !isNaN(inTime)) {
                         attributes.inTime = new Date(Number(inTime));
+                        inTimeParsed = true;
                     }
                 }
 
@@ -90,13 +94,31 @@ define(function (require) {
                     var duration = attributes.duration;
                     if (duration && !isNaN(duration)) {
                         attributes.duration = Number(duration);
+                        durationParsed = true;
                     }
                 }
 
+                if (inTimeParsed && durationParsed) {
+                    attributes.expectedOutTime = utils.addMinutes(attributes.inTime, attributes.duration);
+                }
+
+                var checkedOut = false;
                 if (attributes.hasOwnProperty('outTime')) {
                     var outTime = attributes.outTime;
+                    var inTime = attributes.inTime;
                     if (outTime && !isNaN(outTime)) {
                         attributes.outTime = new Date(Number(outTime));
+                        attributes.actualDuration = (outTime - inTime);
+                        checkedOut = true;
+                    }
+                }
+
+                if (checkedOut === false && attributes.expectedOutTime) {
+                    var expectedOutTimeElapsed = new Date() - attributes.expectedOutTime;
+                    if (expectedOutTimeElapsed >= env.getExpirationThreshold()) {
+                        attributes.checkOutOverdue = true;
+                    } else if (expectedOutTimeElapsed > 0) {
+                        attributes.checkOutExpired = true;
                     }
                 }
             }

@@ -19,6 +19,7 @@ define(function (require) {
             this.showLocus = options.showLocus;
             this.showIdentity = options.showIdentity;
             this.showPosition = options.showPosition;
+            this.showContact = options.showContact;
 
             this.listenTo(this.collection, 'reset', this.addAll);
             this.listenTo(this, 'leave', this.onLeave);
@@ -47,7 +48,8 @@ define(function (require) {
                 dispatcher: currentContext.dispatcher,
                 showLocus: currentContext.showLocus,
                 showIdentity: currentContext.showIdentity,
-                showPosition: currentContext.showPosition
+                showPosition: currentContext.showPosition,
+                showContact: currentContext.showContact
             });
             this.appendChildTo(entryLogListItemViewInstance, '#entry-log-list-item-view-container');
         },

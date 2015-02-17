@@ -19,6 +19,7 @@ define(function (require) {
             this.showLocus = options.showLocus;
             this.showIdentity = options.showIdentity;
             this.showPosition = options.showPosition;
+            this.showContact = options.showContact;
 
             this.listenTo(this.model, 'change', this.updateViewFromModel);
             this.listenTo(this, 'leave', this.onLeave);
@@ -92,6 +93,32 @@ define(function (require) {
             }
             if (this.model.has('outTime')) {
                 this.$('.out-time-label').html(handlebarsHelpers.formatDateWithDefault(this.model.get('outTime'), 'dd-mm-YYYY hh:mm', '&nbsp;'));
+            }
+
+            if (this.model.has('contactNumber')) {
+                this.hasContactNumber = true;
+                this.$('.call-identity-button').attr('href', 'tel:' + this.model.get('contactNumber'));
+                this.$('.message-identity-button').attr('href', 'sms:' + this.model.get('contactNumber'));
+            } else {
+                this.hasContactNumber = false;
+                this.$('.call-identity-button').addClass('hidden');
+                this.$('.message-identity-button').addClass('hidden');
+            }
+            if (this.model.has('email')) {
+                this.hasContactEmail = true;
+                this.$('.email-identity-button').attr('href', 'mailto:' + this.model.get('email'));
+            } else {
+                this.hasContactEmail = false;
+                this.$('.email-identity-button').addClass('hidden');
+            }
+            if (this.showContact) {
+                if (this.hasContactNumber) {
+                    this.$('.call-identity-button').removeClass('hidden');
+                    this.$('.message-identity-button').removeClass('hidden');
+                }
+                if (this.hasContactEmail) {
+                    this.$('.email-identity-button').removeClass('hidden');
+                }
             }
         },
         goToLocusWithId: function (event) {

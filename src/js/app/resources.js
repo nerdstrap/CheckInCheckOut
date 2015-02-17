@@ -69,8 +69,9 @@ define(function(require) {
         'identityList.loadingMessage': 'loading people',
         'identity.loadingMessage': 'loading person',
 
-        'goToPhoneButtonText': 'call number',
-        'goToMessagingButtonText': 'send message',
+        'callButtonText': 'call user',
+        'messageButtonText': 'sms user',
+        'emailButtonText': 'email user',
 
         'cancelButtonText': 'Cancel',
         'checkInButtonText': 'Check-in',

@@ -170,7 +170,8 @@ define(function (require) {
                 collection: currentContext.entryLogCollection,
                 showLocus: false,
                 showIdentity: true,
-                showPosition: false
+                showPosition: false,
+                showContact: true
             });
             currentContext.appendChildTo(currentContext.entryLogListViewInstance, '#entry-log-list-view-container');
 

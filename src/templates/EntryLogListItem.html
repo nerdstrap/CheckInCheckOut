@@ -17,6 +17,21 @@
     </div>
     <div class="row">
         <div class="small-12 columns">
+            <a class="call-identity-button hidden" href="tel:{{contactNumber}}">{{resource "callButtonText"}}</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-12 columns">
+            <a class="message-identity-button hidden" href="sms:{{contactNumber}}">{{resource "messageButtonText"}}</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-12 columns">
+            <a class="email-identity-button hidden" href="mailto:{{email}}">{{resource "emailButtonText"}}</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-12 columns">
             <span class="distance-label hidden">{{withDefault distance "&nbsp;"}}</span>
         </div>
     </div>

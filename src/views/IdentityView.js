@@ -42,6 +42,18 @@ define(function (require) {
             if (this.model.has('identityName')) {
                 this.$('.identity-name-label').html(this.model.get('identityName'));
             }
+            if (this.model.has('contactNumber')) {
+                this.$('#call-identity-button').attr('href', 'tel:' + this.model.get('contactNumber')).removeClass('hidden');
+                this.$('#message-identity-button').attr('href', 'sms:' + this.model.get('contactNumber')).removeClass('hidden');
+            } else {
+                this.$('#call-identity-button').addClass('hidden');
+                this.$('#message-identity-button').addClass('hidden');
+            }
+            if (this.model.has('email')) {
+                this.$('#email-identity-button').attr('href', 'mailto:' + this.model.get('email')).removeClass('hidden');
+            } else {
+                this.$('#email-identity-button').addClass('hidden');
+            }
         },
         onLoaded: function () {
             var currentContext = this;
@@ -52,7 +64,8 @@ define(function (require) {
                 collection: currentContext.entryLogCollection,
                 showLocus: true,
                 showIdentity: false,
-                showPosition: true
+                showPosition: true,
+                showContact: false
             });
             currentContext.appendChildTo(currentContext.entryLogListViewInstance, '#entry-log-list-view-container');
 
