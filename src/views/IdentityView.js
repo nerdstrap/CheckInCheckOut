@@ -10,7 +10,6 @@ define(function (require) {
         EntryLogListView = require('views/EntryLogListView'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         utils = require('utils'),
-        helpers = require('handlebars.helpers'),
         template = require('hbs!templates/Identity');
 
     var IdentityView = BaseView.extend({

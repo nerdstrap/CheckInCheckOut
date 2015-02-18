@@ -60,18 +60,23 @@ define(function(require) {
         return helpers.withDefault(phone, defaultValue);
     };
 
-    helpers.formatDate = function(date, format) {
-        var day = date.getDate();
-        var month = date.getMonth();
-        var fullYear = date.getFullYear();
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-        return month + '/' + day + '/' + fullYear + ' ' + hours + ':' + minutes;
+    helpers.formatDate = function(date) {
+        var formattedDate;
+        if (date) {
+            var day = date.getDate();
+            var month = date.getMonth();
+            var fullYear = date.getFullYear();
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+
+            return month + '/' + day + '/' + fullYear + ' ' + hours + ':' + minutes;
+        }
+        return formattedDate;
     };
 
-    helpers.formatDateWithDefault = function(date, format, defaultValue) {
+    helpers.formatDateWithDefault = function(date, defaultValue) {
         if (date) {
-            return helpers.formatDate(date, format);
+            return helpers.formatDate(date);
         }
         return helpers.withDefault(date, defaultValue);
     };

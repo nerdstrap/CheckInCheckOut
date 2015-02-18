@@ -8,7 +8,6 @@ define(function (require) {
         CompositeView = require('views/CompositeView'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         utils = require('utils'),
-        handlebarsHelpers = require('handlebars.helpers'),
         template = require('hbs!templates/EntryLogListItem');
 
     var EntryLogListItemView = CompositeView.extend({
@@ -54,13 +53,14 @@ define(function (require) {
                 var longitude;
                 if (currentContext.model.has('distance') && currentContext.model.has('latitude') && currentContext.model.has('longitude')) {
                     currentContext.hasCoordinates = true;
+                    distance = currentContext.model.get('distance').toFixed(0);
                     formattedDistance = utils.formatString(utils.getResource('distanceFormatString'), [distance]);
                     latitude = currentContext.model.get('latitude');
                     longitude = currentContext.model.get('longitude');
                 }
                 if (currentContext.hasCoordinates) {
                     currentContext.$('.coordinates-unavailable-label').addClass('hidden');
-                    currentContext.$('.go-to-directions-button').attr('data-latitude', latitude).attr('data-longitude', longitude).removeClass('hidden');
+                    currentContext.$('.go-to-directions-button').attr('data-latitude', latitude).attr('data-longitude', longitude).html(formattedDistance).removeClass('hidden');
                 } else {
                     currentContext.$('.coordinates-unavailable-label').removeClass('hidden');
                     currentContext.$('.go-to-directions-button').addClass('hidden');
@@ -118,7 +118,7 @@ define(function (require) {
                     if (this.model.has('duration')) {
                         duration = this.model.get('duration');
                         outTime = utils.addMinutes(inTime, duration);
-                        outTimeFormatted = 'Estimated Check-out: ' + utils.formatDate(outTime);
+                        outTimeFormatted = utils.formatDate(outTime);
                     }
                 }
             }

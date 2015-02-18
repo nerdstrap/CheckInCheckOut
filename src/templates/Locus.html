@@ -1,12 +1,62 @@
 <div class="locus-view">
     <div class="row">
         <div class="small-12 columns">
-            <h3 class="locus-name-label" data-locus-id="{{locusId}}">{{locusName}}</h3>
+            <h2 id="locus-name-header" class="t-heading -size-m -color-inherit" data-locus-id="{{locusId}}">{{locusName}}</h2><i class="fa fa-star-o"></i>
         </div>
     </div>
-    <div class="row linked-locus-view hidden">
+    <div id="locus-phone-container" class="row hidden">
+        <div class="small-10 columns">
+            <div class="row">
+                <div class="small-12 columns">
+                    <span>{{resource "locusPhoneHeaderText"}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="small-12 columns">
+                    <span id="locus-phone-label">{{formatPhoneWithDefault locusPhone "&nbsp;"}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="small-2 columns">
+            <a id="call-locus-phone-button" href="tel:{{locusPhone}}"><i class="fa fa-phone"></i></a>
+        </div>
+    </div>
+    <div id="coordinates-unavailable-container" class="row hidden">
         <div class="small-12 columns">
-            <a class="go-to-linked-locus-button" data-linked-locus-id href="#">{{resource "goToLinkedLocusButtonTextFormatString"}}<i class="fa fa-arrows-h"></i></a>
+            <span id="coordinates-unavailable-label">{{resource "coordinatesUnavailableErrorMessage"}}</span>
+        </div>
+    </div>
+    <div id="coordinates-container" class="row hidden">
+        <div class="small-10 columns">
+            <div class="row">
+                <div class="small-12 columns">
+                    <span>{{resource "coordinatesHeaderText"}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="small-12 columns">
+                    <span id="distance-label">{{withDefault distance "&nbsp;"}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="small-2 columns">
+            <a id="go-to-directions-button" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#"><i class="fa fa-location-arrow"></i></a>
+        </div>
+    </div>
+    <div id="linked-locus-container" class="row hidden">
+        <div class="small-12 columns">
+            <a id="go-to-linked-locus-button" data-linked-locus-id href="#">{{resource "goToLinkedLocusButtonTextFormatString"}}<i class="fa fa-arrows-h"></i></a>
+        </div>
+    </div>
+    <div id="entry-log-controls-container" class="row">
+        <div class="small-12 columns">
+            <div id="entry-log-status-loading" class="hidden">
+                <span class="loading-message">{{resource "entryLogStatus.loadingMessage"}}</span>
+                <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
+            </div>
+            <a id="go-to-check-in-button" class="button radius success hidden" href="#">{{resource "goToCheckInButtonText"}}<i class="fa fa-check"></i></a>
+            <a id="go-to-check-out-button" class="button radius warning hidden" data-entry-log-id href="#">{{resource "goToCheckOutButtonText"}}<i class="fa fa-times"></i></a>
+            <a id="go-to-open-check-in-button" class="go-to-locus-button hidden" data-locus-id href="#">{{resource "goToOpenCheckInButtonText"}}</a>
         </div>
     </div>
     <div class="row loading {{cid}} hidden">
@@ -15,39 +65,8 @@
             <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
         </div>
     </div>
-    <div class="row hazard-view hidden">
-        <div class="small-12 columns">
-            hazard
-        </div>
-    </div>
-    <div class="row entry-log-status-view">
-        <div class="small-12 columns">
-            <div class="entry-log-status-loading-view">
-                <span class="loading-message">{{resource "entryLogStatus.loadingMessage"}}</span>
-                <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
-            </div>
-            <a class="button radius success check-in-button hidden" href="#">{{resource "checkInButtonText"}}<i class="fa fa-check"></i></a>
-            <a class="button radius warning check-out-button hidden" data-entry-log-id href="#">{{resource "checkOutButtonText"}}<i class="fa fa-times"></i></a>
-            <a class="button radius edit-check-in-button hidden" data-entry-log-id href="#">{{resource "editCheckInButtonText"}}<i class="fa fa-pencil-square-o"></i></a>
-            <a class="go-to-locus-button hidden" data-locus-id href="#">{{resource "goToOpenCheckInButtonText"}}</a>
-        </div>
-    </div>
     <div class="row alert-view-container {{cid}}">
         <div class="small-12 columns"></div>
-    </div>
-    <div class="row">
-        <div class="small-12 columns">
-            <span class="distance-label">{{withDefault distance "&nbsp;"}}</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="small-12 columns">
-            <a class="go-to-directions-button hidden" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{resource "goToDirectionsButtonText"}}<i class="fa fa-map-marker"></i></a>
-        </div>
-    </div>
-    <div class="row">
-        <div id="warning-list-view-container" class="small-12 columns">
-        </div>
     </div>
     <div class="row">
         <div id="entry-log-list-view-container" class="small-12 columns">

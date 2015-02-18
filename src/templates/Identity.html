@@ -22,6 +22,15 @@
             <a id="call-contact-number-button" href="tel:{{contactNumber}}"><i class="fa fa-phone"></i></a>
         </div>
     </div>
+    <div class="row locus-container hidden">
+        <div class="small-10 columns">
+            <a class="go-to-locus-button" data-locus-id="{{locusId}}" href="#">{{withDefault locusName "&nbsp;"}}</a>
+        </div>
+        <div class="small-12 columns">
+            <span class="coordinates-unavailable-label hidden">{{resource "coordinatesUnavailableErrorMessage"}}</span>
+            <a class="button radius tiny success go-to-directions-button hidden" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{withDefault distance "&nbsp;"}}</a>
+        </div>
+    </div>
     <div id="email-container" class="row">
         <div class="small-10 columns">
             <div class="row">
@@ -42,7 +51,7 @@
     <div class="row loading {{cid}} hidden">
         <div class="small-12 columns">
             <span class="loading-message">{{resource "identity.loadingMessage"}}</span>
-            <img src="{{resource 'loadingIconSrc'}}" class="loading-icon" />
+            <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
         </div>
     </div>
     <div class="row alert-view-container {{cid}}">

@@ -30,12 +30,16 @@ define(function(require) {
         'gpsSearchButtonText': 'GPS',
         'manualSearchButtonText': 'Manual',
         'recentSearchButtonText': 'Recent',
+        'favoritesSearchButtonText': 'Favorites',
+        'nameSearchButtonText': 'A-Z',
 
+        'searchPlaceholder': 'search',
         'locus.manualSearchPlaceholderText': 'enter a station name',
         'identity.manualSearchPlaceholderText': 'enter a person name',
 
         'searchButtonText': 'Search',
         'resetButtonText': 'Reset',
+        'cancelButtonText': 'Cancel',
 
         'locusSearch.loadingMessage': 'loading station search',
         'locusList.loadingMessage': 'loading stations',
@@ -43,10 +47,11 @@ define(function(require) {
 
         'locusNameHeaderText': 'Location',
         'locusNamePlaceholder': 'enter description',
-        'coordinatesHeaderText': 'Location',
+        'coordinatesHeaderText': 'gps',
         'latitudePlaceholder': 'Latitude',
         'longitudePlaceholder': 'Longitude',
         'distanceHeaderText': 'Distance',
+        'locusPhoneHeaderText': 'phone',
         'identityNameHeaderText': 'Personnel Name',
         'contactNumberHeaderText': 'mobile',
         'contactNumberPlaceholder': 'enter phone number',
@@ -61,7 +66,7 @@ define(function(require) {
         'groupCheckInHeaderText': 'With Crew?',
         'additionalInfoHeaderText': 'Additional Info',
         'additionalInfoPlaceholder': 'enter your notes',
-        'distanceFormatString': '{0} miles',
+        'distanceFormatString': '{0} mi',
         'goToDirectionsButtonText': 'directions',
         'goToLinkedLocusButtonTextFormatString': 'Linked Station: {0}',
 
@@ -69,10 +74,10 @@ define(function(require) {
         'identityList.loadingMessage': 'loading people',
         'identity.loadingMessage': 'loading person',
 
-        'cancelButtonText': 'Cancel',
+        'goToCheckInButtonText': 'Check-in',
         'checkInButtonText': 'Check-in',
+        'goToCheckOutButtonText': 'Check-out',
         'checkOutButtonText': 'Check-out',
-        'editCheckInButtonText': 'Edit Check-in',
         'goToOpenCheckInButtonText': 'Open Check-in',
 
         'distance.loadingMessage': 'calculating distance',

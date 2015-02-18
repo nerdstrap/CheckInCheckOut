@@ -1,26 +1,24 @@
 <div class="identity-search-view">
+    <div id="manual-search-container" class="row">
+        <div class="small-12 columns">
+            <span><i id="open-manual-search-input-button" class="fa fa-search"></i>{{resource "searchPlaceholder"}}</span><input id="manual-search-input" class="hidden" type="search" placeholder="{{resource "searchPlaceholder"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off" /><i id="clear-manual-search-input-button" class="fa fa-times-circle"></i>
+            <a id="search-button" class="hidden" href="#">{{resource "searchButtonText"}}</a>
+            <a id="cancel-button" class="hidden" href="#">{{resource "cancelButtonText"}}</a>
+        </div>
+    </div>
     <div class="row">
         <div class="small-12 columns">
             <ul class="button-group radius even-3">
                 <li>
-                    <a id="gps-search-button" class="button radius tiny" href="#">{{resource "gpsSearchButtonText"}}</a>
+                    <a id="name-search-button" class="button radius tiny" href="#">{{resource "nameSearchButtonText"}}</a>
                 </li>
                 <li>
-                    <a id="show-manual-search-button" class="button radius tiny secondary" href="#">{{resource "manualSearchButtonText"}}</a>
+                    <a id="gps-search-button" class="button radius tiny secondary" href="#">{{resource "gpsSearchButtonText"}}</a>
                 </li>
                 <li>
                     <a id="recent-search-button" class="button radius tiny secondary" href="#">{{resource "recentSearchButtonText"}}</a>
                 </li>
             </ul>
-        </div>
-    </div>
-    <div id="manual-search-form" class="row hidden">
-        <div class="small-8 columns">
-            <input id="manual-search-input" type="search" placeholder="{{resource "identity.manualSearchPlaceholderText"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off" />
-        </div>
-        <div class="small-4 columns">
-            <a id="manual-search-button" class="button radius" href="#">{{resource "searchButtonText"}}</a>
-            <a id="reset-manual-search-button" class="button radius secondary" href="#">{{resource "resetButtonText"}}</a>
         </div>
     </div>
     <div class="row loading {{cid}} hidden">

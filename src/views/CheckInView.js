@@ -10,7 +10,6 @@ define(function (require) {
         globals = require('globals'),
         env = require('env'),
         utils = require('utils'),
-        helpers = require('handlebars.helpers'),
         optionTemplate = require('hbs!templates/Option'),
         template = require('hbs!templates/CheckIn');
 
@@ -71,7 +70,7 @@ define(function (require) {
                 this.$('#distance-label').html(utils.formatString(utils.getResource('distanceFormatString'), [this.locusModel.get('distance')]));
             }
             if (this.identityModel.has('contactNumber')) {
-                this.$('#contact-number-input').val(helpers.formatPhone(this.identityModel.get('contactNumber')));
+                this.$('#contact-number-input').val(utils.formatPhone(this.identityModel.get('contactNumber')));
             }
             if (this.identityModel.has('email')) {
                 this.$('#email-input').val(this.identityModel.get('email'));

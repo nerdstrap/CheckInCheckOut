@@ -17,6 +17,7 @@ define(function (require) {
             console.trace('IdentitySearchView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
+            this.identityCollection = new IdentityCollection();
 
             this.listenTo(this, 'leave', this.onLeave);
         },
@@ -27,7 +28,6 @@ define(function (require) {
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
-            currentContext.identityCollection = new IdentityCollection();
             currentContext.identityListViewInstance = new IdentityListView({
                 controller: currentContext.controller,
                 dispatcher: currentContext.dispatcher,
@@ -38,80 +38,47 @@ define(function (require) {
             return this;
         },
         events: {
-            'click #gps-search-button': 'dispatchGpsSearch',
-            'click #show-manual-search-button': 'showManualSearchForm',
-            'keypress #user-name-input': 'dispatchManualSearch',
-            'click #manual-search-button': 'dispatchManualSearch',
-            'click #recent-search-button': 'dispatchRecentSearch'
+            //'keypress #user-name-input': 'dispatchManualSearch',
+            'click #open-manual-search-input-button': 'openManualSearchInput',
+            'click #clear-manual-search-input-button': 'clearManualSearchInput',
+            'click #search-button': 'dispatchManualSearch',
+            'click #cancel-button': 'cancelManualSearch',
+            'click #name-search-button': 'resetNameSearch',
+            'click #gps-search-button': 'resetGpsSearch',
+            'click #recent-search-button': 'resetRecentSearch'
         },
-        dispatchGpsSearch: function (event) {
+        openManualSearchInput: function (event) {
             if (event) {
                 event.preventDefault();
             }
-
-            this.identityCollection.reset();
-            this.hideManualSearchForm();
-            this.refreshIdentityListByGps();
+            this.$('#search-button').removeClass('hidden');
+            this.$('#cancel-button').removeClass('hidden');
         },
-        showManualSearchForm: function (event) {
+        clearManualSearchInput: function (event) {
             if (event) {
                 event.preventDefault();
             }
-
-            this.identityCollection.reset();
-            this.$('#manual-search-form').removeClass('hidden');
-            this.$('#manual-search-input').focus();
-        },
-        hideManualSearchForm: function() {
             this.$('#manual-search-input').val('');
-            this.$('#manual-search-form').addClass('hidden');
         },
-        dispatchRecentSearch: function (event) {
+        dispatchManualSearch: function (event) {
             if (event) {
                 event.preventDefault();
             }
-
-            this.identityCollection.reset();
-            this.hideManualSearchForm();
-            this.refreshIdentityList();
         },
-        dispatchManualSearch: function(event) {
+        cancelManualSearch: function (event) {
             if (event) {
                 event.preventDefault();
             }
-
-            this.identityCollection.reset();
-            this.refreshIdentityList();
-            //var validPattern = /^[A-Za-z0-9\s]*$/;
-            //if (event) {
-            //    if (event.keyCode === 13) {
-            //        /* enter key pressed */
-            //        this.refreshIdentityList();
-            //    }
-            //    var charCode = event.charCode || event.keyCode || event.which;
-            //    var inputChar = String.fromCharCode(charCode);
-            //    if (!validPattern.test(inputChar) && event.charCode !== 0) {
-            //        event.preventDefault();
-            //        return false;
-            //    }
-            //}
+            this.$('#search-button').addClass('hidden');
+            this.$('#cancel-button').addClass('hidden');
         },
-        refreshIdentityList: function () {
+        refreshIdentityList: function (options) {
             var identityName = this.$('#manual-search-input').val();
             if (identityName && identityName.length > 1) {
-                var options = {
-                    identityName: identityName
-                }
-                this.identityListViewInstance.showLoading();
-                this.dispatcher.trigger(AppEventNamesEnum.refreshIdentityList, this.identityCollection, options);
-            }
-        },
-        refreshIdentityListByGps: function () {
-            var options = {
-                gps: true
+                options.identityName = identityName;
             }
             this.identityListViewInstance.showLoading();
-            this.dispatcher.trigger(AppEventNamesEnum.refreshIdentityListByGps, this.identityCollection, options);
+            this.dispatcher.trigger(AppEventNamesEnum.refreshIdentityList, this.identityCollection, options);
         },
         onLeave: function () {
             console.trace('IdentitySearchView.onLeave');

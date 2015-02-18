@@ -37,12 +37,11 @@ define(function (require) {
             return this;
         },
         events: {
-            'click .go-to-linked-locus-button': 'goToLinkedLocusWithId',
-            'click .check-in-button': 'goToCheckIn',
-            'click .check-out-button': 'goToCheckOut',
-            'click .edit-check-in-button': 'goToEditCheckIn',
-            'click .go-to-entry-log-with-id': 'goToLocusWithId',
-            'click .go-to-directions-button': 'goToDirectionsWithLatLng'
+            'click #go-to-directions-button': 'goToDirectionsWithLatLng',
+            'click #go-to-linked-locus-button': 'goToLinkedLocusWithId',
+            'click #go-to-check-in-button': 'goToCheckIn',
+            'click #go-to-check-out-button': 'goToCheckOut',
+            'click #go-to-open-check-in-button': 'goToLocusWithId'
         },
         updateEntryLogStatusView: function () {
             var currentContext = this;
@@ -57,66 +56,102 @@ define(function (require) {
             }
         },
         updateViewFromModel: function () {
-            if (this.model.has('locusName')) {
-                this.$('.locus-name-label').html(this.model.get('locusName'));
+            var currentContext = this;
+            
+            var locusName;
+            if (currentContext.model.has('locusName')) {
+                locusName = currentContext.model.get('locusName');
             }
-            if (this.model.has('linkedLocusId')) {
-                this.$('.linked-locus-view').removeClass('hidden');
-                this.$('.go-to-linked-locus-button').attr('data-linked-locus-id', this.model.get('linkedLocusId')).html(this.model.get('linkedLocusName'));
-            } else {
-                this.$('.linked-locus-view').addClass('hidden');
+            currentContext.$('#locus-name-header').html(locusName);
+            
+            var linkedLocusId;
+            var linkedLocusName;
+            if (currentContext.model.has('linkedLocusId') && currentContext.model.has('linkedLocusName')) {
+                currentContext.hasLinkedLocus = true;
+                linkedLocusId = currentContext.model.get('linkedLocusId');
+                linkedLocusName = currentContext.model.get('linkedLocusName');
             }
-
-            if (this.model.has('distance')) {
-                this.$('.distance-label').html(utils.formatString(utils.getResource('distanceFormatString'), [this.model.get('distance')]));
+            if (currentContext.hasLinkedLocus) {
+                currentContext.$('#go-to-linked-locus-button').attr('data-linked-locus-id', linkedLocusId).html(linkedLocusName);
+                currentContext.$('#linked-locus-view').addClass('hidden');
             } else {
-                this.$('.distance-label').html(utils.getResource('distanceUnknownErrorMessage'));
+                currentContext.$('#linked-locus-view').addClass('hidden');
             }
-            if (this.model.has('latitude') && this.model.has('longitude')) {
-                this.$('.go-to-directions-button').removeClass('hidden').attr('data-latitude', this.model.get('latitude')).attr('data-longitude', this.model.get('longitude'));
+            
+            var distance;
+            var formattedDistance;
+            var latitude;
+            var longitude;
+            if (currentContext.model.has('distance') && currentContext.model.has('latitude') && currentContext.model.has('longitude')) {
+                currentContext.hasCoordinates = true;
+                distance = currentContext.model.get('distance').toFixed(0);
+                formattedDistance = utils.formatString(utils.getResource('distanceFormatString'), [distance]);
+                latitude = currentContext.model.get('latitude');
+                longitude = currentContext.model.get('longitude');
+            }
+            if (currentContext.hasCoordinates) {
+                currentContext.$('#distance-label').html(formattedDistance);
+                currentContext.$('#go-to-directions-button').attr('data-latitude', latitude).attr('data-longitude', longitude);
+                currentContext.$('#coordinates-unavailable-container').addClass('hidden');
+                currentContext.$('#coordinates-container').removeClass('hidden');
             } else {
-                this.$('.go-to-directions-button').addClass('hidden');
+                currentContext.$('#go-to-directions-button').addClass('hidden');
+                currentContext.$('#coordinates-unavailable-container').removeClass('hidden');
+                currentContext.$('#coordinates-container').addClass('hidden');
+            }
+            var cleanedLocusPhone;
+            var formattedLocusPhone;
+            if (currentContext.model.has('locusPhone')) {
+                currentContext.hasLocusPhone = true;
+                var locusPhone = currentContext.model.get('locusPhone');
+                cleanedLocusPhone = utils.cleanPhone(locusPhone);
+                formattedLocusPhone = utils.formatPhone(cleanedLocusPhone);
+            }
+            if (currentContext.hasLocusPhone) {
+                currentContext.$('#locus-phone-label').html(formattedLocusPhone);
+                currentContext.$('#call-locus-phone-button').attr('href', 'tel:' + cleanedLocusPhone);
+                currentContext.$('#locus-phone-container').removeClass('hidden');
+            } else {
+                currentContext.$('#locus-phone-container').addClass('hidden');
             }
         },
         showCheckInButton: function () {
             if (this.model.has('hasHazard') && this.model.get('hasHazard') === 'true') {
                 this.showHazardView();
             } else {
-                this.$('.entry-log-status-loading-view').addClass('hidden');
-                this.$('.check-in-button').removeClass('hidden');
-                this.$('.check-out-button').removeAttr('data-entry-log-id').addClass('hidden');
-                this.$('.edit-check-in-button').addClass('hidden');
-                this.$('.go-to-entry-log-button').addClass('hidden');
+                this.$('#entry-log-status-loading').addClass('hidden');
+                this.$('#go-to-check-in-button').removeClass('hidden');
+                this.$('#go-to-check-out-button').addClass('hidden');
+                this.$('#go-to-open-check-in-button').addClass('hidden');
             }
         },
         showCheckOutButton: function (entryLogModel) {
             if (this.model.has('hasHazard') && this.model.get('hasHazard') === 'true') {
                 this.showHazardView();
             } else {
-                this.$('.entry-log-status-loading-view').addClass('hidden');
-                this.$('.check-in-button').addClass('hidden');
-                this.$('.check-out-button').attr('data-entry-log-id', entryLogModel.get('entryLogId')).removeClass('hidden');
-                this.$('.edit-check-in-button').removeClass('hidden');
-                this.$('.go-to-entry-log-button').addClass('hidden');
+                this.$('#entry-log-status-loading').addClass('hidden');
+                this.$('#go-to-check-in-button').addClass('hidden');
+                this.$('#go-to-check-out-button').attr('data-entry-log-id', entryLogModel.get('entryLogId')).removeClass('hidden');
+                this.$('#go-to-open-check-in-button').addClass('hidden');
             }
         },
-        showGoToEntryLogButton: function () {
+        showGoToOpenCheckInButton: function (entryLogModel) {
             if (this.model.has('hasHazard') && this.model.get('hasHazard') === 'true') {
                 this.showHazardView();
             } else {
-                this.$('.entry-log-status-loading-view').addClass('hidden');
-                this.$('.check-in-button').addClass('hidden');
-                this.$('.check-out-button').addClass('hidden');
-                this.$('.edit-check-in-button').addClass('hidden');
-                this.$('.go-to-entry-log-button').removeClass('hidden');
+                this.$('#entry-log-status-loading').addClass('hidden');
+                this.$('#go-to-check-in-button').addClass('hidden');
+                this.$('#go-to-check-out-button').addClass('hidden');
+                this.$('#go-to-open-check-in-button').attr('data-locus-id', entryLogModel.get('locusId')).attr('data-locus-name', entryLogModel.get('locusName')).removeClass('hidden');
             }
         },
         showHazardView: function () {
             if (this.model.has('hasHazard') && this.model.get('hasHazard') === 'true') {
-                this.$('.hazard-view').removeClass('hidden');
-                this.$('.entry-log-status-view').addClass('hidden');
+                this.$('#hazard-view').removeClass('hidden');
+                this.$('#entry-log-controls-container').addClass('hidden');
             } else {
-                this.$('.hazard-view').addClass('hidden');
+                this.$('#hazard-view').addClass('hidden');
+                this.$('#entry-log-controls-container').removeClass('hidden');
             }
         },
         goToLinkedLocusWithId: function (event) {
@@ -142,15 +177,12 @@ define(function (require) {
 
             this.dispatcher.trigger(AppEventNamesEnum.goToCheckOut, currentContext.userOpenEntryLog);
         },
-        goToEditCheckIn: function (event) {
-            if (event) {
-                event.preventDefault();
-            }
-        },
         goToLocusWithId: function (event) {
             if (event) {
                 event.preventDefault();
             }
+
+            this.dispatcher.trigger(AppEventNamesEnum.goToLocusWithId);
         },
         goToDirectionsWithLatLng: function (event) {
             if (event) {

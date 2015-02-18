@@ -37,7 +37,7 @@ define(function (require) {
         return phone;
     };
 
-    utils.formatPhone = function (phone, format) {
+    utils.formatPhone = function (phone) {
         if (phone) {
             var cleanedPhone = utils.cleanPhone(phone);
             var formattedPhone = cleanedPhone;
@@ -53,25 +53,22 @@ define(function (require) {
     };
 
     utils.formatDate = function (date) {
-        var day = date.getDate();
-        var month = date.getMonth();
-        var fullYear = date.getFullYear();
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-        return month + '/' + day + '/' + fullYear + ' ' + hours + ':' + minutes;
+        var formattedDate;
+        if (date) {
+            var day = date.getDate();
+            var month = date.getMonth();
+            var fullYear = date.getFullYear();
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+
+            return month + '/' + day + '/' + fullYear + ' ' + hours + ':' + minutes;
+        }
+        return formattedDate;
     };
 
     utils.formatString = function (formatString, args) {
         return formatString.replace(/{(\d+)}/g, function (match, number) {
-
-            return typeof args[number] != 'undefined'
-
-                ? args[number]
-
-                : match
-
-                ;
-
+            return typeof args[number] !== 'undefined' ? args[number] : match;
         });
     };
 

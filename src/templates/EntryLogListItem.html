@@ -5,7 +5,7 @@
         </div>
         <div class="small-2 columns">
             <span class="coordinates-unavailable-label hidden">{{resource "coordinatesUnavailableErrorMessage"}}</span>
-            <a class="go-to-directions-button hidden" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{withDefault distance "&nbsp;"}}<i class="fa fa-map-marker"></i></a>
+            <a class="button radius tiny success go-to-directions-button hidden" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{withDefault distance "&nbsp;"}}</a>
         </div>
     </div>
     <div class="row identity-container">
@@ -18,27 +18,35 @@
         </div>
     </div>
     <div class="row">
-        <div class="small-5 columns">
-            <span class="in-time-label">{{formatDateWithDefault inTime "dd-mm-YYYY hh:mm" "&nbsp;"}}</span>
-        </div>
-        <div class="small-5 columns">
-            <span class="purpose-label">{{withDefault purpose "&nbsp;"}}</span>
+        <div class="small-10 columns">
+            <span class="in-time-label">{{formatDateWithDefault inTime "&nbsp;"}}</span>
         </div>
         <div class="small-2 columns">
-            <span class="group-check-in-label"><i class="fa fa-user-plus"></i></span>
+            <span class="group-check-in-label"><i class="fa fa-users"></i></span>
         </div>
     </div>
     <div class="row">
         <div class="small-10 columns">
-            <span class="out-time-label">{{formatDateWithDefault outTime "dd-mm-YYYY hh:mm" "&nbsp;"}}</span>
+            <span class="purpose-label">{{withDefault purpose "&nbsp;"}}</span>
+        </div>
+        <div class="small-2 columns">
+            <span>&nbsp;</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-10 columns">
+            <span class="out-time-label">{{formatDateWithDefault outTime "&nbsp;"}}</span>
         </div>
         <div class="small-2 columns">
             <span class="expired-check-in-label"><i class="fa fa-exclamation-circle"></i></span>
         </div>
     </div>
-    <div class="row hidden">
-        <div class="small-12 columns">
+    <div class="row">
+        <div class="small-10 columns">
             <span class="additional-info-label">{{withDefault additionalInfo "&nbsp;"}}</span>
+        </div>
+        <div class="small-2 columns">
+            <span>&nbsp;</span>
         </div>
     </div>
 </div>

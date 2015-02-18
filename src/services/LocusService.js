@@ -12,21 +12,24 @@ define(function (require) {
             "locusId": "FRDIA",
             "locusName": "Fredonia TS",
             "latitude": "40.16352778",
-            "longitude": "-82.61269444"
+            "longitude": "-82.61269444",
+            "locusPhone": "6145551212"
         },
         {
             "locusId": "DELAW",
             "locusName": "Delaware POP",
             "latitude": "40.28777777",
             "longitude": "-83.80555550",
-            "hasHazard": "true"
+            "hasHazard": "true",
+            "locusPhone": "7405552121"
         },
         {
             "locusId": "840",
             "locusName": "Vine",
             "latitude": "39.97109",
             "longitude": "-83.00647",
-            "hasOpenCheckIns": "true"
+            "hasOpenCheckIns": "true",
+            "locusPhone": "3309995454"
         }
     ];
 
