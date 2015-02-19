@@ -12,12 +12,17 @@ define(function (require) {
         template = require('hbs!templates/Search');
 
     var SearchView = BaseView.extend({
+        listCollection: Backbone.Collection,
+        listItemView: BaseView,
+        refreshListAppEventNamesEnum: refreshListAppEventNamesEnum,
         initialize: function (options) {
             console.trace('SearchView.initialize');
             options || (options = {});
+            this._options = options;
+            this.controller = options.controller || this;
             this.dispatcher = options.dispatcher || this;
-            this.CollectionType = options.CollectionType;
-            this.ListItemViewType = options.ListItemViewType;
+            this.listCollection = options.listCollection;
+            this.listItemView = options.listItemView;
             this.refreshListAppEventNamesEnum = options.refreshListAppEventNamesEnum;
 
             this.listenTo(this, 'leave', this.onLeave);
@@ -29,13 +34,8 @@ define(function (require) {
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
-            currentContext.listCollection = new currentContext.CollectionType();
-            currentContext.listViewInstance = new ListView({
-                controller: currentContext.controller,
-                dispatcher: currentContext.dispatcher,
-                collection: currentContext.listCollection,
-                ListItemViewType: currentContext.ListItemViewType
-            });
+            currentContext.listCollection = new currentContext.listCollection();
+            currentContext.listViewInstance = new ListView(currentContext._options);
             currentContext.appendChildTo(currentContext.listViewInstance, '#list-view-container');
 
             return this;

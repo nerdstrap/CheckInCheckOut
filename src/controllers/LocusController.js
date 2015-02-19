@@ -6,11 +6,12 @@ define(function (require) {
         Backbone = require('backbone'),
         LocusService = require('services/LocusService'),
         GeoLocationService = require('services/GeoLocationService'),
-        SearchView = require('views/SearchView'),
-        LocusCollection = require('collections/LocusCollection'),
-        LocusModel = require('models/LocusModel'),
+        LocusSearchView = require('views/LocusSearchView'),
+        LocusListView = require('views/LocusListView'),
         LocusListItemView = require('views/LocusListItemView'),
         LocusView = require('views/LocusView'),
+        LocusCollection = require('collections/LocusCollection'),
+        LocusModel = require('models/LocusModel'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         globals = require('globals'),
         utils = require('utils');
@@ -53,12 +54,9 @@ define(function (require) {
             var currentContext = this,
                 deferred = $.Deferred();
 
-            var locusSearchViewInstance = new SearchView({
+            var locusSearchViewInstance = new LocusSearchView({
                 controller: currentContext,
-                dispatcher: currentContext.dispatcher,
-                CollectionType: LocusCollection,
-                ListItemViewType: LocusListItemView,
-                refreshListAppEventNamesEnum: AppEventNamesEnum.refreshLocusListByGps
+                dispatcher: currentContext.dispatcher
             });
 
             currentContext.router.swapContent(locusSearchViewInstance);

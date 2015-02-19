@@ -11,11 +11,13 @@ define(function (require) {
         template = require('hbs!templates/List');
 
     var ListView = BaseView.extend({
+        listItemView: BaseView,
         initialize: function (options) {
             console.trace('ListView.initialize');
             options || (options = {});
+            this._options = options;
             this.dispatcher = options.dispatcher || this;
-            this.ListItemViewType = options.ListItemViewType;
+            this.listItemView = options.listItemView;
 
             this.listenTo(this.collection, 'reset', this.addAll);
             this.listenTo(this, 'leave', this.onLeave);
@@ -31,19 +33,19 @@ define(function (require) {
 
             return this;
         },
+        updateHeader: function (listHeaderText) {
+            this.$('#list-header').html(listHeaderText);
+        },
         addAll: function () {
             this.showLoading();
             this._leaveChildren();
             _.each(this.collection.models, this.addOne, this);
             this.hideLoading();
         },
-        addOne: function (modelInstance) {
+        addOne: function (model) {
             var currentContext = this;
-            var listItemViewInstance = new currentContext.ListItemViewType({
-                model: modelInstance,
-                dispatcher: currentContext.dispatcher,
-                userRole: currentContext.userRole
-            });
+            var options = _.extend(currentContext._options, { 'model': model });
+            var listItemViewInstance = new currentContext.listItemView(options);
             this.appendChildTo(listItemViewInstance, '#list-item-view-container');
         },
         removeAll: function () {

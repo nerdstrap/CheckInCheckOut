@@ -16,8 +16,8 @@ define(function (require) {
         initialize: function (options) {
             console.trace('IdentitySearchView.initialize');
             options || (options = {});
+            this.controller = options.controller || this;
             this.dispatcher = options.dispatcher || this;
-            this.identityCollection = new IdentityCollection();
 
             this.listenTo(this, 'leave', this.onLeave);
         },
@@ -25,15 +25,16 @@ define(function (require) {
             console.trace('IdentityListView.render()');
             var currentContext = this;
 
-            var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
+            var renderModel = _.extend({}, { cid: currentContext.cid }, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
-            currentContext.identityListViewInstance = new IdentityListView({
+            currentContext.listCollection = new IdentityCollection();
+            currentContext.listViewInstance = new IdentityListView({
                 controller: currentContext.controller,
                 dispatcher: currentContext.dispatcher,
-                collection: currentContext.identityCollection
+                collection: currentContext.listCollection
             });
-            this.appendChildTo(currentContext.identityListViewInstance, '#identity-list-view-container');
+            this.appendChildTo(currentContext.listViewInstance, '#list-view-container');
 
             return this;
         },
@@ -79,6 +80,7 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').removeClass('secondary');
             this.$('#show-nearby-results-button').addClass('secondary');
             this.$('#show-favorites-results-button').addClass('secondary');
+            this.refreshList();
         },
         showNearbyResults: function (event) {
             if (event) {
@@ -87,6 +89,7 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').addClass('secondary');
             this.$('#show-nearby-results-button').removeClass('secondary');
             this.$('#show-favorites-results-button').addClass('secondary');
+            this.refreshList();
         },
         showFavoritesResults: function (event) {
             if (event) {
@@ -95,14 +98,15 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').addClass('secondary');
             this.$('#show-nearby-results-button').addClass('secondary');
             this.$('#show-favorites-results-button').removeClass('secondary');
+            this.refreshList();
         },
-        refreshIdentityList: function (options) {
-            var identityName = this.$('#manual-search-input').val();
-            if (identityName && identityName.length > 1) {
-                options.identityName = identityName;
+        refreshList: function (options) {
+            var currentContext = this;
+            var searchQuery = this.$('#manual-search-input').val();
+            if (searchQuery && searchQuery.length > 1) {
+                options.searchQuery = searchQuery;
             }
-            this.identityListViewInstance.showLoading();
-            this.dispatcher.trigger(AppEventNamesEnum.refreshIdentityList, this.identityCollection, options);
+            this.dispatcher.trigger(AppEventNamesEnum.refreshIdentityListByGps, this.listCollection, options);
         },
         onLeave: function () {
             console.trace('IdentitySearchView.onLeave');

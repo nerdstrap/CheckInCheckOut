@@ -16,8 +16,8 @@ define(function (require) {
         initialize: function (options) {
             console.trace('LocusSearchView.initialize');
             options || (options = {});
+            this.controller = options.controller || this;
             this.dispatcher = options.dispatcher || this;
-            this.locusCollection = new LocusCollection();
 
             this.listenTo(this, 'leave', this.onLeave);
         },
@@ -28,12 +28,13 @@ define(function (require) {
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
-            currentContext.locusListViewInstance = new LocusListView({
+            currentContext.listCollection = new LocusCollection();
+            currentContext.listViewInstance = new LocusListView({
                 controller: currentContext.controller,
                 dispatcher: currentContext.dispatcher,
-                collection: currentContext.locusCollection
+                collection: currentContext.listCollection
             });
-            this.appendChildTo(currentContext.locusListViewInstance, '#locus-list-view-container');
+            this.appendChildTo(currentContext.listViewInstance, '#list-view-container');
 
             return this;
         },
@@ -79,6 +80,7 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').removeClass('secondary');
             this.$('#show-nearby-results-button').addClass('secondary');
             this.$('#show-favorites-results-button').addClass('secondary');
+            this.refreshList();
         },
         showNearbyResults: function (event) {
             if (event) {
@@ -87,6 +89,7 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').addClass('secondary');
             this.$('#show-nearby-results-button').removeClass('secondary');
             this.$('#show-favorites-results-button').addClass('secondary');
+            this.refreshList();
         },
         showFavoritesResults: function (event) {
             if (event) {
@@ -95,14 +98,15 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').addClass('secondary');
             this.$('#show-nearby-results-button').addClass('secondary');
             this.$('#show-favorites-results-button').removeClass('secondary');
+            this.refreshList();
         },
-        refreshLocusList: function (options) {
-            var locusName = this.$('#manual-search-input').val();
-            if (locusName && locusName.length > 1) {
-                options.locusName = locusName;
+        refreshList: function (options) {
+            var currentContext = this;
+            var searchQuery = this.$('#manual-search-input').val();
+            if (searchQuery && searchQuery.length > 1) {
+                options.searchQuery = searchQuery;
             }
-            this.locusListViewInstance.showLoading();
-            this.dispatcher.trigger(AppEventNamesEnum.refreshLocusList, this.locusCollection, options);
+            this.dispatcher.trigger(AppEventNamesEnum.refreshLocusListByGps, this.listCollection, options);
         },
         onLeave: function () {
             console.trace('LocusSearchView.onLeave');

@@ -47,7 +47,7 @@ define(function (require) {
                 showLocus: currentContext.showLocus,
                 showIdentity: currentContext.showIdentity
             });
-            this.appendChildTo(entryLogListItemViewInstance, '#entry-log-list-item-view-container');
+            this.appendChildTo(entryLogListItemViewInstance, '#list-item-view-container');
         },
         onLeave: function () {
             console.trace('EntryLogListView.onLeave');

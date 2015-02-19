@@ -44,7 +44,7 @@ define(function (require) {
                 dispatcher: currentContext.dispatcher,
                 userRole: currentContext.userRole
             });
-            this.appendChildTo(locusListItemViewInstance, '#locus-list-item-view-container');
+            this.appendChildTo(locusListItemViewInstance, '#list-item-view-container');
         },
         removeAll: function () {
             this.showLoading();
