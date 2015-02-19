@@ -63,6 +63,8 @@ define(function (require) {
                     var latitude = attributes.latitude;
                     if (latitude && !isNaN(latitude)) {
                         attributes.latitude = Number(latitude);
+                    } else {
+                        delete attributes.latitude;
                     }
                 }
                 
@@ -70,6 +72,8 @@ define(function (require) {
                     var longitude = attributes.longitude;
                     if (longitude && !isNaN(longitude)) {
                         attributes.longitude = Number(longitude);
+                    } else {
+                        delete attributes.longitude;
                     }
                 }
                 
@@ -77,6 +81,8 @@ define(function (require) {
                     var distance = attributes.distance;
                     if (distance && !isNaN(distance)) {
                         attributes.distance = Number(distance);
+                    } else {
+                        delete attributes.distance;
                     }
                 }
 
