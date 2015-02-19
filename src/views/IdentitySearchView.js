@@ -39,20 +39,20 @@ define(function (require) {
         },
         events: {
             //'keypress #user-name-input': 'dispatchManualSearch',
-            'click #open-manual-search-input-button': 'openManualSearchInput',
+            'click #open-manual-search-button': 'openManualSearch',
             'click #clear-manual-search-input-button': 'clearManualSearchInput',
             'click #search-button': 'dispatchManualSearch',
             'click #cancel-button': 'cancelManualSearch',
-            'click #name-search-button': 'resetNameSearch',
-            'click #gps-search-button': 'resetGpsSearch',
-            'click #recent-search-button': 'resetRecentSearch'
+            'click #show-alphabetic-results-button': 'showAlphabeticResults',
+            'click #show-nearby-results-button': 'showNearbyResults',
+            'click #show-favorites-results-button': 'showFavoritesResults'
         },
-        openManualSearchInput: function (event) {
+        openManualSearch: function (event) {
             if (event) {
                 event.preventDefault();
             }
-            this.$('#search-button').removeClass('hidden');
-            this.$('#cancel-button').removeClass('hidden');
+            this.$('#open-manual-search-container').addClass('hidden');
+            this.$('#manual-search-container').removeClass('hidden');
         },
         clearManualSearchInput: function (event) {
             if (event) {
@@ -69,8 +69,32 @@ define(function (require) {
             if (event) {
                 event.preventDefault();
             }
-            this.$('#search-button').addClass('hidden');
-            this.$('#cancel-button').addClass('hidden');
+            this.$('#manual-search-container').addClass('hidden');
+            this.$('#open-manual-search-container').removeClass('hidden');
+        },
+        showAlphabeticResults: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+            this.$('#show-alphabetic-results-button').removeClass('secondary');
+            this.$('#show-nearby-results-button').addClass('secondary');
+            this.$('#show-favorites-results-button').addClass('secondary');
+        },
+        showNearbyResults: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+            this.$('#show-alphabetic-results-button').addClass('secondary');
+            this.$('#show-nearby-results-button').removeClass('secondary');
+            this.$('#show-favorites-results-button').addClass('secondary');
+        },
+        showFavoritesResults: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+            this.$('#show-alphabetic-results-button').addClass('secondary');
+            this.$('#show-nearby-results-button').addClass('secondary');
+            this.$('#show-favorites-results-button').removeClass('secondary');
         },
         refreshIdentityList: function (options) {
             var identityName = this.$('#manual-search-input').val();

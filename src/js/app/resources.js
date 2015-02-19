@@ -30,8 +30,10 @@ define(function(require) {
         'gpsSearchButtonText': 'GPS',
         'manualSearchButtonText': 'Manual',
         'recentSearchButtonText': 'Recent',
-        'favoritesSearchButtonText': 'Favorites',
-        'nameSearchButtonText': 'A-Z',
+
+        'showAlphabeticResultsButtonText': 'A-Z',
+        'showNearbyResultsButtonText': 'Nearby',
+        'showFavoritesResultsButtonText': 'Favorites',
 
         'searchPlaceholder': 'search',
         'locus.manualSearchPlaceholderText': 'enter a station name',
@@ -44,6 +46,7 @@ define(function(require) {
         'locusSearch.loadingMessage': 'loading station search',
         'locusList.loadingMessage': 'loading stations',
         'locus.loadingMessage': 'loading station',
+        'listSearch.loadingMessage': 'loading search',
 
         'locusNameHeaderText': 'Location',
         'locusNamePlaceholder': 'enter description',

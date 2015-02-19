@@ -5,35 +5,38 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseView = require('views/BaseView'),
-        LocusCollection = require('collections/LocusCollection'),
-        LocusListView = require('views/LocusListView'),
+        ListView = require('views/ListView'),
         globals = require('globals'),
         env = require('env'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
-        template = require('hbs!templates/LocusSearch');
+        template = require('hbs!templates/Search');
 
-    var LocusSearchView = BaseView.extend({
+    var SearchView = BaseView.extend({
         initialize: function (options) {
-            console.trace('LocusSearchView.initialize');
+            console.trace('SearchView.initialize');
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
-            this.locusCollection = new LocusCollection();
+            this.CollectionType = options.CollectionType;
+            this.ListItemViewType = options.ListItemViewType;
+            this.refreshListAppEventNamesEnum = options.refreshListAppEventNamesEnum;
 
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
-            console.trace('LocusListView.render()');
+            console.trace('SearchView.render()');
             var currentContext = this;
 
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
-            currentContext.locusListViewInstance = new LocusListView({
+            currentContext.listCollection = new currentContext.CollectionType();
+            currentContext.listViewInstance = new ListView({
                 controller: currentContext.controller,
                 dispatcher: currentContext.dispatcher,
-                collection: currentContext.locusCollection
+                collection: currentContext.listCollection,
+                ListItemViewType: currentContext.ListItemViewType
             });
-            this.appendChildTo(currentContext.locusListViewInstance, '#locus-list-view-container');
+            currentContext.appendChildTo(currentContext.listViewInstance, '#list-view-container');
 
             return this;
         },
@@ -87,6 +90,7 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').addClass('secondary');
             this.$('#show-nearby-results-button').removeClass('secondary');
             this.$('#show-favorites-results-button').addClass('secondary');
+            this.refreshList();
         },
         showFavoritesResults: function (event) {
             if (event) {
@@ -96,18 +100,19 @@ define(function (require) {
             this.$('#show-nearby-results-button').addClass('secondary');
             this.$('#show-favorites-results-button').removeClass('secondary');
         },
-        refreshLocusList: function (options) {
-            var locusName = this.$('#manual-search-input').val();
-            if (locusName && locusName.length > 1) {
-                options.locusName = locusName;
+        refreshList: function (options) {
+            var currentContext = this;
+            var searchQuery = this.$('#manual-search-input').val();
+            if (searchQuery && searchQuery.length > 1) {
+                options.searchQuery = searchQuery;
             }
-            this.locusListViewInstance.showLoading();
-            this.dispatcher.trigger(AppEventNamesEnum.refreshLocusList, this.locusCollection, options);
+            this.listViewInstance.showLoading();
+            this.dispatcher.trigger(currentContext.refreshListAppEventNamesEnum, this.listCollection, options);
         },
         onLeave: function () {
-            console.trace('LocusSearchView.onLeave');
+            console.trace('SearchView.onLeave');
         }
     });
 
-    return LocusSearchView;
+    return SearchView;
 });

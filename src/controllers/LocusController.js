@@ -6,8 +6,10 @@ define(function (require) {
         Backbone = require('backbone'),
         LocusService = require('services/LocusService'),
         GeoLocationService = require('services/GeoLocationService'),
-        LocusSearchView = require('views/LocusSearchView'),
+        SearchView = require('views/SearchView'),
+        LocusCollection = require('collections/LocusCollection'),
         LocusModel = require('models/LocusModel'),
+        LocusListItemView = require('views/LocusListItemView'),
         LocusView = require('views/LocusView'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         globals = require('globals'),
@@ -47,13 +49,16 @@ define(function (require) {
         },
 
         goToLocusSearch: function () {
-            console.trace('LocusController.goToLocus');
+            console.trace('LocusController.goToLocusSearch');
             var currentContext = this,
                 deferred = $.Deferred();
 
-            var locusSearchViewInstance = new LocusSearchView({
+            var locusSearchViewInstance = new SearchView({
                 controller: currentContext,
-                dispatcher: currentContext.dispatcher
+                dispatcher: currentContext.dispatcher,
+                CollectionType: LocusCollection,
+                ListItemViewType: LocusListItemView,
+                refreshListAppEventNamesEnum: AppEventNamesEnum.refreshLocusListByGps
             });
 
             currentContext.router.swapContent(locusSearchViewInstance);
