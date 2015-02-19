@@ -80,7 +80,7 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').removeClass('secondary');
             this.$('#show-nearby-results-button').addClass('secondary');
             this.$('#show-favorites-results-button').addClass('secondary');
-            this.refreshList();
+            this.refreshList({ 'alphabetic': true });
         },
         showNearbyResults: function (event) {
             if (event) {
@@ -89,7 +89,7 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').addClass('secondary');
             this.$('#show-nearby-results-button').removeClass('secondary');
             this.$('#show-favorites-results-button').addClass('secondary');
-            this.refreshList();
+            this.refreshList({ 'nearby': true });
         },
         showFavoritesResults: function (event) {
             if (event) {
@@ -98,15 +98,21 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').addClass('secondary');
             this.$('#show-nearby-results-button').addClass('secondary');
             this.$('#show-favorites-results-button').removeClass('secondary');
-            this.refreshList();
+            this.refreshList({ 'favorites': true });
         },
         refreshList: function (options) {
+            options || (options = {});
             var currentContext = this;
             var searchQuery = this.$('#manual-search-input').val();
             if (searchQuery && searchQuery.length > 1) {
                 options.searchQuery = searchQuery;
             }
-            this.dispatcher.trigger(AppEventNamesEnum.refreshLocusListByGps, this.listCollection, options);
+            this.listViewInstance.showLoading();
+            if (options.nearby) {
+                this.dispatcher.trigger(AppEventNamesEnum.refreshLocusListByGps, this.listCollection, options);
+            } else {
+                this.dispatcher.trigger(AppEventNamesEnum.refreshLocusList, this.listCollection, options);
+            }
         },
         onLeave: function () {
             console.trace('LocusSearchView.onLeave');

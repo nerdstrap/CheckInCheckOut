@@ -44,7 +44,7 @@ define(function (require) {
                 dispatcher: currentContext.dispatcher,
                 userRole: currentContext.userRole
             });
-            this.appendChildTo(identityListItemViewInstance, '#identity-list-item-view-container');
+            this.appendChildTo(identityListItemViewInstance, '#list-item-view-container');
         },
         removeAll: function () {
             this.showLoading();

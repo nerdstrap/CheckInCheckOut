@@ -15,6 +15,7 @@ define(function (require) {
         listCollection: Backbone.Collection,
         listItemView: BaseView,
         refreshListAppEventNamesEnum: refreshListAppEventNamesEnum,
+        refreshListByGpsAppEventNamesEnum: refreshListByGpsAppEventNamesEnum,
         initialize: function (options) {
             console.trace('SearchView.initialize');
             options || (options = {});
@@ -24,6 +25,7 @@ define(function (require) {
             this.listCollection = options.listCollection;
             this.listItemView = options.listItemView;
             this.refreshListAppEventNamesEnum = options.refreshListAppEventNamesEnum;
+            this.refreshListByGpsAppEventNamesEnum = options.refreshListAppEventNamesEnum;
 
             this.listenTo(this, 'leave', this.onLeave);
         },
@@ -82,6 +84,7 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').removeClass('secondary');
             this.$('#show-nearby-results-button').addClass('secondary');
             this.$('#show-favorites-results-button').addClass('secondary');
+            this.refreshList({ 'alphabetic': true });
         },
         showNearbyResults: function (event) {
             if (event) {
@@ -90,7 +93,7 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').addClass('secondary');
             this.$('#show-nearby-results-button').removeClass('secondary');
             this.$('#show-favorites-results-button').addClass('secondary');
-            this.refreshList();
+            this.refreshList({ 'nearby': true });
         },
         showFavoritesResults: function (event) {
             if (event) {
@@ -99,15 +102,21 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').addClass('secondary');
             this.$('#show-nearby-results-button').addClass('secondary');
             this.$('#show-favorites-results-button').removeClass('secondary');
+            this.refreshList({ 'favorites': true });
         },
         refreshList: function (options) {
+            options || (options = {});
             var currentContext = this;
             var searchQuery = this.$('#manual-search-input').val();
             if (searchQuery && searchQuery.length > 1) {
                 options.searchQuery = searchQuery;
             }
             this.listViewInstance.showLoading();
-            this.dispatcher.trigger(currentContext.refreshListAppEventNamesEnum, this.listCollection, options);
+            if (options.nearby) {
+                this.dispatcher.trigger(currentContext.refreshListByGpsAppEventNamesEnum, this.listCollection, options);
+            } else {
+                this.dispatcher.trigger(currentContext.refreshListAppEventNamesEnum, this.listCollection, options);
+            }
         },
         onLeave: function () {
             console.trace('SearchView.onLeave');

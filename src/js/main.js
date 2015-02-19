@@ -3,8 +3,8 @@ require.config({
         'env': {
             apiUrl: '',
             siteRoot: '/src',
-            distanceThreshold: 50,
-            searchResultsThreshold: 20,
+            distanceThreshold: 250,
+            searchResultsThreshold: 100,
             expirationThreshold: 1800000
         },
         'hbs': {

@@ -1850,16 +1850,7 @@ define(function (require) {
         { "identityId": "", "identityName": "Cico, Transmission", "contactNumber": "5612341890", "email": "@aep.com", "role": "Admin" }
     ];
 
-    var _userIdentity = {
-        "identityId": "S251201",
-        "identityName": "Baltic, Michael",
-        "firstName": "Michael",
-        "lastName": "Baltic",
-        "middleInitial": "E",
-        "contactNumber": "6143239560",
-        "email": "mebaltic@aep.com",
-        "role": "Admin"
-    };
+    var _userIdentity = { "identityId": "S251201", "identityName": "Baltic, Michael E", "contactNumber": "6143239560", "email": "mebaltic@aep.com", "role": "Admin" };
 
     var _getById = function (identityId) {
         return _.where(_identityList, function (identity) {
@@ -1867,9 +1858,9 @@ define(function (require) {
         });
     };
 
-    var _getByIdentityName = function (identityName) {
+    var _getBySearchQuery = function (searchQuery) {
         return _.where(_identityList, function (identity) {
-            return identity.identityName.toLowerCase().indexOf(identityName || "".toLowerCase()) > -1;
+            return identity.identityName.toLowerCase().indexOf(searchQuery || "".toLowerCase()) > -1;
         });
     };
 
@@ -1907,11 +1898,10 @@ define(function (require) {
             var identityList;
             if (options.identityId) {
                 identityList = _getById(options.identityId);
-            } else if (options.identityName) {
-                identityList = _identityList;
-                //identityList = _getByIdentityName(options.identityName);
+            } else if (options.searchQuery) {
+                identityList = _getBySearchQuery(options.searchQuery);
             } else {
-                identityList = _identityList;
+                identityList = _identityList.slice(0, env.getSearchResultsThreshold());
             }
 
             var results = {

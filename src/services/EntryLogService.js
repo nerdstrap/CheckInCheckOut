@@ -76,16 +76,7 @@ define(function (require) {
         }
     ];
 
-    var _userIdentity = {
-        "identityId": "S251201",
-        "identityName": "Baltic, Michael",
-        "firstName": "Michael",
-        "lastName": "Baltic",
-        "middleInitial": "E",
-        "contactNumber": "6143239560",
-        "email": "mebaltic@aep.com",
-        "role": "Admin"
-    };
+    var _userIdentity = { "identityId": "S251201", "identityName": "Baltic, Michael E", "contactNumber": "6143239560", "email": "mebaltic@aep.com", "role": "Admin" };
 
     var _purposes = [
         {
