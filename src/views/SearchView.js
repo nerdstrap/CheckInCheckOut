@@ -13,19 +13,28 @@ define(function (require) {
 
     var SearchView = BaseView.extend({
         listCollection: Backbone.Collection,
+        listView: ListView,
         listItemView: BaseView,
-        refreshListAppEventNamesEnum: refreshListAppEventNamesEnum,
-        refreshListByGpsAppEventNamesEnum: refreshListByGpsAppEventNamesEnum,
+        refreshListTrigger: AppEventNamesEnum.refreshList,
         initialize: function (options) {
             console.trace('SearchView.initialize');
             options || (options = {});
             this._options = options;
-            this.controller = options.controller || this;
+            this.controller = options.controller;
             this.dispatcher = options.dispatcher || this;
-            this.listCollection = options.listCollection;
-            this.listItemView = options.listItemView;
-            this.refreshListAppEventNamesEnum = options.refreshListAppEventNamesEnum;
-            this.refreshListByGpsAppEventNamesEnum = options.refreshListAppEventNamesEnum;
+            if (options.listCollection) {
+                this.listCollection = options.listCollection;
+            }
+            if (options.listView) {
+                this.listView = options.listView;
+            }
+            if (options.listItemView) {
+                this.listItemView = options.listItemView;
+            }
+            if (options.refreshListTrigger) {
+                this.refreshListTrigger = options.refreshListTrigger;
+            }
+            this.collection = new this.listCollection();
 
             this.listenTo(this, 'leave', this.onLeave);
         },
@@ -36,8 +45,7 @@ define(function (require) {
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
-            currentContext.listCollection = new currentContext.listCollection();
-            currentContext.listViewInstance = new ListView(currentContext._options);
+            currentContext.listViewInstance = new currentContext.listView(currentContext._options);
             currentContext.appendChildTo(currentContext.listViewInstance, '#list-view-container');
 
             return this;
@@ -84,7 +92,7 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').removeClass('secondary');
             this.$('#show-nearby-results-button').addClass('secondary');
             this.$('#show-favorites-results-button').addClass('secondary');
-            this.refreshList({ 'alphabetic': true });
+            this.refreshList({'alphabetic': true});
         },
         showNearbyResults: function (event) {
             if (event) {
@@ -93,7 +101,7 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').addClass('secondary');
             this.$('#show-nearby-results-button').removeClass('secondary');
             this.$('#show-favorites-results-button').addClass('secondary');
-            this.refreshList({ 'nearby': true });
+            this.refreshList({'nearby': true});
         },
         showFavoritesResults: function (event) {
             if (event) {
@@ -102,7 +110,7 @@ define(function (require) {
             this.$('#show-alphabetic-results-button').addClass('secondary');
             this.$('#show-nearby-results-button').addClass('secondary');
             this.$('#show-favorites-results-button').removeClass('secondary');
-            this.refreshList({ 'favorites': true });
+            this.refreshList({'favorites': true});
         },
         refreshList: function (options) {
             options || (options = {});
@@ -112,11 +120,7 @@ define(function (require) {
                 options.searchQuery = searchQuery;
             }
             this.listViewInstance.showLoading();
-            if (options.nearby) {
-                this.dispatcher.trigger(currentContext.refreshListByGpsAppEventNamesEnum, this.listCollection, options);
-            } else {
-                this.dispatcher.trigger(currentContext.refreshListAppEventNamesEnum, this.listCollection, options);
-            }
+            this.dispatcher.trigger(currentContext.refreshListTrigger, this.collection, options);
         },
         onLeave: function () {
             console.trace('SearchView.onLeave');

@@ -7,17 +7,25 @@ define(function (require) {
         BaseView = require('views/BaseView'),
         globals = require('globals'),
         env = require('env'),
+        utils = require('utils'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         template = require('hbs!templates/List');
 
     var ListView = BaseView.extend({
+        headerTextFormatString: utils.getResource('list.headerTextFormatString'),
         listItemView: BaseView,
         initialize: function (options) {
             console.trace('ListView.initialize');
             options || (options = {});
             this._options = options;
+            this.controller = options.controller;
             this.dispatcher = options.dispatcher || this;
-            this.listItemView = options.listItemView;
+            if (options.listItemView) {
+                this.listItemView = options.listItemView;
+            }
+            if (options.headerTextFormatString) {
+                this.headerTextFormatString = options.headerTextFormatString;
+            }
 
             this.listenTo(this.collection, 'reset', this.addAll);
             this.listenTo(this, 'leave', this.onLeave);
@@ -33,13 +41,17 @@ define(function (require) {
 
             return this;
         },
-        updateHeader: function (listHeaderText) {
-            this.$('#list-header').html(listHeaderText);
+        updateHeader: function () {
+            if (this.collection) {
+                var headerText = utils.formatString(this.headerTextFormatString, [this.collection.length]);
+                this.$('#list-header').html(headerText);
+            }
         },
         addAll: function () {
             this.showLoading();
             this._leaveChildren();
             _.each(this.collection.models, this.addOne, this);
+            this.updateHeader();
             this.hideLoading();
         },
         addOne: function (model) {

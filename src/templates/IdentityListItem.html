@@ -1,12 +1,42 @@
 <div class="identity-list-item-view">
     <div class="row">
         <div class="small-12 columns">
-            <a class="go-to-identity-button" data-identity-id="{{identityId}}" href="#">{{withDefault identityName "&nbsp;"}}</a>
+            <a class="go-to-identity-button" data-identity-id="{{identityId}}" href="#">{{withDefault identityName "&nbsp;"}}</a><i class="fa fa-star-o"></i>
         </div>
     </div>
-    <div class="row">
-        <div class="small-12 columns">
-            2nd row stuff
+    <div class="row contact-number-container">
+        <div class="small-10 columns">
+            <div class="row">
+                <div class="small-12 columns">
+                    <span>{{resource "contactNumberHeaderText"}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="small-12 columns">
+                    <span class="contact-number-label">{{formatPhoneWithDefault contactNumber "&nbsp;"}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="small-2 columns">
+            <a class="message-contact-number-button" href="sms:{{contactNumber}}"><i class="fa fa-comment-o"></i></a>
+            <a class="call-contact-number-button" href="tel:{{contactNumber}}"><i class="fa fa-phone"></i></a>
+        </div>
+    </div>
+    <div class="row email-container">
+        <div class="small-10 columns">
+            <div class="row">
+                <div class="small-12 columns">
+                    <span>{{resource "emailHeaderText"}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="small-12 columns">
+                    <span class="email-label">{{withDefault email "&nbsp;"}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="small-2 columns">
+            <a class="email-button" href="mailto:{{email}}"><i class="fa fa-envelope-o"></i></a>
         </div>
     </div>
 </div>

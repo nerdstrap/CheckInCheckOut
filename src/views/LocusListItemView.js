@@ -35,27 +35,49 @@ define(function (require) {
             'click .go-to-directions-button': 'goToDirectionsWithLatLng'
         },
         updateViewFromModel: function () {
-            if (this.model.has('locusName')) {
-                this.$('.go-to-locus-button').html(this.model.get('locusName'));
+            var currentContext = this;
+
+            var locusName;
+            if (currentContext.model.has('locusName')) {
+                locusName = currentContext.model.get('locusName');
             }
-            if (this.model.has('distance')) {
-                this.$('.distance-label').html(utils.formatString(utils.getResource('distanceFormatString'), [this.model.get('distance')]));
+            currentContext.$('.go-to-locus-button').html(locusName);
+
+            var distance;
+            var formattedDistance;
+            var latitude;
+            var longitude;
+            if (currentContext.model.has('distance') && currentContext.model.has('latitude') && currentContext.model.has('longitude')) {
+                currentContext.hasCoordinates = true;
+                distance = currentContext.model.get('distance').toFixed(0);
+                formattedDistance = utils.formatString(utils.getResource('distanceFormatString'), [distance]);
+                latitude = currentContext.model.get('latitude');
+                longitude = currentContext.model.get('longitude');
+            }
+            if (currentContext.hasCoordinates) {
+                currentContext.$('.distance-label').html(formattedDistance);
+                currentContext.$('.go-to-directions-button').attr('data-latitude', latitude).attr('data-longitude', longitude);
+                currentContext.$('.coordinates-unavailable-container').addClass('hidden');
+                currentContext.$('.coordinates-container').removeClass('hidden');
             } else {
-                this.$('.distance-label').html(utils.getResource('distanceUnknownErrorMessage'));
+                currentContext.$('.go-to-directions-button').addClass('hidden');
+                currentContext.$('.coordinates-unavailable-container').removeClass('hidden');
+                currentContext.$('.coordinates-container').addClass('hidden');
             }
-            if (this.model.has('latitude') && this.model.has('longitude')) {
-                this.$('.go-to-directions-button').removeClass('hidden').removeClass('hidden').attr('data-latitude', this.model.get('latitude')).attr('data-longitude', this.model.get('longitude'));
+            var cleanedLocusPhone;
+            var formattedLocusPhone;
+            if (currentContext.model.has('phone')) {
+                currentContext.hasLocusPhone = true;
+                var phone = currentContext.model.get('phone');
+                cleanedLocusPhone = utils.cleanPhone(phone);
+                formattedLocusPhone = utils.formatPhone(cleanedLocusPhone);
+            }
+            if (currentContext.hasLocusPhone) {
+                currentContext.$('.phone-label').html(formattedLocusPhone);
+                currentContext.$('.call-phone-button').attr('href', 'tel:' + cleanedLocusPhone);
+                currentContext.$('.phone-container').removeClass('hidden');
             } else {
-                this.$('.go-to-directions-button').addClass('hidden');
-            }
-            if (this.model.has('hasHazard') && this.model.get('hasHazard') === "true") {
-                this.$('.go-to-locus-button').parent().append('<i class="fa fa-warning"></i>');
-            }
-            if (this.model.has('hasOpenCheckIns') && this.model.get('hasOpenCheckIns') === "true") {
-                this.$('.go-to-locus-button').parent().append('<i class="fa fa-user-plus"></i>');
-            }
-            if (this.model.has('linkedLocusId')) {
-                this.$('.go-to-locus-button').parent().append('<i class="fa fa-arrows-h"></i>');
+                currentContext.$('.phone-container').addClass('hidden');
             }
         },
         goToLocusWithId: function (event) {

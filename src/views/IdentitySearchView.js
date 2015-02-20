@@ -7,17 +7,36 @@ define(function (require) {
         BaseView = require('views/BaseView'),
         IdentityCollection = require('collections/IdentityCollection'),
         IdentityListView = require('views/IdentityListView'),
+        IdentityListItemView = require('views/IdentityListItemView'),
         globals = require('globals'),
         env = require('env'),
         AppEventNamesEnum = require('enums/AppEventNamesEnum'),
         template = require('hbs!templates/IdentitySearch');
 
     var IdentitySearchView = BaseView.extend({
+        listCollection: IdentityCollection,
+        listView: IdentityListView,
+        listItemView: IdentityListItemView,
+        refreshListTrigger: AppEventNamesEnum.refreshIdentityList,
         initialize: function (options) {
             console.trace('IdentitySearchView.initialize');
             options || (options = {});
+            this._options = options;
             this.controller = options.controller || this;
             this.dispatcher = options.dispatcher || this;
+            if (options.listCollection) {
+                this.listCollection = options.listCollection;
+            }
+            if (options.listView) {
+                this.listView = options.listView;
+            }
+            if (options.listItemView) {
+                this.listItemView = options.listItemView;
+            }
+            if (options.refreshListTrigger) {
+                this.refreshListTrigger = options.refreshListTrigger;
+            }
+            this.collection = new this.listCollection();
 
             this.listenTo(this, 'leave', this.onLeave);
         },
@@ -25,15 +44,10 @@ define(function (require) {
             console.trace('IdentityListView.render()');
             var currentContext = this;
 
-            var renderModel = _.extend({}, { cid: currentContext.cid }, currentContext.model);
+            var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
-            currentContext.listCollection = new IdentityCollection();
-            currentContext.listViewInstance = new IdentityListView({
-                controller: currentContext.controller,
-                dispatcher: currentContext.dispatcher,
-                collection: currentContext.listCollection
-            });
+            currentContext.listViewInstance = new currentContext.listView(_.extend(currentContext._options, { 'collection': currentContext.collection }));
             this.appendChildTo(currentContext.listViewInstance, '#list-view-container');
 
             return this;
@@ -108,11 +122,7 @@ define(function (require) {
                 options.searchQuery = searchQuery;
             }
             this.listViewInstance.showLoading();
-            if (options.nearby) {
-                this.dispatcher.trigger(AppEventNamesEnum.refreshIdentityListByGps, this.listCollection, options);
-            } else {
-                this.dispatcher.trigger(AppEventNamesEnum.refreshIdentityList, this.listCollection, options);
-            }
+            this.dispatcher.trigger(currentContext.refreshListTrigger, this.collection, options);
         },
         onLeave: function () {
             console.trace('IdentitySearchView.onLeave');

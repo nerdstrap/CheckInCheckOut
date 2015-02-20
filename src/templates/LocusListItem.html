@@ -1,17 +1,46 @@
 <div class="locus-list-item-view">
     <div class="row">
         <div class="small-12 columns">
-            <a class="go-to-locus-button" data-locus-id="{{locusId}}" href="#">{{withDefault locusName "&nbsp;"}}</a>
+            <a class="go-to-locus-button" data-locus-id="{{locusId}}" href="#">{{withDefault locusName "&nbsp;"}}</a><i class="fa fa-star-o"></i>
         </div>
     </div>
-    <div class="row">
+    <div class="row coordinates-unavailable-container hidden">
         <div class="small-12 columns">
-            <span class="distance-label">{{withDefault distance "&nbsp;"}}</span>
+            <span class="coordinates-unavailable-label">{{resource "coordinatesUnavailableErrorMessage"}}</span>
         </div>
     </div>
-    <div class="row">
-        <div class="small-12 columns">
-            <a class="go-to-directions-button hidden" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#">{{resource "goToDirectionsButtonText"}}&nbsp;<i class="fa fa-map-marker"></i></a>
+    <div class="row coordinates-container hidden">
+        <div class="small-10 columns">
+            <div class="row">
+                <div class="small-12 columns">
+                    <span>{{resource "coordinatesHeaderText"}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="small-12 columns">
+                    <span class="distance-label">{{withDefault distance "&nbsp;"}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="small-2 columns">
+            <a class="go-to-directions-button" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#"><i class="fa fa-location-arrow"></i></a>
+        </div>
+    </div>
+    <div class="row phone-container hidden">
+        <div class="small-10 columns">
+            <div class="row">
+                <div class="small-12 columns">
+                    <span>{{resource "phoneHeaderText"}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="small-12 columns">
+                    <span class="phone-label">{{formatPhoneWithDefault phone "&nbsp;"}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="small-2 columns">
+            <a class="call-phone-button" href="tel:{{phone}}"><i class="fa fa-phone"></i></a>
         </div>
     </div>
 </div>

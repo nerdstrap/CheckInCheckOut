@@ -4,23 +4,6 @@
             <h2 id="locus-name-header" class="t-heading -size-m -color-inherit" data-locus-id="{{locusId}}">{{locusName}}</h2><i class="fa fa-star-o"></i>
         </div>
     </div>
-    <div id="locus-phone-container" class="row hidden">
-        <div class="small-10 columns">
-            <div class="row">
-                <div class="small-12 columns">
-                    <span>{{resource "locusPhoneHeaderText"}}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="small-12 columns">
-                    <span id="locus-phone-label">{{formatPhoneWithDefault locusPhone "&nbsp;"}}</span>
-                </div>
-            </div>
-        </div>
-        <div class="small-2 columns">
-            <a id="call-locus-phone-button" href="tel:{{locusPhone}}"><i class="fa fa-phone"></i></a>
-        </div>
-    </div>
     <div id="coordinates-unavailable-container" class="row hidden">
         <div class="small-12 columns">
             <span id="coordinates-unavailable-label">{{resource "coordinatesUnavailableErrorMessage"}}</span>
@@ -41,6 +24,23 @@
         </div>
         <div class="small-2 columns">
             <a id="go-to-directions-button" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#"><i class="fa fa-location-arrow"></i></a>
+        </div>
+    </div>
+    <div id="phone-container" class="row hidden">
+        <div class="small-10 columns">
+            <div class="row">
+                <div class="small-12 columns">
+                    <span>{{resource "phoneHeaderText"}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="small-12 columns">
+                    <span id="phone-label">{{formatPhoneWithDefault phone "&nbsp;"}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="small-2 columns">
+            <a id="call-phone-button" href="tel:{{phone}}"><i class="fa fa-phone"></i></a>
         </div>
     </div>
     <div id="linked-locus-container" class="row hidden">

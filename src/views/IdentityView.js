@@ -51,7 +51,7 @@ define(function (require) {
             var formattedContactNumber;
             if (currentContext.model.has('contactNumber')) {
                 currentContext.hasContactNumber = true;
-                var contactNumber = currentContext.identityModel.get('contactNumber');
+                var contactNumber = currentContext.model.get('contactNumber');
                 cleanedContactNumber = utils.cleanPhone(contactNumber);
                 formattedContactNumber = utils.formatPhone(cleanedContactNumber);
             }

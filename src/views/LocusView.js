@@ -101,18 +101,18 @@ define(function (require) {
             }
             var cleanedLocusPhone;
             var formattedLocusPhone;
-            if (currentContext.model.has('locusPhone')) {
+            if (currentContext.model.has('phone')) {
                 currentContext.hasLocusPhone = true;
-                var locusPhone = currentContext.model.get('locusPhone');
-                cleanedLocusPhone = utils.cleanPhone(locusPhone);
+                var phone = currentContext.model.get('phone');
+                cleanedLocusPhone = utils.cleanPhone(phone);
                 formattedLocusPhone = utils.formatPhone(cleanedLocusPhone);
             }
             if (currentContext.hasLocusPhone) {
-                currentContext.$('#locus-phone-label').html(formattedLocusPhone);
-                currentContext.$('#call-locus-phone-button').attr('href', 'tel:' + cleanedLocusPhone);
-                currentContext.$('#locus-phone-container').removeClass('hidden');
+                currentContext.$('#phone-label').html(formattedLocusPhone);
+                currentContext.$('#call-phone-button').attr('href', 'tel:' + cleanedLocusPhone);
+                currentContext.$('#phone-container').removeClass('hidden');
             } else {
-                currentContext.$('#locus-phone-container').addClass('hidden');
+                currentContext.$('#phone-container').addClass('hidden');
             }
         },
         showCheckInButton: function () {
