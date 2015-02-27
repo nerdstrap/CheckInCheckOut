@@ -1,7 +1,41 @@
 <div class="locus-view">
+    <div id="header" class="row">
+        <div class="small-4 columns">
+            <a id="go-back-from-locus-button" href="#"><i class="fa fa-angle-left"></i>{{resource "goBackFromLocusButtonText"}}</a>
+        </div>
+        <div class="small-4 columns">
+            &nbsp;
+        </div>
+        <div class="small-4 columns">
+            <a id="open-locus-menu-button" class="right" href="#"><i class="fa fa-ellipsis-h"></i></a>
+        </div>
+    </div>
+    <div class="row loading {{cid}} hidden">
+        <div class="small-12 columns">
+            <span class="loading-message">{{resource "locus.loadingMessage"}}</span>
+            <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
+        </div>
+    </div>
     <div class="row">
         <div class="small-12 columns">
-            <h2 id="locus-name-header" class="t-heading -size-m -color-inherit" data-locus-id="{{locusId}}">{{locusName}}</h2><i class="fa fa-star-o"></i>
+            <span id="locus-name-header" class="t-heading -size-l -color-inherit" data-locus-id="{{locusId}}">{{locusName}}</span><a id="add-locus-to-favorites-button" href="#"><i class="fa fa-star-o"></i></a>
+        </div>
+    </div>
+    <div id="phone-container" class="row hidden">
+        <div class="small-10 columns">
+            <div class="row">
+                <div class="small-12 columns">
+                    <span>{{resource "phoneHeaderText"}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="small-12 columns">
+                    <span id="phone-label">{{formatPhoneWithDefault phone "&nbsp;"}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="small-2 columns">
+            <a id="call-phone-button" href="tel:{{phone}}"><i class="fa fa-phone"></i></a>
         </div>
     </div>
     <div id="coordinates-unavailable-container" class="row hidden">
@@ -26,26 +60,14 @@
             <a id="go-to-directions-button" data-latitude="{{latitude}}" data-longitude="{{longitude}}" href="#"><i class="fa fa-location-arrow"></i></a>
         </div>
     </div>
-    <div id="phone-container" class="row hidden">
-        <div class="small-10 columns">
-            <div class="row">
-                <div class="small-12 columns">
-                    <span>{{resource "phoneHeaderText"}}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="small-12 columns">
-                    <span id="phone-label">{{formatPhoneWithDefault phone "&nbsp;"}}</span>
-                </div>
-            </div>
-        </div>
-        <div class="small-2 columns">
-            <a id="call-phone-button" href="tel:{{phone}}"><i class="fa fa-phone"></i></a>
+    <div id="child-locus-container" class="row hidden">
+        <div class="small-12 columns">
+            <a id="go-to-child-locus-button" class="button secondary tiny" data-locus-id href="#">{{resource "goToChildLocusButtonTextFormatString"}}<i class="fa fa-arrows-h"></i></a>
         </div>
     </div>
-    <div id="linked-locus-container" class="row hidden">
+    <div id="parent-locus-container" class="row hidden">
         <div class="small-12 columns">
-            <a id="go-to-linked-locus-button" data-linked-locus-id href="#">{{resource "goToLinkedLocusButtonTextFormatString"}}<i class="fa fa-arrows-h"></i></a>
+            <a id="go-to-parent-locus-button" class="button secondary tiny" data-locus-id href="#">{{resource "goToParentLocusButtonTextFormatString"}}<i class="fa fa-arrows-h"></i></a>
         </div>
     </div>
     <div id="entry-log-controls-container" class="row">
@@ -55,21 +77,32 @@
                 <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
             </div>
             <a id="go-to-check-in-button" class="button radius success hidden" href="#">{{resource "goToCheckInButtonText"}}<i class="fa fa-check"></i></a>
-            <a id="go-to-check-out-button" class="button radius warning hidden" data-entry-log-id href="#">{{resource "goToCheckOutButtonText"}}<i class="fa fa-times"></i></a>
-            <a id="go-to-open-check-in-button" class="go-to-locus-button hidden" data-locus-id href="#">{{resource "goToOpenCheckInButtonText"}}</a>
-        </div>
-    </div>
-    <div class="row loading {{cid}} hidden">
-        <div class="small-12 columns">
-            <span class="loading-message">{{resource "locus.loadingMessage"}}</span>
-            <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
+            <a id="go-to-check-out-button" class="button radius alert hidden" data-entry-log-id href="#">{{resource "goToCheckOutButtonText"}}<i class="fa fa-times"></i></a>
+            <a id="go-to-open-check-in-button" class="button radius secondary hidden" data-locus-id href="#">{{resource "goToOpenCheckInButtonText"}}</a>
+            <a id="call-dispatch-phone-button" class="button radius alert hidden" data-locus-id href="tel:{{phone}}">{{resource "callDispatchPhoneButtonText"}}<i class="fa fa-warning"></i></a>
         </div>
     </div>
     <div class="row alert-view-container {{cid}}">
         <div class="small-12 columns"></div>
     </div>
     <div class="row">
-        <div id="entry-log-list-view-container" class="small-12 columns">
+        <div class="small-12 columns">
+            <ul class="button-group radius even-2">
+                <li>
+                    <a id="show-open-check-ins-button" class="button radius tiny" href="#">{{resource "showOpenCheckInsButtonText"}}</a>
+                </li>
+                <li>
+                    <a id="show-recent-check-ins-button" class="button radius tiny secondary" href="#">{{resource "showRecentCheckInsButtonText"}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div id="open-entry-log-list-view-container" class="small-12 columns">
+        </div>
+    </div>
+    <div class="row">
+        <div id="recent-entry-log-list-view-container" class="small-12 columns hidden">
         </div>
     </div>
 </div>

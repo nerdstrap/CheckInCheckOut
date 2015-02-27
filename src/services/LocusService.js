@@ -5,19 +5,20 @@ define(function (require) {
         _ = require('underscore'),
         globals = require('globals'),
         env = require('env'),
-        utils = require('utils');
+        utils = require('utils'),
+        meService = require('services/meService');
 
     var _locusList = [
         { "locusId": "4885", "locusName": "Somerset Co-Op", "regionName": "Columbus", "areaName": "", "phone": "6326545640", "hasHazard": "false", "hasOpenCheckIns": "false" },
         { "locusId": "4886", "locusName": "Ormet No. 3", "regionName": "Columbus", "areaName": "", "phone": "2553352943", "hasHazard": "false", "hasOpenCheckIns": "false" },
-        { "locusId": "861", "locusName": "West Toronto", "latitude": "40.47697", "longitude": "-80.63673", "regionName": "Columbus", "areaName": "Steubenville", "phone": "4826859448", "hasHazard": "false", "hasOpenCheckIns": "false" },
+        { "locusId": "861", "locusName": "West Toronto", "latitude": "40.47697", "longitude": "-80.63673", "regionName": "Columbus", "areaName": "Steubenville", "phone": "4826859448", "hasHazard": "false", "hasOpenCheckIns": "false", "parentLocusId": "860", "parentLocusName": "West Powhatan" },
         { "locusId": "1968", "locusName": "Bluebell (FE)", "regionName": "Columbus", "areaName": "Canton", "phone": "2177155505", "hasHazard": "false", "hasOpenCheckIns": "false" },
         { "locusId": "1974", "locusName": "Windsor Co-Op", "regionName": "Columbus", "areaName": "Sporn", "phone": "3062544428", "hasHazard": "false", "hasOpenCheckIns": "false" },
         { "locusId": "5613", "locusName": "OHIO EAST", "regionName": "Columbus", "areaName": "Moundsville", "phone": "3730683492", "hasHazard": "false", "hasOpenCheckIns": "false" },
         { "locusId": "5614", "locusName": "OHIO SOUTH", "regionName": "Columbus", "areaName": "Ashland", "phone": "2081643374", "hasHazard": "false", "hasOpenCheckIns": "false" },
         { "locusId": "5620", "locusName": "Madisonburg Sw.", "regionName": "Columbus", "areaName": "Columbus", "phone": "3142259619", "hasHazard": "false", "hasOpenCheckIns": "false" },
         { "locusId": "5621", "locusName": "Superior Hardwood Sw.", "regionName": "Columbus", "areaName": "", "phone": "5566701145", "hasHazard": "false", "hasOpenCheckIns": "false" },
-        { "locusId": "604", "locusName": "General Motors", "latitude": "39.94912", "longitude": "-83.10583", "regionName": "Columbus", "areaName": "Columbus North", "phone": "4428772040", "hasHazard": "false", "hasOpenCheckIns": "false" },
+        { "locusId": "604", "locusName": "General Motors", "latitude": "39.94912", "longitude": "-83.10583", "regionName": "Columbus", "areaName": "Columbus North", "phone": "4428772040", "hasHazard": "true", "hasOpenCheckIns": "false" },
         { "locusId": "1329", "locusName": "New Philadelphia", "latitude": "40.4849", "longitude": "-81.44621", "regionName": "Columbus", "areaName": "Canton", "phone": "4616272769", "hasHazard": "false", "hasOpenCheckIns": "false" },
         { "locusId": "5516", "locusName": "Blaw Knox", "regionName": "Columbus", "areaName": "Moundsville", "phone": "3137963815", "hasHazard": "false", "hasOpenCheckIns": "false" },
         { "locusId": "5517", "locusName": "South Moreland", "latitude": "40.68976", "longitude": "-81.95131", "regionName": "Columbus", "areaName": "Wooster", "phone": "6634939775", "hasHazard": "false", "hasOpenCheckIns": "false" },
@@ -96,7 +97,7 @@ define(function (require) {
         { "locusId": "856", "locusName": "West Malta", "latitude": "39.64585", "longitude": "-81.87498", "regionName": "Columbus", "areaName": "McConnelsville", "phone": "5214240787", "hasHazard": "false", "hasOpenCheckIns": "false" },
         { "locusId": "857", "locusName": "West Millersport", "latitude": "39.88801", "longitude": "-82.56851", "regionName": "Columbus", "areaName": "Lancaster", "phone": "5781298300", "hasHazard": "false", "hasOpenCheckIns": "false" },
         { "locusId": "859", "locusName": "West Philo", "latitude": "39.86673", "longitude": "-81.90984", "regionName": "Columbus", "areaName": "Zanesville", "phone": "7312836893", "hasHazard": "false", "hasOpenCheckIns": "false" },
-        { "locusId": "860", "locusName": "West Powhatan", "latitude": "39.85205", "longitude": "-80.82858", "regionName": "Columbus", "areaName": "Belmont", "phone": "7570020204", "hasHazard": "false", "hasOpenCheckIns": "false" },
+        { "locusId": "860", "locusName": "West Powhatan", "latitude": "39.85205", "longitude": "-80.82858", "regionName": "Columbus", "areaName": "Belmont", "phone": "7570020204", "hasHazard": "false", "hasOpenCheckIns": "false", "childLocusId": "861", "childLocusName": "West Toronto" },
         { "locusId": "4938", "locusName": "Collier (DLC)", "regionName": "Columbus", "areaName": "", "phone": "2014887246", "hasHazard": "false", "hasOpenCheckIns": "false" },
         { "locusId": "4939", "locusName": "Darby (DP&L)", "regionName": "Columbus", "areaName": "", "phone": "5445117687", "hasHazard": "false", "hasOpenCheckIns": "false" },
         { "locusId": "723", "locusName": "North Haverhill Sw.", "latitude": "38.59499", "longitude": "-82.81362", "regionName": "Columbus", "areaName": "Portsmouth", "phone": "6089148919", "hasHazard": "false", "hasOpenCheckIns": "false" },
@@ -1214,8 +1215,6 @@ define(function (require) {
         { "locusId": "11250", "locusName": "RAY KING", "regionName": "Columbus", "areaName": "Columbus", "phone": "7285362076", "hasHazard": "false", "hasOpenCheckIns": "false" }
     ];
 
-    var _userIdentity = { "identityId": "S251201", "identityName": "Baltic, Michael E", "contactNumber": "6143239560", "email": "mebaltic@aep.com", "role": "Admin" };
-
     var _getById = function (locusId) {
         return _.where(_locusList, function (locus) {
             return locus.locusId === locusId;
@@ -1258,7 +1257,7 @@ define(function (require) {
             var deferred = $.Deferred();
 
             var results = {
-                identity: _userIdentity
+                identity: meService.getIdentity()
             };
 
             globals.window.setTimeout(function () {
@@ -1275,17 +1274,17 @@ define(function (require) {
             var locusList;
             if (options.locusId) {
                 locusList = _getById(options.locusId);
-            } else if (options.locusName) {
+            } else if (options.searchQuery && options.searchQuery.length > 1) {
                 locusList = _getBySearchQuery(options.searchQuery);
             } else if (options.coords) {
                 locusList = _getByCoords(options.coords, env.getDistanceThreshold(), env.getSearchResultsThreshold());
             } else {
-                locusList = _locusList;
+                locusList = [];
             }
 
             var results = {
                 locusList: locusList,
-                identity: _userIdentity
+                identity: meService.getIdentity()
             };
 
             globals.window.setTimeout(function () {

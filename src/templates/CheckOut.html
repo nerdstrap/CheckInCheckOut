@@ -1,16 +1,28 @@
 <div class="check-out-view">
-    <div class="row">
-        <div class="small-12 columns">
-            <h2 id="check-out-header" class="t-heading -size-m -color-inherit">{{resource "checkOut.viewTitleText"}}</h2>
+    <div id="header" class="row">
+        <div class="small-4 columns">
+            &nbsp;
+        </div>
+        <div class="small-4 columns">
+            <span id="check-out-header" class="t-heading -size-m -color-inherit h-text-align-center">{{resource "checkOut.headerText"}}</span>
+        </div>
+        <div class="small-4 columns">
+            &nbsp;
         </div>
     </div>
     <div class="row">
-        <div class="small-12 columns">
+        <div class="small-3 columns">
+            <label for="locus-name-label">{{resource "locusNameHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
             <span id="locus-name-label" data-locus-id="{{locusId}}">{{withDefault locusName "&nbsp;"}}</span>
         </div>
     </div>
     <div class="row">
-        <div class="small-12 columns">
+        <div class="small-3 columns">
+            <label for="distance-label">{{resource "coordinatesHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
             <span id="distance-label" name="distance">{{withDefault distance "&nbsp;"}}</span>
         </div>
     </div>
@@ -52,9 +64,7 @@
             <label for="purpose-input">{{resource "purposeHeaderText"}}</label>
         </div>
         <div class="small-9 columns">
-            <select id="purpose-input" name="purpose" class="validate required">
-                <option disabled="disabled" selected="selected" value="">{{resource "purposePlaceholder"}}</option>
-            </select>
+            <span id="purpose-input">{{withDefault purpose "&nbsp;"}}</span>
         </div>
     </div>
     <div id="purpose-other-input-container" class="row hidden">
@@ -70,20 +80,18 @@
             <label for="duration-input">{{resource "durationHeaderText"}}</label>
         </div>
         <div class="small-9 columns">
-            <select id="duration-input" name="duration" class="validate required">
-                <option disabled="disabled" selected="selected" value="">{{resource "durationPlaceholder"}}</option>
-            </select>
+            <span id="duration-input">{{withDefault duration "&nbsp;"}}</span>
         </div>
     </div>
     <div class="row">
         <div class="small-3 columns">
-            <label for="group-check-out-input">{{resource "groupCheckOutHeaderText"}}</label>
+            <label for="group-check-in-input">{{resource "groupCheckInHeaderText"}}</label>
         </div>
         <div class="small-9 columns">
             <span>no</span>
-            <div id="group-check-out-input-container" class="switch radius tiny" tabindex="0">
-                <input id="group-check-out-input" name="groupCheckOut" type="checkBox" />
-                <label for="group-check-out-input"></label>
+            <div id="group-check-in-input-container" class="switch radius tiny" tabindex="0">
+                <input id="group-check-in-input" name="groupCheckIn" type="checkBox" />
+                <label for="group-check-in-input"></label>
             </div>
             <span>yes</span>
         </div>

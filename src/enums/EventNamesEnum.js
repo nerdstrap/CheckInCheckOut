@@ -1,21 +1,24 @@
 define(function (require) {
     'use strict';
 
-    var AppEventNamesEnum = {
+    var EventNamesEnum = {
         login: 'login',
         logout: 'logout',
         identityUpdated: 'identityUpdated',
 
+        goToMyIdentity: 'goToMyIdentity',
+
         goToLocusSearch: 'goToLocusSearch',
         goToLocusWithId: 'goToLocusWithId',
-        refreshLocusListByGps: 'refreshLocusListByGps',
         refreshLocusList: 'refreshLocusList',
 
         goToIdentitySearch: 'goToIdentitySearch',
         goToIdentityWithId: 'goToIdentityWithId',
         refreshIdentityList: 'refreshIdentityList',
 
-        refreshEntryLogListByGps: 'refreshEntryLogListByGps',
+        goToAdHocCheckIn: 'goToAdHocCheckIn',
+        goToSettings: 'goToSettings',
+
         refreshEntryLogList: 'refreshEntryLogList',
 
         goToCheckIn: 'goToCheckIn',
@@ -37,8 +40,8 @@ define(function (require) {
     };
 
     if (Object.freeze) {
-        Object.freeze(AppEventNamesEnum);
+        Object.freeze(EventNamesEnum);
     }
 
-    return AppEventNamesEnum;
+    return EventNamesEnum;
 });

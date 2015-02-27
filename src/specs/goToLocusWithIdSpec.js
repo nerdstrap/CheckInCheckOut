@@ -6,7 +6,7 @@ define(function (require) {
         Backbone = require('backbone'),
         globals = require('globals'),
         EventBus = require('EventBus'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
         UserRolesEnum = require('enums/UserRolesEnum'),
         MockRouter = require('mocks/MockRouter'),
         MockModel = require('mocks/MockModel'),
@@ -101,7 +101,7 @@ define(function (require) {
                 expect(self.locusSearchControllerInstance.router.navigate).toHaveBeenCalledWith('locus/' + fakeLocusId, jasmine.any(Object));
                 expect(locusView.showLoading).toHaveBeenCalled();
                 expect(self.locusSearchControllerInstance.locusService.getLocusList).toHaveBeenCalled();
-                expect(self.locusSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.identityUpdated, fakeUserRole);
+                expect(self.locusSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(EventNamesEnum.identityUpdated, fakeUserRole);
                 expect(self.locusSearchControllerInstance.geoLocationService.getCurrentPosition).toHaveBeenCalled();
                 expect(locusView.model.reset).toHaveBeenCalledWith(fakeLocus);
                 expect(locusView.hideLoading).toHaveBeenCalled();
@@ -147,7 +147,7 @@ define(function (require) {
                 expect(self.locusSearchControllerInstance.router.navigate).toHaveBeenCalledWith('locus/' + fakeLocusId, jasmine.any(Object));
                 expect(locusView.showLoading).toHaveBeenCalled();
                 expect(self.locusSearchControllerInstance.locusService.getLocusList).toHaveBeenCalled();
-                expect(self.locusSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.identityUpdated, fakeUserRole);
+                expect(self.locusSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(EventNamesEnum.identityUpdated, fakeUserRole);
                 expect(locusView.model.reset).toHaveBeenCalled();
                 expect(locusView.hideLoading).toHaveBeenCalled();
                 expect(locusView.showError).toHaveBeenCalled();

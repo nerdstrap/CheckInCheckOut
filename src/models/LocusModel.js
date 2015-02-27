@@ -4,10 +4,9 @@ define(function (require) {
     var $ = require('jquery'),
         _ = require('underscore'),
         Backbone = require('backbone'),
-        BaseModel = require('models/BaseModel'),
         utils = require('utils');
 
-    var LocusModel = BaseModel.extend({
+    var LocusModel = Backbone.Model.extend({
         idAttribute: 'locusId',
         set: function (key, val, options) {
             var attributes;
@@ -18,6 +17,16 @@ define(function (require) {
                 (attributes = {})[key] = val;
             }
             if (attributes) {
+                if (attributes.hasOwnProperty('locusName')) {
+                    var locusNameParts = attributes.locusName.split(' ');
+                    if (locusNameParts && locusNameParts.length > 0) {
+                        attributes.locusInitials = locusNameParts[0][0];
+                        if (locusNameParts.length > 1) {
+                            attributes.locusInitials += locusNameParts[1][0];
+                        }
+                    }
+                }
+
                 if (attributes.hasOwnProperty('latitude')) {
                     var latitude = attributes.latitude;
                     if (latitude && !isNaN(latitude)) {

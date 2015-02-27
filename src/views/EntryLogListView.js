@@ -9,7 +9,7 @@ define(function (require) {
         globals = require('globals'),
         env = require('env'),
         utils = require('utils'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
         template = require('hbs!templates/EntryLogList');
 
     var EntryLogListView = BaseView.extend({

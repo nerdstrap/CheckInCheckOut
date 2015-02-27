@@ -8,7 +8,7 @@ define(function (require) {
         BaseView = require('views/BaseView'),
         EntryLogCollection = require('collections/EntryLogCollection'),
         EntryLogListView = require('views/EntryLogListView'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
         utils = require('utils'),
         template = require('hbs!templates/Identity');
 
@@ -18,14 +18,12 @@ define(function (require) {
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
             this.entryLogCollection = new EntryLogCollection();
+            this.openEntryLogCollection = new EntryLogCollection();
+            this.recentEntryLogCollection = new EntryLogCollection();
 
-            this.listenTo(this.entryLogCollection, 'reset', this.updateEntryLogStatusView);
+            this.listenTo(this.entryLogCollection, 'reset', this.updateViewFromEntryLogCollection);
             this.listenTo(this, 'loaded', this.onLoaded);
             this.listenTo(this, 'leave', this.onLeave);
-
-            this.listenTo(this.dispatcher, AppEventNamesEnum.checkInSuccess, this.updateEntryLogStatusView);
-            this.listenTo(this.dispatcher, AppEventNamesEnum.editCheckInSuccess, this.updateEntryLogStatusView);
-            this.listenTo(this.dispatcher, AppEventNamesEnum.checkOutSuccess, this.updateEntryLogStatusView);
         },
         render: function () {
             console.trace('IdentityView.render()');
@@ -34,18 +32,50 @@ define(function (require) {
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
             currentContext.$el.html(template(renderModel));
 
+            this.renderChildViews();
+
+            return this;
+        },
+        renderChildViews: function() {
+            var currentContext = this;
+
+            currentContext.openEntryLogListViewInstance = new EntryLogListView({
+                controller: currentContext.controller,
+                dispatcher: currentContext.dispatcher,
+                collection: currentContext.openEntryLogCollection,
+                headerTextFormatString: utils.getResource('openEntryLogList.headerTextFormatString'),
+                showLocus: true,
+                showIdentity: false
+            });
+            currentContext.appendChildTo(currentContext.openEntryLogListViewInstance, '#open-entry-log-list-view-container');
+
+            currentContext.recentEntryLogListViewInstance = new EntryLogListView({
+                controller: currentContext.controller,
+                dispatcher: currentContext.dispatcher,
+                collection: currentContext.recentEntryLogCollection,
+                headerTextFormatString: utils.getResource('recentEntryLogList.headerTextFormatString'),
+                showLocus: true,
+                showIdentity: false
+            });
+            currentContext.appendChildTo(currentContext.recentEntryLogListViewInstance, '#recent-entry-log-list-view-container');
+
             return this;
         },
         events: {
+            'click #go-back-from-identity-button': 'goBackFromIdentity',
+            'click #open-identity-menu-button': 'openIdentityMenu',
+            'click #add-identity-to-favorites-button': 'addIdentityToFavorites',
+            'click #show-open-check-ins-button': 'showOpenCheckIns',
+            'click #show-recent-check-ins-button': 'showRecentCheckIns'
         },
         updateViewFromModel: function () {
             var currentContext = this;
 
-            var identityName;
-            if (currentContext.model.has('identityName')) {
-                identityName = currentContext.model.get('identityName');
+            var identityFullName;
+            if (currentContext.model.has('identityFullName')) {
+                identityFullName = currentContext.model.get('identityFullName');
             }
-            currentContext.$('#identity-name-header').html(identityName);
+            currentContext.$('#identity-name-header').html(identityFullName);
 
             var cleanedContactNumber;
             var formattedContactNumber;
@@ -66,7 +96,7 @@ define(function (require) {
            
             var email;
             if (currentContext.model.has('email')) {
-                currentContext.hasEmail = true
+                currentContext.hasEmail = true;
                 email = currentContext.model.get('email');
             }
             if (currentContext.hasEmail) {
@@ -77,24 +107,72 @@ define(function (require) {
                 currentContext.$('#email-container').addClass('hidden');
             }
         },
-        onLoaded: function () {
+        updateViewFromEntryLogCollection: function (options) {
             var currentContext = this;
 
-            currentContext.entryLogListViewInstance = new EntryLogListView({
-                controller: currentContext.controller,
-                dispatcher: currentContext.dispatcher,
-                collection: currentContext.entryLogCollection,
-                showLocus: true,
-                showIdentity: false
+            var openEntryLogs = currentContext.entryLogCollection.filter(function (entryLog) {
+                return !entryLog.has('outTime');
             });
-            currentContext.appendChildTo(currentContext.entryLogListViewInstance, '#entry-log-list-view-container');
+
+            var recentEntryLogs = currentContext.entryLogCollection.filter(function (entryLog) {
+                return entryLog.has('outTime');
+            });
+
+            currentContext.openEntryLogCollection.reset(openEntryLogs);
+            currentContext.recentEntryLogCollection.reset(recentEntryLogs);
+        },
+        goBackFromIdentity: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            this.dispatcher.trigger(EventNamesEnum.goToIdentitySearch);
+        },
+        openIdentityMenu: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+        },
+        addIdentityToFavorites: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+        },
+        onLoaded: function () {
+            var currentContext = this;
 
             var options = {
                 identityId: currentContext.model.get('identityId')
             };
 
-            currentContext.entryLogListViewInstance.showLoading();
-            currentContext.dispatcher.trigger(AppEventNamesEnum.refreshEntryLogList, currentContext.entryLogCollection, options);
+            currentContext.openEntryLogListViewInstance.showLoading();
+            currentContext.dispatcher.trigger(EventNamesEnum.refreshEntryLogList, currentContext.entryLogCollection, options);
+        },
+        showOpenCheckIns: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+            this.$('#show-open-check-ins-button').removeClass('secondary');
+            this.$('#show-recent-check-ins-button').addClass('secondary');
+
+            this.$('#open-entry-log-list-view-container').removeClass('hidden');
+            this.$('#recent-entry-log-list-view-container').addClass('hidden');
+
+            this.openEntryLogListViewInstance.showLoading();
+            this.updateViewFromEntryLogCollection();
+        },
+        showRecentCheckIns: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+            this.$('#show-open-check-ins-button').addClass('secondary');
+            this.$('#show-recent-check-ins-button').removeClass('secondary');
+
+            this.$('#open-entry-log-list-view-container').addClass('hidden');
+            this.$('#recent-entry-log-list-view-container').removeClass('hidden');
+
+            this.recentEntryLogListViewInstance.showLoading();
+            this.updateViewFromEntryLogCollection();
         },
         onLeave: function () {
             console.trace('IdentityView.onLeave');

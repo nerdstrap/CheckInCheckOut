@@ -6,7 +6,7 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         CompositeView = require('views/CompositeView'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
         utils = require('utils'),
         template = require('hbs!templates/EntryLogListItem');
 
@@ -40,6 +40,7 @@ define(function (require) {
         updateViewFromModel: function () {
             var currentContext = this;
 
+            var initials;
             if (currentContext.showLocus) {
                 var locusName;
                 if (currentContext.model.has('locusName')) {
@@ -47,24 +48,28 @@ define(function (require) {
                 }
                 currentContext.$('.go-to-locus-button').html(locusName);
 
-                var distance;
-                var formattedDistance;
-                var latitude;
-                var longitude;
-                if (currentContext.model.has('distance') && currentContext.model.has('latitude') && currentContext.model.has('longitude')) {
-                    currentContext.hasCoordinates = true;
-                    distance = currentContext.model.get('distance').toFixed(0);
-                    formattedDistance = utils.formatString(utils.getResource('distanceFormatString'), [distance]);
-                    latitude = currentContext.model.get('latitude');
-                    longitude = currentContext.model.get('longitude');
+                if (currentContext.model.has('locusInitials')) {
+                    initials = currentContext.model.get('locusInitials');
                 }
-                if (currentContext.hasCoordinates) {
-                    currentContext.$('.coordinates-unavailable-label').addClass('hidden');
-                    currentContext.$('.go-to-directions-button').attr('data-latitude', latitude).attr('data-longitude', longitude).html(formattedDistance).removeClass('hidden');
-                } else {
-                    currentContext.$('.coordinates-unavailable-label').removeClass('hidden');
-                    currentContext.$('.go-to-directions-button').addClass('hidden');
-                }
+
+                //var distance;
+                //var formattedDistance;
+                //var latitude;
+                //var longitude;
+                //if (currentContext.model.has('distance') && currentContext.model.has('latitude') && currentContext.model.has('longitude')) {
+                //    currentContext.hasCoordinates = true;
+                //    distance = currentContext.model.get('distance').toFixed(0);
+                //    formattedDistance = utils.formatString(utils.getResource('distanceFormatString'), [distance]);
+                //    latitude = currentContext.model.get('latitude');
+                //    longitude = currentContext.model.get('longitude');
+                //}
+                //if (currentContext.hasCoordinates) {
+                //    currentContext.$('.coordinates-unavailable-label').addClass('hidden');
+                //    currentContext.$('.go-to-directions-button').attr('data-latitude', latitude).attr('data-longitude', longitude).html(formattedDistance).removeClass('hidden');
+                //} else {
+                //    currentContext.$('.coordinates-unavailable-label').removeClass('hidden');
+                //    currentContext.$('.go-to-directions-button').addClass('hidden');
+                //}
                 currentContext.$('.locus-container').removeClass('hidden');
             } else {
                 currentContext.$('.locus-container').addClass('hidden');
@@ -77,25 +82,32 @@ define(function (require) {
                 }
                 currentContext.$('.go-to-identity-button').html(identityName);
 
-                var cleanedContactNumber;
-                var formattedContactNumber;
-                if (currentContext.model.has('contactNumber')) {
-                    currentContext.hasContactNumber = true;
-                    var contactNumber = currentContext.model.get('contactNumber');
-                    cleanedContactNumber = utils.cleanPhone(contactNumber);
-                    formattedContactNumber = utils.formatPhone(cleanedContactNumber);
+
+                if (currentContext.model.has('identityInitials')) {
+                    initials = currentContext.model.get('identityInitials');
                 }
-                if (currentContext.hasContactNumber) {
-                    currentContext.$('.message-contact-number-button').attr('href', 'sms:' + cleanedContactNumber).removeClass('hidden');
-                    currentContext.$('.call-contact-number-button').attr('href', 'tel:' + cleanedContactNumber).removeClass('hidden');
-                } else {
-                    currentContext.$('.message-contact-number-button').addClass('hidden');
-                    currentContext.$('.call-contact-number-button').addClass('hidden');
-                }
+
+                //var cleanedContactNumber;
+                //var formattedContactNumber;
+                //if (currentContext.model.has('contactNumber')) {
+                //    currentContext.hasContactNumber = true;
+                //    var contactNumber = currentContext.model.get('contactNumber');
+                //    cleanedContactNumber = utils.cleanPhone(contactNumber);
+                //    formattedContactNumber = utils.formatPhone(cleanedContactNumber);
+                //}
+                //if (currentContext.hasContactNumber) {
+                //    currentContext.$('.message-contact-number-button').attr('href', 'sms:' + cleanedContactNumber).removeClass('hidden');
+                //    currentContext.$('.call-contact-number-button').attr('href', 'tel:' + cleanedContactNumber).removeClass('hidden');
+                //} else {
+                //    currentContext.$('.message-contact-number-button').addClass('hidden');
+                //    currentContext.$('.call-contact-number-button').addClass('hidden');
+                //}
                 currentContext.$('.identity-container').removeClass('hidden');
             } else {
                 currentContext.$('.identity-container').addClass('hidden');
             }
+            currentContext.$('.initials-label').html(initials);
+
 
             var purpose;
             if (this.model.has('purpose')) {
@@ -111,19 +123,20 @@ define(function (require) {
             if (this.model.has('inTime')) {
                 inTime = this.model.get('inTime');
                 inTimeFormatted = utils.formatDate(inTime);
+                this.$('.in-time-label').html(inTimeFormatted);
                 if (this.model.has('outTime')) {
                     outTime = this.model.get('outTime');
                     outTimeFormatted = utils.formatDate(outTime);
+                    this.$('.out-time-label').html(outTimeFormatted);
                 } else {
                     if (this.model.has('duration')) {
                         duration = this.model.get('duration');
                         outTime = utils.addMinutes(inTime, duration);
                         outTimeFormatted = utils.formatDate(outTime);
+                        this.$('.out-time-label').html('est. ' + outTimeFormatted);
                     }
                 }
             }
-            this.$('.in-time-label').html(inTimeFormatted);
-            this.$('.out-time-label').html(outTimeFormatted);
         },
         goToLocusWithId: function (event) {
             if (event) {
@@ -131,7 +144,7 @@ define(function (require) {
             }
 
             var locusId = this.model.get('locusId');
-            this.dispatcher.trigger(AppEventNamesEnum.goToLocusWithId, locusId);
+            this.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
         },
         goToIdentityWithId: function (event) {
             if (event) {
@@ -139,17 +152,17 @@ define(function (require) {
             }
 
             var identityId = this.model.get('identityId');
-            this.dispatcher.trigger(AppEventNamesEnum.goToIdentityWithId, identityId);
+            this.dispatcher.trigger(EventNamesEnum.goToIdentityWithId, identityId);
         },
-        goToDirectionsWithLatLng: function (event) {
-            if (event) {
-                event.preventDefault();
-            }
-
-            var latitude = this.model.get('latitude');
-            var longitude = this.model.get('longitude');
-            this.dispatcher.trigger(AppEventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
-        },
+        //goToDirectionsWithLatLng: function (event) {
+        //    if (event) {
+        //        event.preventDefault();
+        //    }
+        //
+        //    var latitude = this.model.get('latitude');
+        //    var longitude = this.model.get('longitude');
+        //    this.dispatcher.trigger(EventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
+        //},
         onLeave: function () {
             console.trace('EntryLogListItemView.onLeave');
         }

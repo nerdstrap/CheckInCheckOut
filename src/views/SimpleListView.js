@@ -5,18 +5,18 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseView = require('views/BaseView'),
-        IdentityListItemView = require('views/IdentityListItemView'),
         globals = require('globals'),
         env = require('env'),
         utils = require('utils'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
-        template = require('hbs!templates/IdentityList');
+        EventNamesEnum = require('enums/EventNamesEnum'),
+        template = require('hbs!templates/SimpleList');
 
-    var IdentityListView = BaseView.extend({
-        headerTextFormatString: utils.getResource('identityList.headerTextFormatString'),
-        listItemView: IdentityListItemView,
+    var SimpleListView = BaseView.extend({
+        headerTextFormatString: utils.getResource('simpleList.headerTextFormatString'),
+        loadingMessage: utils.getResource('simpleList.loadingMessage'),
+        listItemView: BaseView,
         initialize: function (options) {
-            console.trace('IdentityListView.initialize');
+            console.trace('SimpleListView.initialize');
             options || (options = {});
             this._options = options;
             this.controller = options.controller;
@@ -32,7 +32,7 @@ define(function (require) {
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
-            console.trace('IdentityListView.render()');
+            console.trace('SimpleListView.render()');
             var currentContext = this;
 
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
@@ -57,7 +57,8 @@ define(function (require) {
         },
         addOne: function (model) {
             var currentContext = this;
-            var listItemViewInstance = new currentContext.listItemView(_.extend(currentContext._options, { 'model': model }));
+            var options = _.extend(currentContext._options, { 'model': model });
+            var listItemViewInstance = new currentContext.listItemView(options);
             this.appendChildTo(listItemViewInstance, '#list-item-view-container');
         },
         removeAll: function () {
@@ -66,9 +67,9 @@ define(function (require) {
             this.hideLoading();
         },
         onLeave: function () {
-            console.trace('IdentityListView.onLeave');
+            console.trace('SimpleListView.onLeave');
         }
     });
 
-    return IdentityListView;
+    return SimpleListView;
 });

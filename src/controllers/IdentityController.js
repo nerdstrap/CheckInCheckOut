@@ -4,12 +4,15 @@ define(function (require) {
     var $ = require('jquery'),
         _ = require('underscore'),
         Backbone = require('backbone'),
-        IdentityService = require('services/IdentityService'),
         GeoLocationService = require('services/GeoLocationService'),
-        IdentitySearchView = require('views/IdentitySearchView'),
+        IdentityService = require('services/IdentityService'),
+        SimpleSearchView = require('views/SimpleSearchView'),
         IdentityModel = require('models/IdentityModel'),
+        IdentityCollection = require('collections/IdentityCollection'),
+        IdentityListItemView = require('views/IdentityListItemView'),
         IdentityView = require('views/IdentityView'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
+        SearchTypesEnum = require('enums/SearchTypesEnum'),
         globals = require('globals'),
         utils = require('utils');
 
@@ -38,11 +41,11 @@ define(function (require) {
             this.identityService = options.identityService || new IdentityService();
             this.geoLocationService = options.geoLocationService || new GeoLocationService();
 
-            this.listenTo(this.dispatcher, AppEventNamesEnum.goToIdentitySearch, this.goToIdentitySearch);
-            this.listenTo(this.dispatcher, AppEventNamesEnum.goToIdentityWithId, this.goToIdentityWithId);
-            this.listenTo(this.dispatcher, AppEventNamesEnum.refreshIdentityList, this.refreshIdentityList);
+            this.listenTo(this.dispatcher, EventNamesEnum.goToIdentitySearch, this.goToIdentitySearch);
+            this.listenTo(this.dispatcher, EventNamesEnum.goToIdentityWithId, this.goToIdentityWithId);
+            this.listenTo(this.dispatcher, EventNamesEnum.refreshIdentityList, this.refreshIdentityList);
 
-            this.listenTo(this.dispatcher, AppEventNamesEnum.goToDirectionsWithLatLng, this.goToDirectionsWithLatLng);
+            this.listenTo(this.dispatcher, EventNamesEnum.goToDirectionsWithLatLng, this.goToDirectionsWithLatLng);
         },
 
         goToIdentitySearch: function () {
@@ -50,9 +53,14 @@ define(function (require) {
             var currentContext = this,
                 deferred = $.Deferred();
 
-            var identitySearchViewInstance = new IdentitySearchView({
+            var identitySearchViewInstance = new SimpleSearchView({
                 controller: currentContext,
-                dispatcher: currentContext.dispatcher
+                dispatcher: currentContext.dispatcher,
+                headerText: utils.getResource('identitySearch.headerText'),
+                listCollection: IdentityCollection,
+                listItemView: IdentityListItemView,
+                headerTextFormatString: utils.getResource('identityList.headerTextFormatString'),
+                refreshListTrigger: EventNamesEnum.refreshIdentityList
             });
 
             currentContext.router.swapContent(identitySearchViewInstance);
@@ -64,7 +72,7 @@ define(function (require) {
             currentContext.identityService.getIdentitySearchOptions()
                 .then(function (getIdentitySearchOptionsResponse) {
                     identitySearchViewInstance.setIdentityModel(getIdentitySearchOptionsResponse.identity);
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.identityUpdated, identitySearchViewInstance.identityModel);
+                    currentContext.dispatcher.trigger(EventNamesEnum.identityUpdated, identitySearchViewInstance.identityModel);
                     identitySearchViewInstance.completeLoading();
                     deferred.resolve(identitySearchViewInstance);
                 })
@@ -98,7 +106,7 @@ define(function (require) {
             currentContext.identityService.getIdentityList({identityId: identityId})
                 .then(function (getIdentityListResponse) {
                     identityViewInstance.setIdentityModel(getIdentityListResponse.identity);
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.identityUpdated, identityViewInstance.identityModel);
+                    currentContext.dispatcher.trigger(EventNamesEnum.identityUpdated, identityViewInstance.identityModel);
                     if (getIdentityListResponse.identityList && getIdentityListResponse.identityList.length > 0) {
                         identityModelInstance.set(getIdentityListResponse.identityList[0]);
                         identityViewInstance.updateViewFromModel();
@@ -122,15 +130,35 @@ define(function (require) {
             var currentContext = this,
                 deferred = $.Deferred();
 
-            currentContext.identityService.getIdentityList(options)
-                .then(function (getIdentityListResponse) {
-                    identityCollectionInstance.reset(getIdentityListResponse.identityList);
-                    deferred.resolve(identityCollectionInstance);
-                })
-                .fail(function (error) {
-                    identityCollectionInstance.reset();
-                    deferred.reject(identityCollectionInstance);
-                });
+            if (options.searchType === SearchTypesEnum.nearby) {
+                currentContext.geoLocationService.getCurrentPosition()
+                    .then(function (position) {
+                        currentContext.identityService.getIdentityList(_.extend(options, position))
+                            .then(function (getIdentityListResponse) {
+                                utils.computeDistances(position.coords, getIdentityListResponse.identityList);
+                                identityCollectionInstance.reset(getIdentityListResponse.identityList);
+                                deferred.resolve(identityCollectionInstance);
+                            })
+                            .fail(function (error) {
+                                identityCollectionInstance.reset();
+                                deferred.reject(identityCollectionInstance);
+                            });
+                    })
+                    .fail(function (error) {
+                        locusCollectionInstance.reset();
+                        deferred.reject(locusCollectionInstance);
+                    });
+            } else {
+                currentContext.identityService.getIdentityList(options)
+                    .then(function (getIdentityListResponse) {
+                        identityCollectionInstance.reset(getIdentityListResponse.identityList);
+                        deferred.resolve(identityCollectionInstance);
+                    })
+                    .fail(function (error) {
+                        identityCollectionInstance.reset();
+                        deferred.reject(identityCollectionInstance);
+                    });
+            }
 
             return deferred.promise();
         }

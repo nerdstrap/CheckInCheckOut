@@ -16,7 +16,7 @@ define(function (require) {
 
     _.extend(SwappingRouter.prototype, Backbone.Router.prototype, {
         /** Cleans up resources used by the previous view
-         * @param {object} newContentView 
+         * @param {object} newContentView
          */
         swapContent: function (newContentView) {
             if (this.currentContentView && this.currentContentView.leave) {
@@ -32,6 +32,23 @@ define(function (require) {
                     scrollTop: $('body').offset().top
                 }, 250);
             }
+        },
+        pushContent: function (stackedContentView) {
+            this.currentContentView.$el.hide();
+            this.stackedContentView = stackedContentView;
+            $(this.contentViewEl).append(this.stackedContentView.render().el);
+            $('html, body').animate({
+                scrollTop: $('body').offset().top
+            }, 250);
+        },
+        popContent: function () {
+            if (this.stackedContentView && this.stackedContentView.leave) {
+                this.stackedContentView.leave();
+            }
+            this.currentContentView.$el.show();
+            $('html, body').animate({
+                scrollTop: $('body').offset().top
+            }, 250);
         }
     });
 

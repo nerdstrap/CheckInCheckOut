@@ -1,14 +1,19 @@
-<div class="locus-search-view">
+<div class="search-view">
+    <div id="header" class="row">
+        <div class="small-12 columns">
+            <h2 id="header-label" class="t-heading -size-m -color-inherit h-text-align-center"></h2>
+        </div>
+    </div>
     <div id="open-manual-search-container" class="row">
         <div class="small-12 columns">
-            <a id="open-manual-search-button" href="#"><i class="fa fa-search"></i>{{resource "searchPlaceholder"}}</a>
+            <a id="open-manual-search-button" href="#"><i class="fa fa-search"></i>{{resource "search.placeholder"}}</a>
         </div>
     </div>
     <div id="manual-search-container" class="row hidden">
-        <div class="small-10 columns">
-            <i class="fa fa-search"></i><input id="manual-search-input" type="search" placeholder="{{resource "searchPlaceholder"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off" /><a id="clear-manual-search-input-button" href="#"><i class="fa fa-times-circle"></i></a>
+        <div class="small-8 columns">
+            <i class="fa fa-search"></i><input id="manual-search-input" type="search" class="f-input -display-inline" placeholder="{{resource "search.placeholder"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off" /><a id="clear-manual-search-input-button" href="#"><i class="fa fa-times-circle"></i></a>
         </div>
-        <div class="small-2 columns">
+        <div class="small-4 columns">
             <a id="search-button" href="#">{{resource "searchButtonText"}}</a>
             <a id="cancel-button" href="#">{{resource "cancelButtonText"}}</a>
         </div>
@@ -30,7 +35,7 @@
     </div>
     <div class="row loading {{cid}} hidden">
         <div class="small-12 columns">
-            <span class="loading-message">{{resource "locusSearch.loadingMessage"}}</span>
+            <span class="loading-message">{{resource "simpleSearch.loadingMessage"}}</span>
             <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
         </div>
     </div>

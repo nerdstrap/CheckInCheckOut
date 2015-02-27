@@ -1,7 +1,18 @@
 <div class="identity-view">
+    <div id="header" class="row">
+        <div class="small-4 columns">
+            <a id="go-back-from-identity-button" href="#"><i class="fa fa-angle-left"></i>{{resource "goBackFromIdentityButtonText"}}</a>
+        </div>
+        <div class="small-4 columns">
+            &nbsp;
+        </div>
+        <div class="small-4 columns">
+            <a id="open-identity-menu-button" class="right" href="#"><i class="fa fa-ellipsis-h"></i></a>
+        </div>
+    </div>
     <div class="row">
         <div class="small-12 columns">
-            <h2 id="identity-name-header" class="t-heading -size-m -color-inherit" data-identity-id="{{identityId}}">{{identityName}}</h2><i class="fa fa-star-o"></i>
+            <span id="identity-name-header" class="t-heading -size-l -color-inherit" data-identity-id="{{identityId}}">{{identityFullName}}</span><a id="add-identity-to-favorites-button" href="#"><i class="fa fa-star-o"></i></a>
         </div>
     </div>
     <div id="contact-number-container" class="row">
@@ -49,7 +60,23 @@
         <div class="small-12 columns"></div>
     </div>
     <div class="row">
-        <div id="entry-log-list-view-container" class="small-12 columns">
+        <div class="small-12 columns">
+            <ul class="button-group radius even-2">
+                <li>
+                    <a id="show-open-check-ins-button" class="button radius tiny" href="#">{{resource "showOpenCheckInsButtonText"}}</a>
+                </li>
+                <li>
+                    <a id="show-recent-check-ins-button" class="button radius tiny secondary" href="#">{{resource "showRecentCheckInsButtonText"}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div id="open-entry-log-list-view-container" class="small-12 columns">
+        </div>
+    </div>
+    <div class="row">
+        <div id="recent-entry-log-list-view-container" class="small-12 columns hidden">
         </div>
     </div>
 </div>

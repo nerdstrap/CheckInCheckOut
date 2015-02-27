@@ -8,7 +8,7 @@ define(function (require) {
         BaseView = require('views/BaseView'),
         EntryLogCollection = require('collections/EntryLogCollection'),
         EntryLogListView = require('views/EntryLogListView'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
         utils = require('utils'),
         template = require('hbs!templates/Locus');
 
@@ -18,14 +18,12 @@ define(function (require) {
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
             this.entryLogCollection = new EntryLogCollection();
+            this.openEntryLogCollection = new EntryLogCollection();
+            this.recentEntryLogCollection = new EntryLogCollection();
 
-            this.listenTo(this.entryLogCollection, 'reset', this.updateEntryLogStatusView);
+            this.listenTo(this.entryLogCollection, 'reset', this.updateViewFromEntryLogCollection);
             this.listenTo(this, 'loaded', this.onLoaded);
             this.listenTo(this, 'leave', this.onLeave);
-
-            this.listenTo(this.dispatcher, AppEventNamesEnum.checkInSuccess, this.updateEntryLogStatusView);
-            this.listenTo(this.dispatcher, AppEventNamesEnum.editCheckInSuccess, this.updateEntryLogStatusView);
-            this.listenTo(this.dispatcher, AppEventNamesEnum.checkOutSuccess, this.updateEntryLogStatusView);
         },
         render: function () {
             console.trace('LocusView.render()');
@@ -34,50 +32,85 @@ define(function (require) {
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
             currentContext.$el.html(template(renderModel));
 
+            this.renderChildViews();
+
+            return this;
+        },
+        renderChildViews: function() {
+            var currentContext = this;
+
+            currentContext.openEntryLogListViewInstance = new EntryLogListView({
+                controller: currentContext.controller,
+                dispatcher: currentContext.dispatcher,
+                collection: currentContext.openEntryLogCollection,
+                headerTextFormatString: utils.getResource('openEntryLogList.headerTextFormatString'),
+                showLocus: false,
+                showIdentity: true
+            });
+            currentContext.appendChildTo(currentContext.openEntryLogListViewInstance, '#open-entry-log-list-view-container');
+
+            currentContext.recentEntryLogListViewInstance = new EntryLogListView({
+                controller: currentContext.controller,
+                dispatcher: currentContext.dispatcher,
+                collection: currentContext.recentEntryLogCollection,
+                headerTextFormatString: utils.getResource('recentEntryLogList.headerTextFormatString'),
+                showLocus: false,
+                showIdentity: true
+            });
+            currentContext.appendChildTo(currentContext.recentEntryLogListViewInstance, '#recent-entry-log-list-view-container');
+
             return this;
         },
         events: {
+            'click #go-back-from-locus-button': 'goBackFromLocus',
+            'click #open-locus-menu-button': 'openLocusMenu',
+            'click #add-locus-to-favorites-button': 'addLocusToFavorites',
             'click #go-to-directions-button': 'goToDirectionsWithLatLng',
-            'click #go-to-linked-locus-button': 'goToLinkedLocusWithId',
+            'click #go-to-child-locus-button': 'goToLocusWithId',
+            'click #go-to-parent-locus-button': 'goToLocusWithId',
             'click #go-to-check-in-button': 'goToCheckIn',
             'click #go-to-check-out-button': 'goToCheckOut',
-            'click #go-to-open-check-in-button': 'goToLocusWithId'
-        },
-        updateEntryLogStatusView: function () {
-            var currentContext = this;
-            currentContext.userOpenEntryLog = currentContext.entryLogCollection.find(function (entryLog) {
-                return entryLog.get('identityId') === currentContext.identityModel.get('identityId') && !entryLog.has('outTime');
-            });
-
-            if (currentContext.userOpenEntryLog) {
-                this.showCheckOutButton(currentContext.userOpenEntryLog);
-            } else {
-                this.showCheckInButton();
-            }
+            'click #go-to-open-check-in-button': 'goToLocusWithId',
+            'click #show-open-check-ins-button': 'showOpenCheckIns',
+            'click #show-recent-check-ins-button': 'showRecentCheckIns'
         },
         updateViewFromModel: function () {
             var currentContext = this;
-            
+
             var locusName;
             if (currentContext.model.has('locusName')) {
                 locusName = currentContext.model.get('locusName');
             }
             currentContext.$('#locus-name-header').html(locusName);
-            
-            var linkedLocusId;
-            var linkedLocusName;
-            if (currentContext.model.has('linkedLocusId') && currentContext.model.has('linkedLocusName')) {
-                currentContext.hasLinkedLocus = true;
-                linkedLocusId = currentContext.model.get('linkedLocusId');
-                linkedLocusName = currentContext.model.get('linkedLocusName');
+
+            var childLocusId;
+            var childLocusName;
+            if (currentContext.model.has('childLocusId') && currentContext.model.has('childLocusName')) {
+                currentContext.hasChildLocus = true;
+                childLocusId = currentContext.model.get('childLocusId');
+                childLocusName = currentContext.model.get('childLocusName');
             }
-            if (currentContext.hasLinkedLocus) {
-                currentContext.$('#go-to-linked-locus-button').attr('data-linked-locus-id', linkedLocusId).html(linkedLocusName);
-                currentContext.$('#linked-locus-view').addClass('hidden');
+            if (currentContext.hasChildLocus) {
+                currentContext.$('#go-to-child-locus-button').attr('data-locus-id', childLocusId).html(childLocusName);
+                currentContext.$('#child-locus-container').removeClass('hidden');
             } else {
-                currentContext.$('#linked-locus-view').addClass('hidden');
+                currentContext.$('#child-locus-container').addClass('hidden');
             }
             
+            var parentLocusId;
+            var parentLocusName;
+            if (currentContext.model.has('parentLocusId') && currentContext.model.has('parentLocusName')) {
+                currentContext.hasParentLocus = true;
+                parentLocusId = currentContext.model.get('parentLocusId');
+                parentLocusName = currentContext.model.get('parentLocusName');
+            }
+            if (currentContext.hasParentLocus) {
+                currentContext.$('#go-to-parent-locus-button').attr('data-locus-id', parentLocusId).html(parentLocusName);
+                currentContext.$('#parent-locus-container').removeClass('hidden');
+            } else {
+                currentContext.$('#parent-locus-container').addClass('hidden');
+            }
+
             var distance;
             var formattedDistance;
             var latitude;
@@ -114,10 +147,34 @@ define(function (require) {
             } else {
                 currentContext.$('#phone-container').addClass('hidden');
             }
+
+            if (currentContext.identityModel.openEntryLogCollection.length > 0) {
+                if (currentContext.identityModel.openEntryLogCollection.at(0).get('locusId') === currentContext.model.get('locusId')) {
+                    currentContext.showCheckOutButton(currentContext.identityModel.openEntryLogCollection.at(0));
+                } else {
+                    currentContext.showGoToOpenCheckInButton(currentContext.identityModel.openEntryLogCollection.at(0));
+                }
+            } else {
+                this.showCheckInButton();
+            }
+        },
+        updateViewFromEntryLogCollection: function (options) {
+            var currentContext = this;
+
+            var openEntryLogs = currentContext.entryLogCollection.filter(function (entryLog) {
+                return !entryLog.has('outTime');
+            });
+
+            var recentEntryLogs = currentContext.entryLogCollection.filter(function (entryLog) {
+                return entryLog.has('outTime');
+            });
+
+            currentContext.openEntryLogCollection.reset(openEntryLogs);
+            currentContext.recentEntryLogCollection.reset(recentEntryLogs);
         },
         showCheckInButton: function () {
             if (this.model.has('hasHazard') && this.model.get('hasHazard') === 'true') {
-                this.showHazardView();
+                this.showHazardButton();
             } else {
                 this.$('#entry-log-status-loading').addClass('hidden');
                 this.$('#go-to-check-in-button').removeClass('hidden');
@@ -127,8 +184,9 @@ define(function (require) {
         },
         showCheckOutButton: function (entryLogModel) {
             if (this.model.has('hasHazard') && this.model.get('hasHazard') === 'true') {
-                this.showHazardView();
+                this.showHazardButton();
             } else {
+                this.openEntryLog = entryLogModel;
                 this.$('#entry-log-status-loading').addClass('hidden');
                 this.$('#go-to-check-in-button').addClass('hidden');
                 this.$('#go-to-check-out-button').attr('data-entry-log-id', entryLogModel.get('entryLogId')).removeClass('hidden');
@@ -137,7 +195,7 @@ define(function (require) {
         },
         showGoToOpenCheckInButton: function (entryLogModel) {
             if (this.model.has('hasHazard') && this.model.get('hasHazard') === 'true') {
-                this.showHazardView();
+                this.showHazardButton();
             } else {
                 this.$('#entry-log-status-loading').addClass('hidden');
                 this.$('#go-to-check-in-button').addClass('hidden');
@@ -145,29 +203,38 @@ define(function (require) {
                 this.$('#go-to-open-check-in-button').attr('data-locus-id', entryLogModel.get('locusId')).attr('data-locus-name', entryLogModel.get('locusName')).removeClass('hidden');
             }
         },
-        showHazardView: function () {
+        showHazardButton: function () {
             if (this.model.has('hasHazard') && this.model.get('hasHazard') === 'true') {
-                this.$('#hazard-view').removeClass('hidden');
-                this.$('#entry-log-controls-container').addClass('hidden');
-            } else {
-                this.$('#hazard-view').addClass('hidden');
-                this.$('#entry-log-controls-container').removeClass('hidden');
+                this.$('#entry-log-status-loading').addClass('hidden');
+                this.$('#go-to-check-in-button').addClass('hidden');
+                this.$('#go-to-check-out-button').addClass('hidden');
+                this.$('#go-to-open-check-in-button').addClass('hidden');
+                this.$('#call-dispatch-phone-button').removeClass('hidden');
             }
         },
-        goToLinkedLocusWithId: function (event) {
+        goBackFromLocus: function (event) {
             if (event) {
                 event.preventDefault();
             }
 
-            var linkedLocusId = this.model.get('linkedLocusId');
-            this.dispatcher.trigger(AppEventNamesEnum.goToLocusWithId, linkedLocusId);
+            this.dispatcher.trigger(EventNamesEnum.goToLocusSearch);
+        },
+        openLocusMenu: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+        },
+        addLocusToFavorites: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
         },
         goToCheckIn: function (event) {
             var currentContext = this;
             if (event) {
                 event.preventDefault();
             }
-            this.dispatcher.trigger(AppEventNamesEnum.goToCheckIn, currentContext.model);
+            this.dispatcher.trigger(EventNamesEnum.goToCheckIn, currentContext.model);
         },
         goToCheckOut: function (event) {
             var currentContext = this;
@@ -175,14 +242,18 @@ define(function (require) {
                 event.preventDefault();
             }
 
-            this.dispatcher.trigger(AppEventNamesEnum.goToCheckOut, currentContext.userOpenEntryLog);
+            this.dispatcher.trigger(EventNamesEnum.goToCheckOut, currentContext.openEntryLog);
         },
         goToLocusWithId: function (event) {
             if (event) {
                 event.preventDefault();
+                if (event.target) {
+                    var locusId = $(event.target).attr('data-locus-id');
+                    if (locusId) {
+                        this.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
+                    }
+                }
             }
-
-            this.dispatcher.trigger(AppEventNamesEnum.goToLocusWithId);
         },
         goToDirectionsWithLatLng: function (event) {
             if (event) {
@@ -191,26 +262,43 @@ define(function (require) {
 
             var latitude = this.model.get('latitude');
             var longitude = this.model.get('longitude');
-            this.dispatcher.trigger(AppEventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
+            this.dispatcher.trigger(EventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
         },
         onLoaded: function () {
             var currentContext = this;
-
-            currentContext.entryLogListViewInstance = new EntryLogListView({
-                controller: currentContext.controller,
-                dispatcher: currentContext.dispatcher,
-                collection: currentContext.entryLogCollection,
-                showLocus: false,
-                showIdentity: true
-            });
-            currentContext.appendChildTo(currentContext.entryLogListViewInstance, '#entry-log-list-view-container');
 
             var options = {
                 locusId: currentContext.model.get('locusId')
             };
 
-            currentContext.entryLogListViewInstance.showLoading();
-            currentContext.dispatcher.trigger(AppEventNamesEnum.refreshEntryLogList, currentContext.entryLogCollection, options);
+            currentContext.openEntryLogListViewInstance.showLoading();
+            currentContext.dispatcher.trigger(EventNamesEnum.refreshEntryLogList, currentContext.entryLogCollection, options);
+        },
+        showOpenCheckIns: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+            this.$('#show-open-check-ins-button').removeClass('secondary');
+            this.$('#show-recent-check-ins-button').addClass('secondary');
+
+            this.$('#open-entry-log-list-view-container').removeClass('hidden');
+            this.$('#recent-entry-log-list-view-container').addClass('hidden');
+
+            this.openEntryLogListViewInstance.showLoading();
+            this.updateViewFromEntryLogCollection();
+        },
+        showRecentCheckIns: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+            this.$('#show-open-check-ins-button').addClass('secondary');
+            this.$('#show-recent-check-ins-button').removeClass('secondary');
+
+            this.$('#open-entry-log-list-view-container').addClass('hidden');
+            this.$('#recent-entry-log-list-view-container').removeClass('hidden');
+
+            this.recentEntryLogListViewInstance.showLoading();
+            this.updateViewFromEntryLogCollection();
         },
         onLeave: function () {
             console.trace('LocusView.onLeave');

@@ -7,7 +7,7 @@ define(function (require) {
         IdentityModel = require('models/IdentityModel'),
         AlertView = require('views/AlertView'),
         AlertModel = require('models/AlertModel'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
         globals = require('globals'),
         env = require('env');
 

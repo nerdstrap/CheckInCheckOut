@@ -1,16 +1,28 @@
 <div class="check-in-view">
-    <div class="row">
-        <div class="small-12 columns">
-            <h2 id="check-in-header" class="t-heading -size-m -color-inherit">{{resource "checkIn.viewTitleText"}}</h2>
+    <div id="header" class="row">
+        <div class="small-4 columns">
+            &nbsp;
+        </div>
+        <div class="small-4 columns">
+            <span id="check-in-header" class="t-heading -size-m -color-inherit h-text-align-center">{{resource "checkIn.headerText"}}</span>
+        </div>
+        <div class="small-4 columns">
+            &nbsp;
         </div>
     </div>
     <div class="row">
-        <div class="small-12 columns">
+        <div class="small-3 columns">
+            <label for="locus-name-label">{{resource "locusNameHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
             <span id="locus-name-label" data-locus-id="{{locusId}}">{{withDefault locusName "&nbsp;"}}</span>
         </div>
     </div>
     <div class="row">
-        <div class="small-12 columns">
+        <div class="small-3 columns">
+            <label for="distance-label">{{resource "coordinatesHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
             <span id="distance-label" name="distance">{{withDefault distance "&nbsp;"}}</span>
         </div>
     </div>
@@ -19,7 +31,7 @@
             <label for="locus-name-input">{{resource "locusNameHeaderText"}}</label>
         </div>
         <div class="small-9 columns">
-            <input id="locus-name-input" name="locusName" type="text" class="validate required hidden" data-locus-id="{{locusId}}" placeholder="{{resource "locusNamePlaceholder"}}" />
+            <input id="locus-name-input" name="locusName" type="text" class="validate required" data-locus-id="{{locusId}}" placeholder="{{resource "locusNamePlaceholder"}}" />
         </div>
     </div>
     <div id="coordinates-input-container" class="row hidden">

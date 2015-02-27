@@ -6,7 +6,7 @@ define(function (require) {
         Backbone = require('backbone'),
         globals = require('globals'),
         EventBus = require('EventBus'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
         UserRolesEnum = require('enums/UserRolesEnum'),
         MockRouter = require('mocks/MockRouter'),
         MockModel = require('mocks/MockModel'),

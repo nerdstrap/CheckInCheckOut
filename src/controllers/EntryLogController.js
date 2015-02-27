@@ -8,7 +8,8 @@ define(function (require) {
         GeoLocationService = require('services/GeoLocationService'),
         EntryLogModel = require('models/EntryLogModel'),
         CheckInView = require('views/CheckInView'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        CheckOutView = require('views/CheckOutView'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
         globals = require('globals'),
         utils = require('utils');
 
@@ -37,11 +38,12 @@ define(function (require) {
             this.entryLogService = options.entryLogService || new EntryLogService();
             this.geoLocationService = options.geoLocationService || new GeoLocationService();
 
-            this.listenTo(this.dispatcher, AppEventNamesEnum.refreshEntryLogList, this.refreshEntryLogList);
-            this.listenTo(this.dispatcher, AppEventNamesEnum.refreshEntryLogListByGps, this.refreshEntryLogListByGps);
-            this.listenTo(this.dispatcher, AppEventNamesEnum.goToCheckIn, this.goToCheckIn);
-            this.listenTo(this.dispatcher, AppEventNamesEnum.checkIn, this.checkIn);
-            this.listenTo(this.dispatcher, AppEventNamesEnum.goToCheckOut, this.goToCheckOut);
+            this.listenTo(this.dispatcher, EventNamesEnum.refreshEntryLogList, this.refreshEntryLogList);
+            this.listenTo(this.dispatcher, EventNamesEnum.refreshEntryLogListByGps, this.refreshEntryLogListByGps);
+            this.listenTo(this.dispatcher, EventNamesEnum.goToCheckIn, this.goToCheckIn);
+            this.listenTo(this.dispatcher, EventNamesEnum.checkIn, this.checkIn);
+            this.listenTo(this.dispatcher, EventNamesEnum.goToCheckOut, this.goToCheckOut);
+            this.listenTo(this.dispatcher, EventNamesEnum.checkOut, this.checkOut);
         },
 
         refreshEntryLogList: function (entryLogCollectionInstance, options) {
@@ -117,7 +119,7 @@ define(function (require) {
             currentContext.entryLogService.getCheckInOptions()
                 .then(function (getCheckInOptionsResponse) {
                     checkInViewInstance.setIdentityModel(getCheckInOptionsResponse.identity);
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.identityUpdated, checkInViewInstance.identityModel);
+                    currentContext.dispatcher.trigger(EventNamesEnum.identityUpdated, checkInViewInstance.identityModel);
                     currentContext.geoLocationService.getCurrentPosition()
                         .then(function (position) {
                             var distance = utils.computeDistanceBetween(position.coords, locusModelInstance.attributes);
@@ -159,30 +161,11 @@ define(function (require) {
             currentContext.entryLogService.postCheckIn(entryLogModelInstance.attributes)
                 .done(function (postCheckInResponse) {
                     entryLogModelInstance.set(postCheckInResponse.entryLog);
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.checkInSuccess, entryLogModelInstance);
+                    currentContext.dispatcher.trigger(EventNamesEnum.checkInSuccess, entryLogModelInstance);
                     deferred.resolve(entryLogModelInstance);
                 })
                 .fail(function (error) {
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.checkInError, error);
-                    deferred.reject(entryLogModelInstance);
-                });
-
-            return deferred.promise();
-        },
-
-        goToEditCheckIn: function (entryLogModelInstance) {
-            console.trace('EntryLogController.goToEditCheckIn');
-            var currentContext = this,
-                deferred = $.Deferred();
-
-            currentContext.entryLogService.postEditCheckIn(entryLogModelInstance.attributes)
-                .done(function (postEditCheckInResponse) {
-                    entryLogModelInstance.set(postEditCheckInResponse.entryLog);
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.checkInSuccess, entryLogModelInstance);
-                    deferred.resolve(entryLogModelInstance);
-                })
-                .fail(function (error) {
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.checkInError, error);
+                    currentContext.dispatcher.trigger(EventNamesEnum.checkInError, error);
                     deferred.reject(entryLogModelInstance);
                 });
 
@@ -194,14 +177,46 @@ define(function (require) {
             var currentContext = this,
                 deferred = $.Deferred();
 
+            var checkOutViewInstance = new CheckOutView({
+                controller: currentContext,
+                dispatcher: currentContext.dispatcher,
+                model: entryLogModelInstance
+            });
+
+            currentContext.router.swapContent(checkOutViewInstance);
+
+            checkOutViewInstance.showLoading();
+            currentContext.entryLogService.getCheckOutOptions()
+                .then(function (getCheckOutOptionsResponse) {
+                    checkOutViewInstance.setIdentityModel(getCheckOutOptionsResponse.identity);
+                    currentContext.dispatcher.trigger(EventNamesEnum.identityUpdated, checkOutViewInstance.identityModel);
+                    checkOutViewInstance.updateViewFromModel();
+                    checkOutViewInstance.completeLoading();
+                    deferred.resolve(checkOutViewInstance);
+                })
+                .fail(function (error) {
+                    entryLogModelInstance.clear();
+                    checkOutViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
+                    checkOutViewInstance.completeLoading();
+                    deferred.reject(checkOutViewInstance);
+                });
+
+            return deferred.promise();
+        },
+
+        checkOut: function (entryLogModelInstance) {
+            console.trace('EntryLogController.checkOut');
+            var currentContext = this,
+                deferred = $.Deferred();
+
             currentContext.entryLogService.postCheckOut(entryLogModelInstance.attributes)
                 .done(function (postCheckOutResponse) {
                     entryLogModelInstance.set(postCheckOutResponse.entryLog);
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.checkOutSuccess, entryLogModelInstance);
+                    currentContext.dispatcher.trigger(EventNamesEnum.checkOutSuccess, entryLogModelInstance);
                     deferred.resolve(entryLogModelInstance);
                 })
                 .fail(function (error) {
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.checkOutError, error);
+                    currentContext.dispatcher.trigger(EventNamesEnum.checkOutError, error);
                     deferred.reject(entryLogModelInstance);
                 });
 

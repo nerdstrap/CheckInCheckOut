@@ -4,15 +4,15 @@ define(function (require) {
     var $ = require('jquery'),
         _ = require('underscore'),
         Backbone = require('backbone'),
-        LocusService = require('services/LocusService'),
         GeoLocationService = require('services/GeoLocationService'),
-        LocusSearchView = require('views/LocusSearchView'),
-        LocusListView = require('views/LocusListView'),
+        LocusService = require('services/LocusService'),
+        SimpleSearchView = require('views/SimpleSearchView'),
+        LocusModel = require('models/LocusModel'),
+        LocusCollection = require('collections/LocusCollection'),
         LocusListItemView = require('views/LocusListItemView'),
         LocusView = require('views/LocusView'),
-        LocusCollection = require('collections/LocusCollection'),
-        LocusModel = require('models/LocusModel'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
+        SearchTypesEnum = require('enums/SearchTypesEnum'),
         globals = require('globals'),
         utils = require('utils');
 
@@ -41,12 +41,11 @@ define(function (require) {
             this.locusService = options.locusService || new LocusService();
             this.geoLocationService = options.geoLocationService || new GeoLocationService();
 
-            this.listenTo(this.dispatcher, AppEventNamesEnum.goToLocusSearch, this.goToLocusSearch);
-            this.listenTo(this.dispatcher, AppEventNamesEnum.goToLocusWithId, this.goToLocusWithId);
-            this.listenTo(this.dispatcher, AppEventNamesEnum.refreshLocusList, this.refreshLocusList);
-            this.listenTo(this.dispatcher, AppEventNamesEnum.refreshLocusListByGps, this.refreshLocusListByGps);
+            this.listenTo(this.dispatcher, EventNamesEnum.goToLocusSearch, this.goToLocusSearch);
+            this.listenTo(this.dispatcher, EventNamesEnum.goToLocusWithId, this.goToLocusWithId);
+            this.listenTo(this.dispatcher, EventNamesEnum.refreshLocusList, this.refreshLocusList);
 
-            this.listenTo(this.dispatcher, AppEventNamesEnum.goToDirectionsWithLatLng, this.goToDirectionsWithLatLng);
+            this.listenTo(this.dispatcher, EventNamesEnum.goToDirectionsWithLatLng, this.goToDirectionsWithLatLng);
         },
 
         goToLocusSearch: function () {
@@ -54,9 +53,14 @@ define(function (require) {
             var currentContext = this,
                 deferred = $.Deferred();
 
-            var locusSearchViewInstance = new LocusSearchView({
+            var locusSearchViewInstance = new SimpleSearchView({
                 controller: currentContext,
-                dispatcher: currentContext.dispatcher
+                dispatcher: currentContext.dispatcher,
+                headerText: utils.getResource('locusSearch.headerText'),
+                listCollection: LocusCollection,
+                listItemView: LocusListItemView,
+                headerTextFormatString: utils.getResource('locusList.headerTextFormatString'),
+                refreshListTrigger: EventNamesEnum.refreshLocusList
             });
 
             currentContext.router.swapContent(locusSearchViewInstance);
@@ -68,7 +72,7 @@ define(function (require) {
             currentContext.locusService.getLocusSearchOptions()
                 .then(function (getLocusSearchOptionsResponse) {
                     locusSearchViewInstance.setIdentityModel(getLocusSearchOptionsResponse.identity);
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.identityUpdated, locusSearchViewInstance.identityModel);
+                    currentContext.dispatcher.trigger(EventNamesEnum.identityUpdated, locusSearchViewInstance.identityModel);
                     locusSearchViewInstance.completeLoading();
                     deferred.resolve(locusSearchViewInstance);
                 })
@@ -102,11 +106,17 @@ define(function (require) {
             currentContext.locusService.getLocusList({locusId: locusId})
                 .then(function (getLocusListResponse) {
                     locusViewInstance.setIdentityModel(getLocusListResponse.identity);
-                    currentContext.dispatcher.trigger(AppEventNamesEnum.identityUpdated, locusViewInstance.identityModel);
+                    currentContext.dispatcher.trigger(EventNamesEnum.identityUpdated, locusViewInstance.identityModel);
                     if (getLocusListResponse.locusList && getLocusListResponse.locusList.length > 0) {
                         currentContext.geoLocationService.getCurrentPosition()
                             .then(function (position) {
                                 utils.computeDistances(position.coords, getLocusListResponse.locusList);
+                                locusModelInstance.set(getLocusListResponse.locusList[0]);
+                                locusViewInstance.updateViewFromModel();
+                                locusViewInstance.completeLoading();
+                                deferred.resolve(locusViewInstance);
+                            })
+                            .fail(function(error) {
                                 locusModelInstance.set(getLocusListResponse.locusList[0]);
                                 locusViewInstance.updateViewFromModel();
                                 locusViewInstance.completeLoading();
@@ -135,50 +145,43 @@ define(function (require) {
             var currentContext = this,
                 deferred = $.Deferred();
 
-            currentContext.locusService.getLocusList(options)
-                .then(function (getLocusListResponse) {
-                    currentContext.geoLocationService.getCurrentPosition()
-                        .then(function (position) {
-                            utils.computeDistances(position.coords, getLocusListResponse.locusList);
-                            locusCollectionInstance.reset(getLocusListResponse.locusList);
-                            deferred.resolve(locusCollectionInstance);
-                        })
-                        .fail(function () {
-                            locusCollectionInstance.reset(getLocusListResponse.locusList);
-                            deferred.resolve(locusCollectionInstance);
-                        });
-                })
-                .fail(function (error) {
-                    locusCollectionInstance.reset();
-                    deferred.reject(locusCollectionInstance);
-                });
-
-            return deferred.promise();
-        },
-
-        refreshLocusListByGps: function (locusCollectionInstance, options) {
-            console.trace('LocusController.refreshLocusList');
-            options || (options = {});
-            var currentContext = this,
-                deferred = $.Deferred();
-
-            currentContext.geoLocationService.getCurrentPosition()
-                .then(function (position) {
-                    currentContext.locusService.getLocusList(position)
-                        .then(function (getLocusListResponse) {
-                            utils.computeDistances(position.coords, getLocusListResponse.locusList);
-                            locusCollectionInstance.reset(getLocusListResponse.locusList);
-                            deferred.resolve(locusCollectionInstance);
-                        })
-                        .fail(function (error) {
-                            locusCollectionInstance.reset();
-                            deferred.reject(locusCollectionInstance);
-                        });
-                })
-                .fail(function (error) {
-                    locusCollectionInstance.reset();
-                    deferred.reject(locusCollectionInstance);
-                });
+            if (options.searchType === SearchTypesEnum.nearby) {
+                currentContext.geoLocationService.getCurrentPosition()
+                    .then(function (position) {
+                        currentContext.locusService.getLocusList(_.extend(options, position))
+                            .then(function (getLocusListResponse) {
+                                utils.computeDistances(position.coords, getLocusListResponse.locusList);
+                                locusCollectionInstance.reset(getLocusListResponse.locusList);
+                                deferred.resolve(locusCollectionInstance);
+                            })
+                            .fail(function (error) {
+                                locusCollectionInstance.reset();
+                                deferred.reject(locusCollectionInstance);
+                            });
+                    })
+                    .fail(function (error) {
+                        locusCollectionInstance.reset();
+                        deferred.reject(locusCollectionInstance);
+                    });
+            } else {
+                currentContext.locusService.getLocusList(options)
+                    .then(function (getLocusListResponse) {
+                        currentContext.geoLocationService.getCurrentPosition()
+                            .then(function (position) {
+                                utils.computeDistances(position.coords, getLocusListResponse.locusList);
+                                locusCollectionInstance.reset(getLocusListResponse.locusList);
+                                deferred.resolve(locusCollectionInstance);
+                            })
+                            .fail(function () {
+                                locusCollectionInstance.reset(getLocusListResponse.locusList);
+                                deferred.resolve(locusCollectionInstance);
+                            });
+                    })
+                    .fail(function (error) {
+                        locusCollectionInstance.reset();
+                        deferred.reject(locusCollectionInstance);
+                    });
+            }
 
             return deferred.promise();
         },

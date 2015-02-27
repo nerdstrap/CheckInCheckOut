@@ -4,11 +4,10 @@ define(function (require) {
     var $ = require('jquery'),
         _ = require('underscore'),
         Backbone = require('backbone'),
-        BaseModel = require('models/BaseModel'),
         env = require('env'),
         utils = require('utils');
 
-    var EntryLogModel = BaseModel.extend({
+    var EntryLogModel = Backbone.Model.extend({
         idAttribute: 'entryLogId',
         validation: {
             locusId: {
@@ -59,6 +58,24 @@ define(function (require) {
                 (attributes = {})[key] = val;
             }
             if (attributes) {
+                if (attributes.hasOwnProperty('identityName')) {
+                    var identityNameParts = attributes.identityName.split(', ');
+                    if (identityNameParts && identityNameParts.length > 1) {
+                        attributes.identityInitials = identityNameParts[1][0] + identityNameParts[0][0];
+                        attributes.identityFullName = identityNameParts[1] + ' ' + identityNameParts[0];
+                    }
+                }
+
+                if (attributes.hasOwnProperty('locusName')) {
+                    var locusNameParts = attributes.locusName.split(' ');
+                    if (locusNameParts && locusNameParts.length > 0) {
+                        attributes.locusInitials = locusNameParts[0][0];
+                        if (locusNameParts.length > 1) {
+                            attributes.locusInitials += locusNameParts[1][0];
+                        }
+                    }
+                }
+
                 if (attributes.hasOwnProperty('latitude')) {
                     var latitude = attributes.latitude;
                     if (latitude && !isNaN(latitude)) {

@@ -6,7 +6,7 @@ define(function (require) {
         Backbone = require('backbone'),
         validation = require('backbone.validation'),
         BaseView = require('views/BaseView'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
         globals = require('globals'),
         env = require('env'),
         utils = require('utils'),
@@ -20,6 +20,7 @@ define(function (require) {
             this.dispatcher = options.dispatcher || this;
             this.locusModel = options.locusModel;
 
+            this.listenTo(this.dispatcher, EventNamesEnum.checkInSuccess, this.onCheckInSuccess);
             this.listenTo(this.model, 'validated', this.onValidated);
             this.listenTo(this, 'leave', this.onLeave);
         },
@@ -151,7 +152,7 @@ define(function (require) {
 
             currentContext.$('.validate').each(function() {
                 $(this).parent().parent().removeClass('invalid');
-            })
+            });
 
             if (isValid) {
                 this.dispatchCheckIn();
@@ -167,15 +168,18 @@ define(function (require) {
             }
 
             var locusId = this.locusModel.get('locusId');
-            this.dispatcher.trigger(AppEventNamesEnum.goToLocusWithId, locusId);
+            this.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
         },
         dispatchCheckIn: function (event) {
             if (event) {
                 event.preventDefault();
             }
-            this.dispatcher.trigger(AppEventNamesEnum.checkIn, this.model);
+            this.dispatcher.trigger(EventNamesEnum.checkIn, this.model);
         },
-
+        onCheckInSuccess: function () {
+            var locusId = this.locusModel.get('locusId');
+            this.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
+        },
         onLeave: function () {
             console.trace('LocusSearchView.onLeave');
         }

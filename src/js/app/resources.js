@@ -13,6 +13,10 @@ define(function(require) {
         'identityWithId.fragment': 'person/',
         'entryLog.fragment': 'entryLog/',
         'checkIn.fragment': 'checkIn',
+        'simpleList.headerTextFormatString': '{0}',
+        'simpleList.loadingMessage': '',
+        'simpleSearch.headerText': 'Search',
+        'simpleSearch.loadingMessage': '',
 
         'loadingIconSrc': 'images/loading.gif',
         'loadingIconAlt': 'loading',
@@ -23,9 +27,13 @@ define(function(require) {
         'goToIdentitySearchButtonText': 'People',
         'goToIdentityWithIdButtonText': 'View Person',
 
-        'locusSearch.viewTitleText': 'Find a Station',
-        'identitySearch.viewTitleText': 'Find a Person',
-        'checkIn.viewTitleText': 'Check-in to Station',
+        'myIdentity.headerText': 'Me',
+        'locusSearch.headerText': 'Stations',
+        'identitySearch.headerText': 'People',
+        'checkIn.headerText': 'Check-in',
+        'checkOut.headerText': 'Check-out',
+        'adHocCheckIn.headerText': 'Ad-hoc Check-in',
+        'settings.headerText': 'Settings',
 
         'gpsSearchButtonText': 'GPS',
         'manualSearchButtonText': 'Manual',
@@ -35,7 +43,7 @@ define(function(require) {
         'showNearbyResultsButtonText': 'Nearby',
         'showFavoritesResultsButtonText': 'Favorites',
 
-        'searchPlaceholder': 'search',
+        'search.placeholder': 'search',
         'locus.manualSearchPlaceholderText': 'enter a station name',
         'identity.manualSearchPlaceholderText': 'enter a person name',
 
@@ -49,14 +57,15 @@ define(function(require) {
         'listSearch.loadingMessage': 'loading search',
 
         'locusList.headerTextFormatString': '{0} Stations',
-        'identityList.headerTextFormatString': '{0} Personnel',
+        'identityList.headerTextFormatString': '{0} People',
         'entryLogList.headerTextFormatString': '{0} Check-ins',
+        'currentEntryLogList.headerTextFormatString': 'Current Check-ins',
         'openEntryLogList.headerTextFormatString': '{0} Open Check-ins',
         'recentEntryLogList.headerTextFormatString': '{0} Recent Check-ins',
 
         'locusNameHeaderText': 'Location',
         'locusNamePlaceholder': 'enter description',
-        'coordinatesHeaderText': 'gps',
+        'coordinatesHeaderText': 'directions',
         'latitudePlaceholder': 'Latitude',
         'longitudePlaceholder': 'Longitude',
         'distanceHeaderText': 'Distance',
@@ -88,6 +97,7 @@ define(function(require) {
         'goToCheckOutButtonText': 'Check-out',
         'checkOutButtonText': 'Check-out',
         'goToOpenCheckInButtonText': 'Open Check-in',
+        'callDispatchPhoneButtonText': 'Call Dispatch',
 
         'distance.loadingMessage': 'calculating distance',
         'entryLogStatus.loadingMessage': 'determining entry log status',
@@ -131,10 +141,18 @@ define(function(require) {
         'outageIconSrc': 'images/outage_180x180.png',
         'outageIconSvgSrc': 'images/outage_180x180.svg',
 
+        'goToMyIdentityButtonText': 'Me',
         'goToGpsSearchButtonText': 'Nearby',
         'goToManualSearchButtonText': 'Search',
-        'goToAdHocEntryButtonText': 'Ad Hoc',
-        'goToSettingsButtonText': 'Settings'
+        'goToAdHocEntryButtonText': 'Ad-hoc',
+        'goToSettingsButtonText': 'Settings',
+
+        'showOpenCheckInsButtonText': 'Open Check-ins',
+        'showRecentCheckInsButtonText': 'Recent Check-ins',
+        'showLocusDetailsButtonText': 'Station Details',
+        'goBackFromLocusButtonText': 'Stations',
+        'goBackFromIdentityButtonText': 'People',
+        'menuButtonText': '...'
     };
 
     var defaultResource = '';

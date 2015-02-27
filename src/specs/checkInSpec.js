@@ -6,7 +6,7 @@ define(function (require) {
         Backbone = require('backbone'),
         globals = require('globals'),
         EventBus = require('EventBus'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
         UserRolesEnum = require('enums/UserRolesEnum'),
         MockRouter = require('mocks/MockRouter'),
         MockModel = require('mocks/MockModel'),
@@ -78,7 +78,7 @@ define(function (require) {
                 //assert
                 expect(self.entryLogSearchControllerInstance.entryLogService.postCheckIn).toHaveBeenCalledWith(mockEntryLogModelInstance.attributes);
                 expect(mockEntryLogModelInstance.reset).toHaveBeenCalledWith(fakeEntryLog);
-                expect(self.entryLogSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.checkInSuccess, mockEntryLogModelInstance);
+                expect(self.entryLogSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(EventNamesEnum.checkInSuccess, mockEntryLogModelInstance);
                 done();
             }, function () {
                 this.fail(new Error('entryLogSearchControllerInstance.checkIn call failed'));

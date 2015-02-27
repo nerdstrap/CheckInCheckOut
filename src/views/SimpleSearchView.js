@@ -5,25 +5,30 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseView = require('views/BaseView'),
-        IdentityCollection = require('collections/IdentityCollection'),
-        IdentityListView = require('views/IdentityListView'),
-        IdentityListItemView = require('views/IdentityListItemView'),
+        SimpleListView = require('views/SimpleListView'),
         globals = require('globals'),
         env = require('env'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
-        template = require('hbs!templates/IdentitySearch');
+        utils = require('utils'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
+        SearchTypesEnum = require('enums/SearchTypesEnum'),
+        template = require('hbs!templates/SimpleSearch');
 
-    var IdentitySearchView = BaseView.extend({
-        listCollection: IdentityCollection,
-        listView: IdentityListView,
-        listItemView: IdentityListItemView,
-        refreshListTrigger: AppEventNamesEnum.refreshIdentityList,
+    var SimpleSearchView = BaseView.extend({
+        headerText: utils.getResource('simpleSearch.headerText'),
+        loadingMessage: utils.getResource('simpleSearch.loadingMessage'),
+        listCollection: Backbone.Collection,
+        listView: SimpleListView,
+        listItemView: BaseView,
+        refreshListTrigger: EventNamesEnum.refreshList,
         initialize: function (options) {
-            console.trace('IdentitySearchView.initialize');
+            console.trace('SimpleSearchView.initialize');
             options || (options = {});
             this._options = options;
-            this.controller = options.controller || this;
+            this.controller = options.controller;
             this.dispatcher = options.dispatcher || this;
+            if (options.headerText) {
+                this.headerText = options.headerText;
+            }
             if (options.listCollection) {
                 this.listCollection = options.listCollection;
             }
@@ -37,18 +42,21 @@ define(function (require) {
                 this.refreshListTrigger = options.refreshListTrigger;
             }
             this.collection = new this.listCollection();
+            this.searchType = SearchTypesEnum.alphabetic;
 
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
-            console.trace('IdentityListView.render()');
+            console.trace('SimpleSearchView.render()');
             var currentContext = this;
 
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
             currentContext.listViewInstance = new currentContext.listView(_.extend(currentContext._options, { 'collection': currentContext.collection }));
-            this.appendChildTo(currentContext.listViewInstance, '#list-view-container');
+            currentContext.appendChildTo(currentContext.listViewInstance, '#list-view-container');
+
+            currentContext.updateHeader(currentContext.headerText);
 
             return this;
         },
@@ -61,6 +69,9 @@ define(function (require) {
             'click #show-alphabetic-results-button': 'showAlphabeticResults',
             'click #show-nearby-results-button': 'showNearbyResults',
             'click #show-favorites-results-button': 'showFavoritesResults'
+        },
+        updateHeader: function (headerText) {
+            this.$('#header-label').html(headerText);
         },
         openManualSearch: function (event) {
             if (event) {
@@ -79,6 +90,10 @@ define(function (require) {
             if (event) {
                 event.preventDefault();
             }
+            var searchQuery = this.$('#manual-search-input').val();
+            if (searchQuery && searchQuery.length > 1) {
+                this.refreshList({ 'searchQuery': searchQuery });
+            }
         },
         cancelManualSearch: function (event) {
             if (event) {
@@ -91,43 +106,43 @@ define(function (require) {
             if (event) {
                 event.preventDefault();
             }
+            this.searchType = SearchTypesEnum.alphabetic;
             this.$('#show-alphabetic-results-button').removeClass('secondary');
             this.$('#show-nearby-results-button').addClass('secondary');
             this.$('#show-favorites-results-button').addClass('secondary');
-            this.refreshList({ 'alphabetic': true });
+            this.refreshList();
         },
         showNearbyResults: function (event) {
             if (event) {
                 event.preventDefault();
             }
+            this.searchType = SearchTypesEnum.nearby;
             this.$('#show-alphabetic-results-button').addClass('secondary');
             this.$('#show-nearby-results-button').removeClass('secondary');
             this.$('#show-favorites-results-button').addClass('secondary');
-            this.refreshList({ 'nearby': true });
+            this.refreshList();
         },
         showFavoritesResults: function (event) {
             if (event) {
                 event.preventDefault();
             }
+            this.searchType = SearchTypesEnum.favorites;
             this.$('#show-alphabetic-results-button').addClass('secondary');
             this.$('#show-nearby-results-button').addClass('secondary');
             this.$('#show-favorites-results-button').removeClass('secondary');
-            this.refreshList({ 'favorites': true });
+            this.refreshList();
         },
         refreshList: function (options) {
             options || (options = {});
             var currentContext = this;
-            var searchQuery = this.$('#manual-search-input').val();
-            if (searchQuery && searchQuery.length > 1) {
-                options.searchQuery = searchQuery;
-            }
+            options.searchType = this.searchType;
             this.listViewInstance.showLoading();
             this.dispatcher.trigger(currentContext.refreshListTrigger, this.collection, options);
         },
         onLeave: function () {
-            console.trace('IdentitySearchView.onLeave');
+            console.trace('SimpleSearchView.onLeave');
         }
     });
 
-    return IdentitySearchView;
+    return SimpleSearchView;
 });

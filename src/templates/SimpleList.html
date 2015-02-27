@@ -1,17 +1,17 @@
-<div class="locus-list-view">
-    <div class="row">
-        <div class="small-12 columns">
-            <h2 id="list-header" class="t-heading -size-m -color-inherit">{{resource "locusListHeaderText"}}</h2>
-        </div>
-    </div>
+<div class="list-view">
     <div class="row loading {{cid}} hidden">
         <div class="small-12 columns">
-            <span class="loading-message">{{resource "locusList.loadingMessage"}}</span>
+            <span class="loading-message">{{resource "simpleList.loadingMessage"}}</span>
             <img src="{{resource 'loadingIconSrc'}}" class="loading-icon" />
         </div>
     </div>
     <div class="row alert-view-container {{cid}}">
         <div class="small-12 columns"></div>
+    </div>
+    <div class="row -list-header">
+        <div class="small-12 columns">
+            <h2 id="list-header" class="t-heading -size-m -color-inherit -border-bottom"></h2>
+        </div>
     </div>
     <div class="row">
         <div id="list-item-view-container" class="small-12 columns">

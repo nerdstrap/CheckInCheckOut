@@ -5,7 +5,7 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         CompositeView = require('views/CompositeView'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
         template = require('hbs!templates/Footer');
 
     var FooterView = CompositeView.extend({
@@ -14,7 +14,7 @@ define(function (require) {
             options || (options = {});
             this.dispatcher = options.dispatcher || this;
 
-            //this.listenTo(appEvents, AppEventNamesEnum.identityUpdated, this.identityUpdated);
+            this.listenTo(this.dispatcher, EventNamesEnum.identityUpdated, this.onIdentityUpdated);
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
@@ -27,21 +27,99 @@ define(function (require) {
             return this;
         },
         events: {
-            'click #footer-button': 'footerButtonClick'
+            'click #go-to-my-identity-button': 'goToMyIdentity',
+            'click #go-to-my-open-check-in-button': 'goToLocusWithId',
+            'click #go-to-locus-search-button': 'goToLocusSearch',
+            'click #go-to-identity-search-button': 'goToIdentitySearch',
+            'click #go-to-ad-hoc-entry-button': 'goToAdHocEntry',
+            'click #go-to-settings-button': 'goToSettings'
         },
-        identityUpdated: function (userRole) {
-            if (userRole === UserRolesEnum.Admin) {
-                //show admin functions
+        onIdentityUpdated: function (identityModel) {
+            if (identityModel.openEntryLogCollection && identityModel.openEntryLogCollection.length > 0) {
+                var openEntryLog = identityModel.openEntryLogCollection.at(0);
+                if (openEntryLog.has('locusId')) {
+                    var locusId = openEntryLog.get('locusId');
+                    var checkInClass = 'open';
+                    if (openEntryLog.has('checkOutOverdue')) {
+                        checkInClass = 'overdue';
+                    }
+                    if (openEntryLog.has('checkOutExpired')) {
+                        checkInClass = 'expired';
+                    }
+                    this.$('#go-to-my-open-check-in-button').attr('data-locus-id', locusId).removeClass().addClass(checkInClass);
+                }
+                this.$('#go-to-my-identity-container').addClass('hidden');
+                this.$('#go-to-my-open-check-in-container').removeClass('hidden');
             } else {
-                //hide admin functions
+                if (identityModel.has('identityId')) {
+                    var identityId = identityModel.get('identityId');
+                    this.$('#go-to-my-identity-button').attr('data-identity-id', identityId);
+                }
+                this.$('#go-to-my-identity-container').removeClass('hidden');
+                this.$('#go-to-my-open-check-in-container').addClass('hidden');
             }
         },
-        footerButtonClick: function (event) {
+        goToMyIdentity: function (event) {
             if (event) {
                 event.preventDefault();
+                if (event.target) {
+                    var identityId = $(event.target).attr('data-identity-id');
+                    if (identityId) {
+                        this.dispatcher.trigger(EventNamesEnum.goToIdentityWithId, identityId);
+                    }
+                    $(event.target).parent().addClass('active').siblings().removeClass('active');
+                }
             }
         },
-        onLeave: function() {
+        goToLocusWithId: function (event) {
+            if (event) {
+                event.preventDefault();
+                if (event.target) {
+                    var locusId = $(event.target).attr('data-locus-id');
+                    if (locusId) {
+                        this.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
+                    }
+                    $(event.target).parent().addClass('active').siblings().removeClass('active');
+                }
+            }
+        },
+        goToLocusSearch: function (event) {
+            if (event) {
+                event.preventDefault();
+                if (event.target) {
+                    $(event.target).parent().addClass('active').siblings().removeClass('active');
+                }
+            }
+            this.dispatcher.trigger(EventNamesEnum.goToLocusSearch);
+        },
+        goToIdentitySearch: function (event) {
+            if (event) {
+                event.preventDefault();
+                if (event.target) {
+                    $(event.target).parent().addClass('active').siblings().removeClass('active');
+                }
+            }
+            this.dispatcher.trigger(EventNamesEnum.goToIdentitySearch);
+        },
+        goToAdHocEntry: function (event) {
+            if (event) {
+                event.preventDefault();
+                if (event.target) {
+                    $(event.target).parent().addClass('active').siblings().removeClass('active');
+                }
+            }
+            //this.dispatcher.trigger(EventNamesEnum.goToAdHocCheckIn);
+        },
+        goToSettings: function (event) {
+            if (event) {
+                event.preventDefault();
+                if (event.target) {
+                    $(event.target).parent().addClass('active').siblings().removeClass('active');
+                }
+            }
+            this.dispatcher.trigger(EventNamesEnum.goToSettings);
+        },
+        onLeave: function () {
             console.trace('FooterView.onLeave');
         }
     });

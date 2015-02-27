@@ -6,7 +6,7 @@ define(function (require) {
         Backbone = require('backbone'),
         globals = require('globals'),
         EventBus = require('EventBus'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
         UserRolesEnum = require('enums/UserRolesEnum'),
         MockRouter = require('mocks/MockRouter'),
         MockModel = require('mocks/MockModel'),
@@ -72,7 +72,7 @@ define(function (require) {
                 expect(self.locusSearchControllerInstance.router.navigate).toHaveBeenCalledWith('locus', jasmine.any(Object));
                 expect(locusSearchView.showLoading).toHaveBeenCalled();
                 expect(self.locusSearchControllerInstance.locusService.getLocusSearchOptions).toHaveBeenCalled();
-                expect(self.locusSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(AppEventNamesEnum.identityUpdated, fakeUserRole);
+                expect(self.locusSearchControllerInstance.dispatcher.trigger).toHaveBeenCalledWith(EventNamesEnum.identityUpdated, fakeUserRole);
                 expect(locusSearchView.hideLoading).toHaveBeenCalled();
                 done();
             }, function () {

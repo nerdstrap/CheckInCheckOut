@@ -5,9 +5,8 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         CompositeView = require('views/CompositeView'),
-        HeaderView = require('views/HeaderView'),
         FooterView = require('views/FooterView'),
-        AppEventNamesEnum = require('enums/AppEventNamesEnum'),
+        EventNamesEnum = require('enums/EventNamesEnum'),
         template = require('hbs!templates/Shell');
 
     var ShellView = CompositeView.extend({
@@ -24,13 +23,6 @@ define(function (require) {
 
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
             currentContext.$el.html(template(renderModel));
-
-            currentContext.headerViewInstance = new HeaderView({
-                model: currentContext.model,
-                el: $('#header-view', currentContext.$el),
-                dispatcher: currentContext.dispatcher
-            });
-            this.renderChild(currentContext.headerViewInstance);
 
             currentContext.footerViewInstance = new FooterView({
                 model: currentContext.model,

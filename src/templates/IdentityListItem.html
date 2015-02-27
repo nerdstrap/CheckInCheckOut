@@ -1,42 +1,29 @@
-<div class="identity-list-item-view">
+<div class="identity-list-item-view -list-item">
     <div class="row">
-        <div class="small-12 columns">
-            <a class="go-to-identity-button" data-identity-id="{{identityId}}" href="#">{{withDefault identityName "&nbsp;"}}</a><i class="fa fa-star-o"></i>
-        </div>
-    </div>
-    <div class="row contact-number-container">
-        <div class="small-10 columns">
-            <div class="row">
-                <div class="small-12 columns">
-                    <span>{{resource "contactNumberHeaderText"}}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="small-12 columns">
-                    <span class="contact-number-label">{{formatPhoneWithDefault contactNumber "&nbsp;"}}</span>
-                </div>
-            </div>
-        </div>
         <div class="small-2 columns">
-            <a class="message-contact-number-button" href="sms:{{contactNumber}}"><i class="fa fa-comment-o"></i></a>
-            <a class="call-contact-number-button" href="tel:{{contactNumber}}"><i class="fa fa-phone"></i></a>
+            <div class="circle">
+                <span class="identity-initials-label">{{withDefault identityInitials "&nbsp;"}}</span>
+            </div>
         </div>
-    </div>
-    <div class="row email-container">
-        <div class="small-10 columns">
+        <div class="small-10 columns -border-bottom">
             <div class="row">
                 <div class="small-12 columns">
-                    <span>{{resource "emailHeaderText"}}</span>
+                    <span class="identity-name-label t-span -size-s -color-grey -style-italic">{{withDefault identityName "&nbsp;"}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="small-11 columns">
+                    <a class="go-to-identity-button" data-identity-id="{{identityId}}" href="#">{{withDefault identityFullName "&nbsp;"}}</a>
+                </div>
+                <div class="small-1 columns">
+                    <i class="fa fa-angle-right"></i>
                 </div>
             </div>
             <div class="row">
                 <div class="small-12 columns">
-                    <span class="email-label">{{withDefault email "&nbsp;"}}</span>
+                    <span class="notes-label t-span -size-s -color-grey -style-italic">last checked-in at Vine on 2/11/2015</span>
                 </div>
             </div>
-        </div>
-        <div class="small-2 columns">
-            <a class="email-button" href="mailto:{{email}}"><i class="fa fa-envelope-o"></i></a>
         </div>
     </div>
 </div>
