@@ -46,7 +46,8 @@ define(function (require) {
             'station': 'goToLocusSearch',
             'station/:id': 'goToLocusWithId',
             'person': 'goToIdentitySearch',
-            'person/:id': 'goToIdentityWithId'
+            'person/:id': 'goToIdentityWithId',
+            'admin/station': 'goToLocusAdmin'
         },
 
         goToLocusSearch: function () {
@@ -67,6 +68,11 @@ define(function (require) {
         goToIdentityWithId: function (identityId) {
             console.trace('appRouter.goToIdentityWithId');
             this.identityControllerInstance.goToIdentityWithId(identityId);
+        },
+
+        goToLocusAdmin: function () {
+            console.trace('appRouter.goToAdmin');
+            this.locusControllerInstance.goToLocusAdmin();
         }
     });
 

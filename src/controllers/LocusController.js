@@ -7,6 +7,7 @@ define(function (require) {
         GeoLocationService = require('services/GeoLocationService'),
         LocusService = require('services/LocusService'),
         SimpleSearchView = require('views/SimpleSearchView'),
+        AdminView = require('views/AdminView'),
         LocusModel = require('models/LocusModel'),
         LocusCollection = require('collections/LocusCollection'),
         LocusListItemView = require('views/LocusListItemView'),
@@ -46,6 +47,9 @@ define(function (require) {
             this.listenTo(this.dispatcher, EventNamesEnum.refreshLocusList, this.refreshLocusList);
 
             this.listenTo(this.dispatcher, EventNamesEnum.goToDirectionsWithLatLng, this.goToDirectionsWithLatLng);
+
+            this.listenTo(this.dispatcher, EventNamesEnum.goToLocusAdmin, this.goToLocusAdmin);
+            this.listenTo(this.dispatcher, EventNamesEnum.adminAddLocusList, this.adminAddLocusList);
         },
 
         goToLocusSearch: function () {
@@ -190,6 +194,70 @@ define(function (require) {
             console.trace('LocusController.goToDirectionsWithLatLng');
             var directionsUri = 'http://maps.google.com?daddr=' + latitude + ',' + longitude;
             globals.window.open(directionsUri);
+        },
+
+        goToLocusAdmin: function () {
+            console.trace('LocusController.goToLocusAdmin');
+            var currentContext = this,
+                deferred = $.Deferred();
+
+            var locusCollectionInstance = new LocusCollection();
+            var adminViewInstance = new AdminView({
+                controller: currentContext,
+                dispatcher: currentContext.dispatcher,
+                collection: locusCollectionInstance
+            });
+
+            currentContext.router.swapContent(adminViewInstance);
+            var routerFragment = utils.getResource('locusAdmin.fragment');
+            var fragmentAlreadyMatches = (Backbone.history.fragment === routerFragment || Backbone.history.fragment === '');
+            currentContext.router.navigate(routerFragment, {replace: fragmentAlreadyMatches});
+
+            adminViewInstance.showLoading();
+            currentContext.locusService.getLocusList({'admin': true})
+                .then(function (getLocusListResponse) {
+                    adminViewInstance.setIdentityModel(getLocusListResponse.identity);
+                    currentContext.dispatcher.trigger(EventNamesEnum.identityUpdated, adminViewInstance.identityModel);
+                    locusCollectionInstance.reset(getLocusListResponse.locusList);
+                    adminViewInstance.completeLoading();
+                    deferred.resolve(adminViewInstance);
+                })
+                .fail(function (error) {
+                    adminViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
+                    locusCollectionInstance.reset();
+                    adminViewInstance.completeLoading();
+                    deferred.reject(adminViewInstance);
+                });
+
+            return deferred.promise();
+        },
+
+        adminAddLocusList: function (locusCollectionInstance, options) {
+            console.trace('LocusController.adminAddLocusList');
+            options || (options = {});
+            var currentContext = this,
+                deferred = $.Deferred();
+
+            var index = 0;
+            var count = 100;//locusCollectionInstance.length;
+            for(index; index < count; index++) {
+
+                var locusModel = locusCollectionInstance.at(index);
+
+                currentContext.locusService.postLocus(locusModel.attributes)
+                    .then(function (postLocusResponse) {
+                        currentContext.dispatcher.trigger(EventNamesEnum.addLocusSuccess, postLocusResponse.locus);
+                    })
+                    .fail(function (error) {
+                        currentContext.dispatcher.trigger(EventNamesEnum.addLocusError, error);
+                    });
+
+                if (index === count) {
+                    deferred.resolve();
+                }
+            }
+
+            return deferred.promise();
         }
     });
 

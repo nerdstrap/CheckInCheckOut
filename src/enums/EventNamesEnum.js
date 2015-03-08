@@ -36,7 +36,12 @@ define(function (require) {
         checkOutSuccess: 'checkOutSuccess',
         checkOutError: 'checkOutError',
 
-        goToDirectionsWithLatLng: 'goToDirectionsWithLatLng'
+        goToDirectionsWithLatLng: 'goToDirectionsWithLatLng',
+
+        goToLocusAdmin: 'goToLocusAdmin',
+        adminAddLocusList: 'adminAddLocusList',
+        addLocusSuccess: 'addLocusSuccess',
+        addLocusError: 'addLocusError'
     };
 
     if (Object.freeze) {

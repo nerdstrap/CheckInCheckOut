@@ -1,0 +1,26 @@
+<div class="admin-view">
+    <div id="header" class="row">
+        <div class="small-12 columns">
+            <h2 id="header-label" class="t-heading -size-m -color-inherit h-text-align-center">Admin</h2>
+        </div>
+    </div>
+    <div class="row loading {{cid}} hidden">
+        <div class="small-12 columns">
+            <span class="loading-message">{{resource "simpleSearch.loadingMessage"}}</span>
+            <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
+        </div>
+    </div>
+    <div class="row alert-view-container {{cid}}">
+        <div class="small-12 columns"></div>
+    </div>
+    <div class="row">
+        <div class="small-12 columns">
+            <a id="post-list-button" class="button radius success" href="#">Post List</a>
+        </div>
+    </div>
+    <div class="row alert-view-container {{cid}}">
+        <div class="small-12 columns">
+            <span id="count-label"></span>
+        </div>
+    </div>
+</div>

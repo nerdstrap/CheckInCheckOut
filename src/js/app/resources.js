@@ -9,6 +9,7 @@ define(function(require) {
         'appTitleText': 'Check-in&#124;Check-out',
         'locus.fragment': 'station',
         'locusWithId.fragment': 'station/',
+        'locusAdmin.fragment': 'admin/station',
         'identity.fragment': 'person',
         'identityWithId.fragment': 'person/',
         'entryLog.fragment': 'entryLog/',

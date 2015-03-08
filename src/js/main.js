@@ -1,7 +1,7 @@
 require.config({
     config: {
         'env': {
-            apiUrl: '',
+            apiUrl: 'https://cico-azure.azure-mobile.net/api',
             siteRoot: '/src',
             distanceThreshold: 250,
             searchResultsThreshold: 100,
