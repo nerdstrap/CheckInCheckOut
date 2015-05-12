@@ -5,9 +5,9 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         CompositeView = require('views/CompositeView'),
-        FooterView = require('views/FooterView'),
+        HeaderView = require('views/HeaderView'),
         EventNamesEnum = require('enums/EventNamesEnum'),
-        template = require('hbs!templates/Shell');
+        template = require('hbs!templates/ShellView');
 
     var ShellView = CompositeView.extend({
         initialize: function (options) {
@@ -21,20 +21,20 @@ define(function (require) {
             console.trace('ShellView.render()');
             var currentContext = this;
 
-            var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
+            var renderModel = _.extend({}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
-            currentContext.footerViewInstance = new FooterView({
+            currentContext.headerViewInstance = new HeaderView({
                 model: currentContext.model,
-                el: $('#footer-view', currentContext.$el),
+                el: $('#header-container', currentContext.$el),
                 dispatcher: currentContext.dispatcher
             });
-            this.renderChild(currentContext.footerViewInstance);
+            this.renderChild(currentContext.headerViewInstance);
 
             return this;
         },
         contentViewEl: function () {
-            return $('#content-view', this.el);
+            return $('#content-container', this.el);
         },
         onLeave: function() {
             console.trace('ShellView.onLeave');
