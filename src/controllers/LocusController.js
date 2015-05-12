@@ -6,11 +6,12 @@ define(function (require) {
         Backbone = require('backbone'),
         GeoLocationService = require('services/GeoLocationService'),
         LocusService = require('services/LocusService'),
-        SimpleSearchView = require('views/SimpleSearchView'),
-        AdminView = require('views/AdminView'),
         LocusModel = require('models/LocusModel'),
         LocusCollection = require('collections/LocusCollection'),
-        LocusListItemView = require('views/LocusListItemView'),
+        SearchView = require('views/SearchView'),
+        AdminView = require('views/AdminView'),
+        ListView = require('views/ListView'),
+        LocusTileView = require('views/LocusTileView'),
         LocusView = require('views/LocusView'),
         EventNamesEnum = require('enums/EventNamesEnum'),
         SearchTypesEnum = require('enums/SearchTypesEnum'),
@@ -57,14 +58,16 @@ define(function (require) {
             var currentContext = this,
                 deferred = $.Deferred();
 
-            var locusSearchViewInstance = new SimpleSearchView({
+            var locusSearchViewInstance = new SearchView({
                 controller: currentContext,
                 dispatcher: currentContext.dispatcher,
                 headerText: utils.getResource('locusSearch.headerText'),
-                listCollection: LocusCollection,
-                listItemView: LocusListItemView,
+                searchResultsModelType: LocusModel,
+                searchResultsCollectionType: LocusCollection,
+                searchResultsListViewType: ListView,
+                searchResultsTileViewType: LocusTileView,
                 headerTextFormatString: utils.getResource('locusList.headerTextFormatString'),
-                refreshListTrigger: EventNamesEnum.refreshLocusList
+                getSearchResultsTrigger: EventNamesEnum.refreshLocusList
             });
 
             currentContext.router.swapContent(locusSearchViewInstance);

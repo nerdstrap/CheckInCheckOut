@@ -6,6 +6,16 @@ define(function(require) {
             Backbone = require('backbone');
 
     var resources = {
+        'searchViewHeaderText':'Search',
+        'searchqueryplaceholder':'search',
+        'searchButtonText':'search',
+        'cancelButtonText':'cancel',
+        'alphabeticButtonText':'a-z',
+        'nearbyButtonText':'nearby',
+        'favoritesButtonText':'fav',
+        'loadingIconSrc': 'images/loading.gif',
+        'listViewHeaderText' :'rows',
+
         'appTitleText': 'Check-in&#124;Check-out',
         'locus.fragment': 'station',
         'locusWithId.fragment': 'station/',
@@ -19,7 +29,6 @@ define(function(require) {
         'simpleSearch.headerText': 'Search',
         'simpleSearch.loadingMessage': '',
 
-        'loadingIconSrc': 'images/loading.gif',
         'loadingIconAlt': 'loading',
 
         'goToLocusSearchButtonText': 'Stations',
@@ -48,9 +57,7 @@ define(function(require) {
         'locus.manualSearchPlaceholderText': 'enter a station name',
         'identity.manualSearchPlaceholderText': 'enter a person name',
 
-        'searchButtonText': 'Search',
         'resetButtonText': 'Reset',
-        'cancelButtonText': 'Cancel',
 
         'button.search.text': 'Search',
         'button.reset.text': 'Reset',

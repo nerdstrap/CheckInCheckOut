@@ -1,54 +1,32 @@
-<div class="search-view">
-    <div class="row">
-        <div class="small-12 columns">
-            <h1 id="search-view-header">{{resource "searchViewHeaderText"}}</h1>
-        </div>
-    </div>
-    <div id="open-search-query-container" class="row">
-        <div class="small-12 columns">
+<div class="row search-view">
+    <div class="small-12 columns">
+        <h3 id="search-view-header">{{resource "searchViewHeaderText"}}</h3>
+        <div id="open-search-query-container" class="small-12">
             <a id="open-search-query-button" href="#"><i class="fa fa-search"></i></a>
         </div>
-    </div>
-    <div id="search-query-container" class="row hidden">
-        <div class="small-7 columns">
-            <input id="search-query-input" type="search" class="search-query-input" placeholder="{{resource " searchQueryPlaceholder"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off" />
-        </div>
-        <div class="small-1 columns">
+        <div id="search-query-container" class="small-12 hidden">
+            <input id="search-query-input" type="search" class="search-query-input" placeholder="{{resource " searchqueryplaceholder"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off" />
             <a id="clear-search-query-button" class="clear-search-query-button" href="#"><i class="fa fa-times-circle"></i></a>
-        </div>
-        <div class="small-2 columns">
             <a id="submit-search-query-button" class="submit-search-query-button" href="#">{{resource "searchButtonText"}}</a>
-        </div>
-        <div class="small-2 columns">
             <a id="cancel-search-query-button" class="cancel-search-query-button" href="#">{{resource "cancelButtonText"}}</a>
         </div>
-    </div>
-    <div class="row">
-        <div class="small-12 columns">
-            <ul class="button-group radius even-3">
-                <li>
-                    <a id="filter-search-by-alphabetic-button" class="button radius tiny" href="#">{{resource "alphabeticButtonText"}}</a>
-                </li>
-                <li>
-                    <a id="filter-search-by-nearby-button" class="button radius tiny secondary" href="#">{{resource "nearbyButtonText"}}</a>
-                </li>
-                <li>
-                    <a id="filter-search-by-favorites-button" class="button radius tiny secondary" href="#">{{resource "favoritesButtonText"}}</a>
-                </li>
-            </ul>
+        <ul class="button-group radius even-3">
+            <li>
+                <a id="filter-search-by-alphabetic-button" class="button radius tiny" href="#">{{resource "alphabeticButtonText"}}</a>
+            </li>
+            <li>
+                <a id="filter-search-by-nearby-button" class="button radius tiny secondary" href="#">{{resource "nearbyButtonText"}}</a>
+            </li>
+            <li>
+                <a id="filter-search-by-favorites-button" class="button radius tiny secondary" href="#">{{resource "favoritesButtonText"}}</a>
+            </li>
+        </ul>
+        <div class="small-12">
+            <img id="search-view-loading-icon" src="{{resource 'loadingIconSrc'}}" />
         </div>
-    </div>
-    <div class="row">
-        <div class="small-12 columns">
-            <img id="search-view-loading-icon" src="{{resource 'loadingIconSrc'}}"/>
+        <div id="search-view-alerts-container">
         </div>
-    </div>
-    <div class="row">
-        <div id="search-view-alerts-container" class="small-12 columns">
-        </div>
-    </div>
-    <div class="row">
-        <div id="search-results-container" class="small-12 columns">
+        <div id="search-results-container">
         </div>
     </div>
 </div>

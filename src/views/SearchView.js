@@ -5,22 +5,22 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseView = require('views/BaseView'),
-        SimpleListView = require('views/SimpleListView'),
+        ListView = require('views/ListView'),
         globals = require('globals'),
         env = require('env'),
         utils = require('utils'),
         EventNamesEnum = require('enums/EventNamesEnum'),
         SearchTypesEnum = require('enums/SearchTypesEnum'),
-        template = require('hbs!templates/Search');
+        template = require('hbs!templates/SearchView');
 
     var SearchView = BaseView.extend({
         headerText: utils.getResource('searchViewHeaderText'),
         loadingIconId: 'search-view-loading-icon',
         alertsContainerId: 'search-view-alerts-container',
+        searchResultsModelType: Backbone.Model,
         searchResultsCollectionType: Backbone.Collection,
-        modelType: Backbone.Model,
-        searchResultsViewType: SimpleListView,
-        searchResultsItemViewType: BaseView,
+        searchResultsListViewType: ListView,
+        searchResultsTileViewType: BaseView,
         getSearchResultsTrigger: EventNamesEnum.refreshList,
 
         initialize: function (options) {
@@ -33,14 +33,17 @@ define(function (require) {
             if (options.headerText) {
                 this.headerText = options.headerText;
             }
+            if (options.searchResultsModelType) {
+                this.searchResultsModelType = options.searchResultsModelType;
+            }
             if (options.searchResultsCollectionType) {
                 this.searchResultsCollectionType = options.searchResultsCollectionType;
             }
-            if (options.searchResultsViewType) {
-                this.searchResultsViewType = options.searchResultsViewType;
+            if (options.searchResultsListViewType) {
+                this.searchResultsListViewType = options.searchResultsListViewType;
             }
-            if (options.searchResultsItemViewType) {
-                this.searchResultsItemViewType = options.searchResultsItemViewType;
+            if (options.searchResultsTileViewType) {
+                this.searchResultsTileViewType = options.searchResultsTileViewType;
             }
             if (options.getSearchResultsTrigger) {
                 this.getSearchResultsTrigger = options.getSearchResultsTrigger;
@@ -58,8 +61,8 @@ define(function (require) {
             var renderModel = _.extend({}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
-            currentContext.searchResultsViewInstance = new currentContext.searchResultsViewType(_.extend(currentContext._options, {'collection': currentContext.collection}));
-            currentContext.appendChildTo(currentContext.searchResultsViewInstance, '#search-results-container');
+            currentContext.searchResultsListViewInstance = new currentContext.searchResultsListViewType(_.extend(currentContext._options, { 'collection': currentContext.collection, 'tileViewType': currentContext.searchResultsTileViewType }));
+            currentContext.appendChildTo(currentContext.searchResultsListViewInstance, '#search-results-container');
 
             currentContext.updateHeader(currentContext.headerText);
 
@@ -151,8 +154,20 @@ define(function (require) {
             options || (options = {});
             var currentContext = this;
             options.searchType = this.searchType;
-            this.listViewInstance.showLoading();
-            this.dispatcher.trigger(currentContext.refreshListTrigger, this.collection, options);
+            this.showLoading();
+            this.dispatcher.trigger(currentContext.getSearchResultsTrigger, this.collection, options);
+        },
+
+        onLoaded: function () {
+            this.hideLoading();
+        },
+
+        showLoading: function () {
+            this.$('#search-view-loading-icon').removeClass('hidden');
+        },
+
+        hideLoading: function () {
+            this.$('#search-view-loading-icon').addClass('hidden');
         },
 
         onLeave: function () {
