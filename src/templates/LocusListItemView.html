@@ -1,0 +1,27 @@
+<div class="locus-list-item-view">
+    <div class="row">
+        <div class="small-3 columns avatar">
+            <span class="locus-initials-label"><i class="fa fa-map-marker"></i></span>
+        </div>
+        <div class="small-8 columns">
+            <div class="row">
+                <div class="small-12 columns">
+                    <span class="text-primary" data-locus-id="{{locusId}}">{{withDefault locusName "&nbsp;"}}</span>
+                </div>
+            </div>
+            <div class="row coordinates-unavailable-container hidden">
+                <div class="small-12 columns">
+                    <span class="coordinates-unavailable-label t-span -size-s -color-grey -style-italic">{{resource "coordinatesUnavailableErrorMessage"}}</span>
+                </div>
+            </div>
+            <div class="row coordinates-container hidden">
+                <div class="small-12 columns">
+                    <span class="distance-label t-span -size-s -color-grey -style-italic">{{withDefault distance "&nbsp;"}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="small-2 columns icon">
+            <i class="fa fa-space-shuttle"></i>
+        </div>
+    </div>
+</div>

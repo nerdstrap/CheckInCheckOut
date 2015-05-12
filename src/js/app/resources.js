@@ -52,6 +52,13 @@ define(function(require) {
         'resetButtonText': 'Reset',
         'cancelButtonText': 'Cancel',
 
+        'button.search.text': 'Search',
+        'button.reset.text': 'Reset',
+        'button.cancel.text': 'Cancel',
+        'button.alphabetic.text': 'A-Z',
+        'button.nearby.text': 'Nearby',
+        'button.favorites.text': 'Favorites',
+
         'locusSearch.loadingMessage': 'loading station search',
         'locusList.loadingMessage': 'loading stations',
         'locus.loadingMessage': 'loading station',

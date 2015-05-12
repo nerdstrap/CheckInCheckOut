@@ -1266,51 +1266,51 @@ define(function (require) {
 
             return deferred.promise();
         },
-        //getLocusList: function (options) {
-        //    options || (options = {});
-        //    var currentContext = this;
-        //    var deferred = $.Deferred();
-        //
-        //    var locusList;
-        //    if (options.locusId) {
-        //        locusList = _getById(options.locusId);
-        //    } else if (options.searchQuery && options.searchQuery.length > 1) {
-        //        locusList = _getBySearchQuery(options.searchQuery);
-        //    } else if (options.coords) {
-        //        locusList = _getByCoords(options.coords, env.getDistanceThreshold(), env.getSearchResultsThreshold());
-        //    } else if (options.admin) {
-        //        locusList = _locusList;
-        //    } else {
-        //        locusList = [];
-        //    }
-        //
-        //    var results = {
-        //        locusList: locusList,
-        //        identity: meService.getIdentity()
-        //    };
-        //
-        //    globals.window.setTimeout(function () {
-        //        deferred.resolveWith(currentContext, [results]);
-        //    }, 50);
-        //
-        //    return deferred.promise();
-        //},
-        getLocusList: function(options) {
+        getLocusList: function (options) {
             options || (options = {});
             var currentContext = this;
-            var data = $.param({'searchQuery': options.searchQuery});
+            var deferred = $.Deferred();
 
-            return $.ajax({
-                contentType: 'application/json',
-                data: data,
-                dataType: 'json',
-                headers: {
-                    'X-ZUMO-APPLICATION': 'QyiVffdgpmSoNCrltoZqcHqJyOxrzY55'
-                },
-                type: 'GET',
-                url: env.getApiUrl() + '/locus/find'
-            });
+            var locusList;
+            if (options.locusId) {
+                locusList = _getById(options.locusId);
+            } else if (options.searchQuery && options.searchQuery.length > 1) {
+                locusList = _getBySearchQuery(options.searchQuery);
+            } else if (options.coords) {
+                locusList = _getByCoords(options.coords, env.getDistanceThreshold(), env.getSearchResultsThreshold());
+            } else if (options.admin) {
+                locusList = _locusList;
+            } else {
+                locusList = [];
+            }
+
+            var results = {
+                locusList: locusList,
+                identity: meService.getIdentity()
+            };
+
+            globals.window.setTimeout(function () {
+                deferred.resolveWith(currentContext, [results]);
+            }, 50);
+
+            return deferred.promise();
         },
+        //getLocusList: function(options) {
+        //    options || (options = {});
+        //    var currentContext = this;
+        //    var data = $.param({'searchQuery': options.searchQuery});
+        //
+        //    return $.ajax({
+        //        contentType: 'application/json',
+        //        data: data,
+        //        dataType: 'json',
+        //        headers: {
+        //            'X-ZUMO-APPLICATION': 'QyiVffdgpmSoNCrltoZqcHqJyOxrzY55'
+        //        },
+        //        type: 'GET',
+        //        url: env.getApiUrl() + '/locus/find'
+        //    });
+        //},
         postLocus: function(options) {
             options || (options = {});
             var data = JSON.stringify(options);
