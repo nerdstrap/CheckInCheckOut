@@ -1,13 +1,31 @@
-<div class="row locus-tile-view">
-    <div id="go-to-locus-with-id-button" class="small-10 columns" tabindex="0" role="button">
-        <div class="small-3 avatar">
-            <i class="fa fa-info-circle"></i> 
+<div class="locus-tile-view">
+    <div class="row">
+        <div class="small-10 columns go-to-locus-with-id-button" tabindex="0" role="button">
+            <div class="row">
+                <div class="small-3 columns">
+                    <i class="fa fa-info-circle"></i>
+                </div>
+                <div class="small-9 columns">
+                    <div class="row">
+                        <div class="small-12 columns">
+                            <span class="locus-name-label -style-primary" data-locus-id="{{locusId}}">{{withDefault locusName "&nbsp;"}}</span>
+                        </div>
+                    </div>
+                    <div class="row coordinates-container hidden">
+                        <div class="small-12 columns">
+                            <span class="distance-label -style-secondary">{{withDefault distance "&nbsp;"}}</span>
+                        </div>
+                    </div>
+                    <div class="row phone-container hidden">
+                        <div class="small-12 columns">
+                            <span class="phone-label -style-secondary">{{withDefault phone "&nbsp;"}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="small-7">
-            <span class="locus-name-label" data-locus-id="{{locusId}}">{{withDefault locusName "&nbsp;"}}</span>
+        <div class="small-2 columns go-to-directions-with-lat-lng-button" tabindex="0" role="button">
+            <i class="fa fa-map-marker"></i>
         </div>
-    </div>
-    <div id="go-to-directions-with-lat-lng-button" class="small-2 columns icon" tabindex="0" role="button">
-        <i class="fa fa-map-marker"></i>
     </div>
 </div>

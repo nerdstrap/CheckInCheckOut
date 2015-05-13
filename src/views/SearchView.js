@@ -14,6 +14,9 @@ define(function (require) {
         template = require('hbs!templates/SearchView');
 
     var SearchView = BaseView.extend({
+        tagName: 'div',
+        className: 'search-view',
+        id: 'search-view',
         headerText: utils.getResource('searchViewHeaderText'),
         loadingIconId: 'search-view-loading-icon',
         alertsContainerId: 'search-view-alerts-container',
@@ -51,6 +54,7 @@ define(function (require) {
             this.collection = new this.searchResultsCollectionType();
             this.searchType = SearchTypesEnum.alphabetic;
 
+            this.listenTo(this.collection, 'reset', this.onLoaded);
             this.listenTo(this, 'leave', this.onLeave);
         },
 

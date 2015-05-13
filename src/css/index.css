@@ -1,4 +1,4 @@
-﻿@charset "UTF-8";
+@charset "UTF-8";
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 /**
  * 1. Set default font family to sans-serif.
@@ -10391,13 +10391,6 @@ th.hide-for-touch {
   content: "";
 }
 
-/* -------- NocLog -------- */
-root {
-  display: block;
-  font-size: 1em;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
 .hidden {
   display: none;
 }
@@ -10406,3 +10399,42 @@ root {
   visibility: hidden;
 }
 
+.invalid {
+  border: solid red 1px;
+  color: red;
+}
+
+.open {
+  color: #00ff00 !important;
+}
+
+.overdue {
+  color: #ff0000 !important;
+}
+
+.expired {
+  color: #ffff00 !important;
+}
+
+.-style-headline {
+  font-size: 24px;
+}
+
+.-style-subhead {
+  font-size: 16px;
+}
+
+.-style-primary {
+  font-size: 16px;
+}
+
+.-style-secondary {
+  font-size: 16px;
+}
+
+.-style-body2 {
+  font-size: 14px;
+  font-weight: bolder;
+}
+
+/*# sourceMappingURL=index.css.map */

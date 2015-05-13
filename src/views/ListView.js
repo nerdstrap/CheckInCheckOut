@@ -38,8 +38,6 @@ define(function (require) {
             var renderModel = _.extend({}, currentContext.model);
             currentContext.$el.html(template(renderModel));
 
-            this.hideLoading();
-
             return this;
         },
 
@@ -51,11 +49,9 @@ define(function (require) {
         },
 
         addAll: function () {
-            this.showLoading();
             this._leaveChildren();
             _.each(this.collection.models, this.addOne, this);
             this.updateHeader();
-            this.hideLoading();
         },
 
         addOne: function (model) {
@@ -66,9 +62,7 @@ define(function (require) {
         },
 
         removeAll: function () {
-            this.showLoading();
             this._leaveChildren();
-            this.hideLoading();
         },
 
         onLeave: function () {

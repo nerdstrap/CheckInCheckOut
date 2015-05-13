@@ -49,27 +49,27 @@ define(function (require) {
             }
             currentContext.$('.locus-initials-label').html(locusInitials);
 
-            //var distance;
-            //var formattedDistance;
-            ////var latitude;
-            ////var longitude;
-            //if (currentContext.model.has('distance') && currentContext.model.has('latitude') && currentContext.model.has('longitude')) {
-            //    currentContext.hasCoordinates = true;
-            //    distance = currentContext.model.get('distance').toFixed(0);
-            //    formattedDistance = utils.formatString(utils.getResource('distanceFormatString'), [distance]);
-            //    //latitude = currentContext.model.get('latitude');
-            //    //longitude = currentContext.model.get('longitude');
-            //}
-            //if (currentContext.hasCoordinates) {
-            //    currentContext.$('.distance-label').html(formattedDistance);
-            //    //currentContext.$('.go-to-directions-button').attr('data-latitude', latitude).attr('data-longitude', longitude);
-            //    currentContext.$('.coordinates-unavailable-container').addClass('hidden');
-            //    currentContext.$('.coordinates-container').removeClass('hidden');
-            //} else {
-            //    //currentContext.$('.go-to-directions-button').addClass('hidden');
-            //    currentContext.$('.coordinates-unavailable-container').removeClass('hidden');
-            //    currentContext.$('.coordinates-container').addClass('hidden');
-            //}
+            var distance;
+            var formattedDistance;
+            //var latitude;
+            //var longitude;
+            if (currentContext.model.has('distance') && currentContext.model.has('latitude') && currentContext.model.has('longitude')) {
+                currentContext.hasCoordinates = true;
+                distance = currentContext.model.get('distance').toFixed(0);
+                formattedDistance = utils.formatString(utils.getResource('distanceFormatString'), [distance]);
+                //latitude = currentContext.model.get('latitude');
+                //longitude = currentContext.model.get('longitude');
+            }
+            if (currentContext.hasCoordinates) {
+                currentContext.$('.distance-label').html(formattedDistance);
+                //currentContext.$('.go-to-directions-button').attr('data-latitude', latitude).attr('data-longitude', longitude);
+                //currentContext.$('.coordinates-unavailable-container').addClass('hidden');
+                currentContext.$('.coordinates-container').removeClass('hidden');
+            } else {
+                //currentContext.$('.go-to-directions-button').addClass('hidden');
+                currentContext.$('.coordinates-unavailable-container').removeClass('hidden');
+                currentContext.$('.coordinates-container').addClass('hidden');
+            }
             //var cleanedLocusPhone;
             //var formattedLocusPhone;
             //if (currentContext.model.has('phone')) {

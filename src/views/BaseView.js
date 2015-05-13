@@ -26,15 +26,8 @@ define(function (require) {
                 this.identityModel = new IdentityModel(identity);
             }
         },
-        showLoading: function () {
-            this.$('.loading.' + this.cid).removeClass('hidden');
-        },
         completeLoading: function () {
-            this.hideLoading();
             this.trigger('loaded');
-        },
-        hideLoading: function () {
-            this.$('.loading.' + this.cid).addClass('hidden');
         },
         showInfo: function (message) {
             var level;
