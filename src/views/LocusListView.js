@@ -5,68 +5,114 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseView = require('views/BaseView'),
+        LocusListItemView = require('views/LocusListItemView'),
         globals = require('globals'),
         env = require('env'),
         utils = require('utils'),
         EventNamesEnum = require('enums/EventNamesEnum'),
-        template = require('hbs!templates/LocusList');
+        template = require('hbs!templates/LocusListView');
 
     var LocusListView = BaseView.extend({
-        headerTextFormatString: utils.getResource('LocusList.headerTextFormatString'),
-        loadingMessage: utils.getResource('LocusList.loadingMessage'),
-        listItemView: BaseView,
+        /**
+         *
+         */
+        tagName: 'div',
+
+        /**
+         *
+         */
+        className: 'locus-list-view',
+
+        /**
+         *
+         */
+        headerTextFormatString: utils.getResource('locusListViewHeaderTextFormatString'),
+
+        /**
+         *
+         * @param options
+         */
         initialize: function (options) {
             console.trace('LocusListView.initialize');
             options || (options = {});
-            this._options = options;
             this.controller = options.controller;
             this.dispatcher = options.dispatcher || this;
-            if (options.listItemView) {
-                this.listItemView = options.listItemView;
-            }
-            if (options.headerTextFormatString) {
-                this.headerTextFormatString = options.headerTextFormatString;
-            }
 
             this.listenTo(this.collection, 'reset', this.addAll);
             this.listenTo(this, 'leave', this.onLeave);
         },
+
+        /**
+         *
+         * @returns {LocusListView}
+         */
         render: function () {
             console.trace('LocusListView.render()');
             var currentContext = this;
-
-            var renderModel = _.extend({}, { cid: currentContext.cid }, currentContext.model);
+            var renderModel = _.extend({}, currentContext.model);
             currentContext.$el.html(template(renderModel));
-
-            this.hideLoading();
-
             return this;
         },
+
+        /**
+         *
+         * @returns {LocusListView}
+         */
         updateHeader: function () {
-            if (this.collection) {
-                var headerText = utils.formatString(this.headerTextFormatString, [this.collection.length]);
-                this.$('#list-header').html(headerText);
+            var currentContext = this;
+            var headerText = '';
+            if (currentContext.collection) {
+                headerText = utils.formatString(currentContext.headerTextFormatString, [currentContext.collection.length]);
+
             }
+            currentContext.$('#locus-list-view-header').html(headerText);
+            return this;
         },
+
+        /**
+         *
+         * @returns {LocusListView}
+         */
         addAll: function () {
-            this.showLoading();
-            this._leaveChildren();
-            _.each(this.collection.models, this.addOne, this);
-            this.updateHeader();
-            this.hideLoading();
+            var currentContext = this;
+            currentContext._leaveChildren();
+            _.each(currentContext.collection.models, currentContext.addOne, currentContext);
+            currentContext.updateHeader();
+            return this;
         },
+
+        /**
+         *
+         * @param model
+         * @returns {LocusListView}
+         */
         addOne: function (model) {
             var currentContext = this;
-            var options = _.extend(currentContext._options, { 'model': model });
-            var listItemViewInstance = new currentContext.listItemView(options);
-            this.appendChildTo(listItemViewInstance, '#list-item-view-container');
+            var locusListItemViewInstance = new LocusListItemView({
+                'controller': currentContext.controller,
+                'dispatcher': currentContext.dispatcher,
+                'model': model
+            });
+            currentContext.appendChildTo(locusListItemViewInstance, '#locus-rows-container');
+            return this;
         },
+
+        /**
+         *
+         * @returns {LocusListView}
+         */
         removeAll: function () {
-            this.showLoading();
-            this._leaveChildren();
-            this.hideLoading();
+            var currentContext = this;
+            currentContext._leaveChildren();
+            currentContext.updateHeader();
+            return this;
         },
+
+        /**
+         *
+         */
         onLeave: function () {
+            var currentContext = this;
             console.trace('LocusListView.onLeave');
         }
     });

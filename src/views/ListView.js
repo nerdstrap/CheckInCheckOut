@@ -12,8 +12,12 @@ define(function (require) {
         template = require('hbs!templates/ListView');
 
     var ListView = BaseView.extend({
+        tagName: 'div',
+        className: 'list-view',
+
         headerTextFormatString: utils.getResource('listViewHeaderTextFormatString'),
         tileViewType: BaseView,
+
         initialize: function (options) {
             console.trace('ListView.initialize');
             options || (options = {});

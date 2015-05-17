@@ -1,0 +1,130 @@
+<div class="check-out-view">
+    <div id="header" class="row">
+        <div class="small-4 columns">
+            &nbsp;
+        </div>
+        <div class="small-4 columns">
+            <span id="check-out-header" class="t-heading -size-m -color-inherit h-text-align-center">{{resource "checkOut.headerText"}}</span>
+        </div>
+        <div class="small-4 columns">
+            &nbsp;
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="locus-name-label">{{resource "locusNameHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <span id="locus-name-label" data-locus-id="{{locusId}}">{{withDefault locusName "&nbsp;"}}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="distance-label">{{resource "coordinatesHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <span id="distance-label" name="distance">{{withDefault distance "&nbsp;"}}</span>
+        </div>
+    </div>
+    <div id="locus-name-input-container" class="row hidden">
+        <div class="small-3 columns">
+            <label for="locus-name-input">{{resource "locusNameHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <input id="locus-name-input" name="locusName" type="text" class="validate required hidden" data-locus-id="{{locusId}}" placeholder="{{resource "locusNamePlaceholder"}}" />
+        </div>
+    </div>
+    <div id="coordinates-input-container" class="row hidden">
+        <div class="small-3 columns">
+            <label for="latitude-input">{{resource "coordinatesHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <input id="latitude-input" name="latitude" type="text" class="validate required" placeholder="{{resource "latitudePlaceholder"}}" />
+            <input id="longitude-input" name="longitude" type="text" class="validate required" placeholder="{{resource "longitudePlaceholder"}}" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="contact-number-input">{{resource "contactNumberHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <input id="contact-number-input" name="contactNumber" type="text" class="validate required pattern" placeholder="{{resource "contactNumberPlaceholder"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="email-input">{{resource "emailHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <input id="email-input" name="email" type="text" class="validate pattern" placeholder="{{resource "emailPlaceholder"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="purpose-input">{{resource "purposeHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <span id="purpose-input">{{withDefault purpose "&nbsp;"}}</span>
+        </div>
+    </div>
+    <div id="purpose-other-input-container" class="row hidden">
+        <div class="small-3 columns">
+            <label for="purpose-other-input">{{resource "purposeOtherHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <input id="purpose-other-input" name="purposeOther" type="text" class="validate required" placeholder="{{resource "purposeOtherPlaceholder"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="duration-input">{{resource "durationHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <span id="duration-input">{{withDefault duration "&nbsp;"}}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="group-check-in-input">{{resource "groupCheckInHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <span>no</span>
+            <div id="group-check-in-input-container" class="switch radius tiny" tabindex="0">
+                <input id="group-check-in-input" name="groupCheckIn" type="checkBox" />
+                <label for="group-check-in-input"></label>
+            </div>
+            <span>yes</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-3 columns">
+            <label for="additional-info-input">{{resource "additionalInfoHeaderText"}}</label>
+        </div>
+        <div class="small-9 columns">
+            <input id="additional-info-input" name="additionalInfo" type="text" placeholder="{{resource "additionalInfoPlaceholder"}}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off" />
+        </div>
+    </div>
+    <div class="row loading {{cid}} hidden">
+        <div class="small-9 columns">
+            <span class="loading-message">{{resource "checkOut.loadingMessage"}}</span>
+            <img src="{{resource 'loadingIconSrc'}}" class="loading-icon"/>
+        </div>
+    </div>
+    <div class="row alert-view-container {{cid}}">
+        <div class="small-9 columns"></div>
+    </div>
+    <div class="row">
+        <div class="small-12 columns">
+            <div class="confirm-check-out-view hidden">
+                <span>You will be required to confirm or clear the following warnings before checking-out of this station:</span>
+                <ul>
+                    <li>snakes</li>
+                    <li>icicles</li>
+                    <li>ninjas</li>
+                </ul>
+            </div>
+            <a id="cancel-button" class="button radius secondary" href="#">{{resource "cancelButtonText"}}</a>
+            <a id="check-out-button" class="button radius success" href="#">{{resource "checkOutButtonText"}}<i class="fa fa-check-circle-o"></i></a>
+        </div>
+    </div>
+</div>

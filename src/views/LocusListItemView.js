@@ -8,32 +8,58 @@ define(function (require) {
         CompositeView = require('views/CompositeView'),
         EventNamesEnum = require('enums/EventNamesEnum'),
         utils = require('utils'),
-        template = require('hbs!templates/LocusListItem');
+        template = require('hbs!templates/LocusListItemView');
 
     var LocusListItemView = CompositeView.extend({
+        /**
+         *
+         */
+        tagName: 'li',
+
+        /**
+         *
+         */
+        className: 'locus-list-item-view',
+
+        /**
+         *
+         * @param options
+         */
         initialize: function (options) {
             console.trace('LocusListItemView.initialize');
             options || (options = {});
+            this.controller = options.controller;
             this.dispatcher = options.dispatcher || this;
 
             this.listenTo(this.model, 'reset', this.updateViewFromModel);
             this.listenTo(this, 'leave', this.onLeave);
         },
+
+        /**
+         *
+         * @returns {LocusListItemView}
+         */
         render: function () {
             console.trace('LocusListItemView.render()');
             var currentContext = this;
-
-            var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
+            var renderModel = _.extend({}, currentContext.model.attributes);
             currentContext.$el.html(template(renderModel));
-
             this.updateViewFromModel();
-
             return this;
         },
+
+        /**
+         *
+         */
         events: {
-            'click .go-to-locus-button': 'goToLocusWithId',
-            'click .go-to-directions-button': 'goToDirectionsWithLatLng'
+            'click .go-to-locus-button': 'goToLocus',
+            'click .go-to-directions-button': 'goToDirections'
         },
+
+        /**
+         *
+         * @returns {LocusListItemView}
+         */
         updateViewFromModel: function () {
             var currentContext = this;
 
@@ -41,69 +67,57 @@ define(function (require) {
             if (currentContext.model.has('locusName')) {
                 locusName = currentContext.model.get('locusName');
             }
-            currentContext.$('.go-to-locus-button').html(locusName);
+            currentContext.$('.locus-name-label').html(locusName);
 
-            var locusInitials;
-            if (currentContext.model.has('locusInitials')) {
-                locusInitials = currentContext.model.get('locusInitials');
-            }
-            currentContext.$('.locus-initials-label').html(locusInitials);
-
-            var distance;
             var formattedDistance;
-            //var latitude;
-            //var longitude;
             if (currentContext.model.has('distance') && currentContext.model.has('latitude') && currentContext.model.has('longitude')) {
                 currentContext.hasCoordinates = true;
-                distance = currentContext.model.get('distance').toFixed(0);
+                var distance = currentContext.model.get('distance').toFixed(0);
                 formattedDistance = utils.formatString(utils.getResource('distanceFormatString'), [distance]);
-                //latitude = currentContext.model.get('latitude');
-                //longitude = currentContext.model.get('longitude');
-            }
-            if (currentContext.hasCoordinates) {
-                currentContext.$('.distance-label').html(formattedDistance);
-                //currentContext.$('.go-to-directions-button').attr('data-latitude', latitude).attr('data-longitude', longitude);
-                currentContext.$('.coordinates-unavailable-container').addClass('hidden');
-                currentContext.$('.coordinates-container').removeClass('hidden');
             } else {
-                //currentContext.$('.go-to-directions-button').addClass('hidden');
-                currentContext.$('.coordinates-unavailable-container').removeClass('hidden');
-                currentContext.$('.coordinates-container').addClass('hidden');
+                formattedDistance = utils.getResource('coordinatesUnavailableErrorMessage');
             }
-            //var cleanedLocusPhone;
-            //var formattedLocusPhone;
-            //if (currentContext.model.has('phone')) {
-            //    currentContext.hasLocusPhone = true;
-            //    var phone = currentContext.model.get('phone');
-            //    cleanedLocusPhone = utils.cleanPhone(phone);
-            //    formattedLocusPhone = utils.formatPhone(cleanedLocusPhone);
-            //}
-            //if (currentContext.hasLocusPhone) {
-            //    currentContext.$('.phone-label').html(formattedLocusPhone);
-            //    currentContext.$('.call-phone-button').attr('href', 'tel:' + cleanedLocusPhone);
-            //    currentContext.$('.phone-container').removeClass('hidden');
-            //} else {
-            //    currentContext.$('.phone-container').addClass('hidden');
-            //}
+            currentContext.$('.distance-label').html(formattedDistance);
+
+            return this;
         },
-        goToLocusWithId: function (event) {
+
+        /**
+         *
+         * @param event
+         * @returns {LocusListItemView}
+         */
+        goToLocus: function (event) {
             if (event) {
                 event.preventDefault();
             }
-
+            var currentContext = this;
             var locusId = this.model.get('locusId');
-            this.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
+            currentContext.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
+            return this;
         },
-        goToDirectionsWithLatLng: function (event) {
+
+        /**
+         *
+         * @param event
+         * @returns {LocusListItemView}
+         */
+        goToDirections: function (event) {
             if (event) {
                 event.preventDefault();
             }
-
-            var latitude = this.model.get('latitude');
-            var longitude = this.model.get('longitude');
-            this.dispatcher.trigger(EventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
+            var currentContext = this;
+            var latitude = currentContext.model.get('latitude');
+            var longitude = currentContext.model.get('longitude');
+            currentContext.dispatcher.trigger(EventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
+            return this;
         },
+
+        /**
+         *
+         */
         onLeave: function () {
+            var currentContext = this;
             console.trace('LocusListItemView.onLeave');
         }
     });

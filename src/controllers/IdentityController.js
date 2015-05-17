@@ -21,8 +21,7 @@ define(function (require) {
      * @constructor
      * @param {object} options
      */
-    var IdentityController;
-    IdentityController = function (options) {
+    var IdentityController = function (options) {
         console.trace('new IdentityController()');
         options || (options = {});
         this.initialize.apply(this, arguments);

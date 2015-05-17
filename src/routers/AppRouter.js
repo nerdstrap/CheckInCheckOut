@@ -43,10 +43,10 @@ define(function (require) {
 
         routes: {
             '': 'goToLocusSearch',
-            'station': 'goToLocusSearch',
-            'station/:id': 'goToLocusWithId',
-            'person': 'goToIdentitySearch',
-            'person/:id': 'goToIdentityWithId',
+            'locus': 'goToLocusSearch',
+            'locus/:id': 'goToLocusWithId',
+            'identity': 'goToIdentitySearch',
+            'identity/:id': 'goToIdentityWithId',
             'admin/station': 'goToLocusAdmin'
         },
 

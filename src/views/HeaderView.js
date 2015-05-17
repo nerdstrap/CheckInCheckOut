@@ -48,15 +48,15 @@ define(function (require) {
                     }
                     this.$('#go-to-my-open-check-in-button').attr('data-locus-id', locusId).removeClass().addClass(checkInClass);
                 }
-                this.$('#go-to-my-identity-container').addClass('hidden');
-                this.$('#go-to-my-open-check-in-container').removeClass('hidden');
+                this.$('#go-to-my-identity-button').addClass('hidden');
+                this.$('#go-to-open-check-in-button').removeClass('hidden');
             } else {
                 if (identityModel.has('identityId')) {
                     var identityId = identityModel.get('identityId');
                     this.$('#go-to-my-identity-button').attr('data-identity-id', identityId);
                 }
-                this.$('#go-to-my-identity-container').removeClass('hidden');
-                this.$('#go-to-my-open-check-in-container').addClass('hidden');
+                this.$('#go-to-my-identity-button').removeClass('hidden');
+                this.$('#go-to-open-check-in-button').addClass('hidden');
             }
         },
         goToMyIdentity: function (event) {

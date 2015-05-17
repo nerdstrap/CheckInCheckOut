@@ -10416,6 +10416,12 @@ th.hide-for-touch {
   color: #ffff00 !important;
 }
 
+#locus-search-query-input,
+#identity-search-query-input {
+  display: inline;
+  width: 200px !important;
+}
+
 .-style-headline {
   font-size: 24px;
 }
@@ -10435,6 +10441,62 @@ th.hide-for-touch {
 .-style-body2 {
   font-size: 14px;
   font-weight: bolder;
+}
+
+.header-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.header-card-menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.header-card-image {
+  position: relative;
+}
+
+.header-card-image img {
+  position: relative;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: -1000;
+  width: 100%;
+  height: auto;
+}
+
+.header-card-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  padding: 20px;
+}
+
+.header-card-action {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.header-card-content {
+  height: 170px;
+  padding: 20px;
+}
+
+a.overlay {
+  color: white;
+}
+
+h1.overlay {
+  color: white;
 }
 
 /*# sourceMappingURL=index.css.map */

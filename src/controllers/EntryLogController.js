@@ -14,21 +14,20 @@ define(function (require) {
         utils = require('utils');
 
     /**
-     * Creates a new EntryLogController with the specified attributes.
+     *
+     * @param options
      * @constructor
-     * @param {object} options
      */
-    var EntryLogController;
-    EntryLogController = function (options) {
+    var EntryLogController = function (options) {
         console.trace('new EntryLogController()');
         options || (options = {});
         this.initialize.apply(this, arguments);
     };
 
     _.extend(EntryLogController.prototype, Backbone.Events, {
-        /** @class EntryLogController
-         * @constructs EntryLogController object
-         * @param {object} options
+        /**
+         *
+         * @param options
          */
         initialize: function (options) {
             console.trace('EntryLogController.initialize');
@@ -172,7 +171,7 @@ define(function (require) {
             return deferred.promise();
         },
 
-        goToCheckOut: function (entryLogModelInstance) {
+        goToCheckOut: function (entryLogModel) {
             console.trace('EntryLogController.goToCheckOut');
             var currentContext = this,
                 deferred = $.Deferred();
@@ -180,7 +179,7 @@ define(function (require) {
             var checkOutViewInstance = new CheckOutView({
                 controller: currentContext,
                 dispatcher: currentContext.dispatcher,
-                model: entryLogModelInstance
+                model: entryLogModel
             });
 
             currentContext.router.swapContent(checkOutViewInstance);
@@ -195,7 +194,7 @@ define(function (require) {
                     deferred.resolve(checkOutViewInstance);
                 })
                 .fail(function (error) {
-                    entryLogModelInstance.clear();
+                    entryLogModel.clear();
                     checkOutViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
                     checkOutViewInstance.completeLoading();
                     deferred.reject(checkOutViewInstance);

@@ -8,11 +8,11 @@ define(function (require) {
         LocusService = require('services/LocusService'),
         LocusModel = require('models/LocusModel'),
         LocusCollection = require('collections/LocusCollection'),
-        SearchView = require('views/SearchView'),
+        LocusSearchView = require('views/LocusSearchView'),
         AdminView = require('views/AdminView'),
         ListView = require('views/ListView'),
         LocusTileView = require('views/LocusTileView'),
-        LocusView = require('views/LocusView'),
+        LocusDetailView = require('views/LocusDetailView'),
         EventNamesEnum = require('enums/EventNamesEnum'),
         SearchTypesEnum = require('enums/SearchTypesEnum'),
         globals = require('globals'),
@@ -23,8 +23,7 @@ define(function (require) {
      * @constructor
      * @param {object} options
      */
-    var LocusController;
-    LocusController = function (options) {
+    var LocusController = function (options) {
         console.trace('new LocusController()');
         options || (options = {});
         this.initialize.apply(this, arguments);
@@ -58,20 +57,15 @@ define(function (require) {
             var currentContext = this,
                 deferred = $.Deferred();
 
-            var locusSearchViewInstance = new SearchView({
+            var locusCollectionInstance = new LocusCollection();
+            var locusSearchViewInstance = new LocusSearchView({
                 controller: currentContext,
                 dispatcher: currentContext.dispatcher,
-                headerText: utils.getResource('locusSearch.headerText'),
-                searchResultsModelType: LocusModel,
-                searchResultsCollectionType: LocusCollection,
-                searchResultsListViewType: ListView,
-                searchResultsTileViewType: LocusTileView,
-                headerTextFormatString: utils.getResource('locusList.headerTextFormatString'),
-                getSearchResultsTrigger: EventNamesEnum.refreshLocusList
+                collection: locusCollectionInstance
             });
-
             currentContext.router.swapContent(locusSearchViewInstance);
-            var routerFragment = utils.getResource('locus.fragment');
+
+            var routerFragment = 'locus';
             var fragmentAlreadyMatches = (Backbone.history.fragment === routerFragment || Backbone.history.fragment === '');
             currentContext.router.navigate(routerFragment, {replace: fragmentAlreadyMatches});
 
@@ -98,49 +92,53 @@ define(function (require) {
                 deferred = $.Deferred();
 
             var locusModelInstance = new LocusModel({locusId: locusId});
-            var locusViewInstance = new LocusView({
+            var openEntryLogCollectionInstance = new Backbone.Collection();
+            var recentEntryLogCollectionInstance = new Backbone.Collection();
+            var locusDetailViewInstance = new LocusDetailView({
                 controller: currentContext,
                 dispatcher: currentContext.dispatcher,
-                model: locusModelInstance
+                model: locusModelInstance,
+                openEntryLogCollection: openEntryLogCollectionInstance,
+                recentEntryLogCollection: recentEntryLogCollectionInstance
             });
 
-            currentContext.router.swapContent(locusViewInstance);
-            var routerFragment = utils.getResource('locusWithId.fragment');
-            var fragmentAlreadyMatches = (Backbone.history.fragment === routerFragment + locusId || Backbone.history.fragment === '');
-            currentContext.router.navigate(routerFragment + locusId, {replace: fragmentAlreadyMatches});
+            currentContext.router.swapContent(locusDetailViewInstance);
+            var routerFragment = 'locus/' + locusId;
+            var fragmentAlreadyMatches = (Backbone.history.fragment === routerFragment || Backbone.history.fragment === '');
+            currentContext.router.navigate(routerFragment, {replace: fragmentAlreadyMatches});
 
-            locusViewInstance.showLoading();
+            locusDetailViewInstance.showLoading();
             currentContext.locusService.getLocusList({locusId: locusId})
                 .then(function (getLocusListResponse) {
-                    locusViewInstance.setIdentityModel(getLocusListResponse.identity);
-                    currentContext.dispatcher.trigger(EventNamesEnum.identityUpdated, locusViewInstance.identityModel);
+                    locusDetailViewInstance.setIdentityModel(getLocusListResponse.identity);
+                    currentContext.dispatcher.trigger(EventNamesEnum.identityUpdated, locusDetailViewInstance.identityModel);
                     if (getLocusListResponse.locusList && getLocusListResponse.locusList.length > 0) {
                         currentContext.geoLocationService.getCurrentPosition()
                             .then(function (position) {
                                 utils.computeDistances(position.coords, getLocusListResponse.locusList);
                                 locusModelInstance.set(getLocusListResponse.locusList[0]);
-                                locusViewInstance.updateViewFromModel();
-                                locusViewInstance.completeLoading();
-                                deferred.resolve(locusViewInstance);
+                                locusDetailViewInstance.updateViewFromModel();
+                                locusDetailViewInstance.completeLoading();
+                                deferred.resolve(locusDetailViewInstance);
                             })
-                            .fail(function(error) {
+                            .fail(function (error) {
                                 locusModelInstance.set(getLocusListResponse.locusList[0]);
-                                locusViewInstance.updateViewFromModel();
-                                locusViewInstance.completeLoading();
-                                deferred.resolve(locusViewInstance);
+                                locusDetailViewInstance.updateViewFromModel();
+                                locusDetailViewInstance.completeLoading();
+                                deferred.resolve(locusDetailViewInstance);
                             });
                     } else {
                         locusModelInstance.clear();
-                        locusViewInstance.showError(utils.getResource('locusNotFoundErrorMessage'));
-                        locusViewInstance.completeLoading();
-                        deferred.reject(locusViewInstance);
+                        locusDetailViewInstance.showError(utils.getResource('locusNotFoundErrorMessage'));
+                        locusDetailViewInstance.completeLoading();
+                        deferred.reject(locusDetailViewInstance);
                     }
                 })
                 .fail(function (error) {
                     locusModelInstance.clear();
-                    locusViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
-                    locusViewInstance.completeLoading();
-                    deferred.reject(locusViewInstance);
+                    locusDetailViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
+                    locusDetailViewInstance.completeLoading();
+                    deferred.reject(locusDetailViewInstance);
                 });
 
             return deferred.promise();
@@ -243,7 +241,7 @@ define(function (require) {
 
             var index = 0;
             var count = 100;//locusCollectionInstance.length;
-            for(index; index < count; index++) {
+            for (index; index < count; index++) {
 
                 var locusModel = locusCollectionInstance.at(index);
 

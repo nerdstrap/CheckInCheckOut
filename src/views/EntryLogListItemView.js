@@ -11,10 +11,15 @@ define(function (require) {
         template = require('hbs!templates/EntryLogListItem');
 
     var EntryLogListItemView = CompositeView.extend({
+        tagName: 'li',
+        className: 'entry-log-list-item-view',
+
         initialize: function (options) {
             console.trace('EntryLogListItemView.initialize');
             options || (options = {});
+            this.controller = options.controller;
             this.dispatcher = options.dispatcher || this;
+
             this.showLocus = options.showLocus;
             this.showIdentity = options.showIdentity;
 

@@ -11,6 +11,9 @@ define(function (require) {
         template = require('hbs!templates/LocusTileView');
 
     var LocusTileView = CompositeView.extend({
+        tagName: 'li',
+        className: 'locus-tile-view',
+
         initialize: function (options) {
             console.trace('LocusTileView.initialize');
             options || (options = {});
@@ -31,8 +34,8 @@ define(function (require) {
             return this;
         },
         events: {
-            'click .go-to-locus-with-id-button': 'goToLocusWithId',
-            'click .go-to-directions-with-lat-lng-button': 'goToDirectionsWithLatLng'
+            'click .go-to-locus-button': 'goToLocus',
+            'click .go-to-directions-button': 'goToDirections'
         },
         updateViewFromModel: function () {
             var currentContext = this;
@@ -43,11 +46,11 @@ define(function (require) {
             }
             currentContext.$('.locus-name-label').html(locusName);
 
-            var locusInitials;
-            if (currentContext.model.has('locusInitials')) {
-                locusInitials = currentContext.model.get('locusInitials');
-            }
-            currentContext.$('.locus-initials-label').html(locusInitials);
+            //var locusInitials;
+            //if (currentContext.model.has('locusInitials')) {
+            //    locusInitials = currentContext.model.get('locusInitials');
+            //}
+            //currentContext.$('.locus-initials-label').html(locusInitials);
 
             var distance;
             var formattedDistance;
@@ -62,14 +65,12 @@ define(function (require) {
             }
             if (currentContext.hasCoordinates) {
                 currentContext.$('.distance-label').html(formattedDistance);
-                //currentContext.$('.go-to-directions-button').attr('data-latitude', latitude).attr('data-longitude', longitude);
-                //currentContext.$('.coordinates-unavailable-container').addClass('hidden');
-                currentContext.$('.coordinates-container').removeClass('hidden');
+                //currentContext.$('.go-to-directions-button').removeClass('hidden').attr('data-latitude', latitude).attr('data-longitude', longitude);
             } else {
+                currentContext.$('.distance-label').html(utils.getResource('coordinatesUnavailableErrorMessage'));
                 //currentContext.$('.go-to-directions-button').addClass('hidden');
-                currentContext.$('.coordinates-unavailable-container').removeClass('hidden');
-                currentContext.$('.coordinates-container').addClass('hidden');
             }
+
             //var cleanedLocusPhone;
             //var formattedLocusPhone;
             //if (currentContext.model.has('phone')) {
@@ -86,7 +87,7 @@ define(function (require) {
             //    currentContext.$('.phone-container').addClass('hidden');
             //}
         },
-        goToLocusWithId: function (event) {
+        goToLocus: function (event) {
             if (event) {
                 event.preventDefault();
             }
@@ -94,7 +95,7 @@ define(function (require) {
             var locusId = this.model.get('locusId');
             this.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
         },
-        goToDirectionsWithLatLng: function (event) {
+        goToDirections: function (event) {
             if (event) {
                 event.preventDefault();
             }

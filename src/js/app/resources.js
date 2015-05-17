@@ -6,30 +6,28 @@ define(function(require) {
             Backbone = require('backbone');
 
     var resources = {
-        'searchViewHeaderText':'Search',
-        'searchqueryplaceholder':'search',
+        'locusSearchViewHeaderText': 'Stations',
+        'searchQueryPlaceholder':'search',
         'searchButtonText':'search',
         'cancelButtonText':'cancel',
         'alphabeticButtonText':'a-z',
         'nearbyButtonText':'nearby',
         'favoritesButtonText':'fav',
         'loadingIconSrc': 'images/loading.gif',
-        'listViewHeaderText' :'rows',
+        'locusListViewHeaderTextFormatString': '{0} Stations',
+        'locusHeaderImageSrc': 'images/transmission_station.jpg',
+        'loadingIconAlt': 'loading',
+
+        'currentCheckInDetailLabelTextFormatString': 'You checked-in to this Station at {0}. You are working on {1}, and expect to check-out at {2}.',
+        'openCheckInDetailLabelTextFormatString': 'You checked-in to Station {0} at {1}. Check-out of that Station if you wish to check-in at this Station.',
+        'locusLockMessage': 'There is a hazard at this Station. You will need to call the dispatch desk if you need to check-in, extend your current check-in, or check-out.',
+
+        'locusPhoneTypeHeaderText': 'Station',
+        'entryLogListViewHeaderTextFormatString': '{} Check-ins',
+        'openEntryLogListViewHeaderTextFormatString': '{} Open Check-ins',
+        'recentEntryLogListViewHeaderTextFormatString': '{} Recent Check-ins',
 
         'appTitleText': 'Check-in&#124;Check-out',
-        'locus.fragment': 'station',
-        'locusWithId.fragment': 'station/',
-        'locusAdmin.fragment': 'admin/station',
-        'identity.fragment': 'person',
-        'identityWithId.fragment': 'person/',
-        'entryLog.fragment': 'entryLog/',
-        'checkIn.fragment': 'checkIn',
-        'simpleList.headerTextFormatString': '{0}',
-        'simpleList.loadingMessage': '',
-        'simpleSearch.headerText': 'Search',
-        'simpleSearch.loadingMessage': '',
-
-        'loadingIconAlt': 'loading',
 
         'goToLocusSearchButtonText': 'Stations',
         'goToLocusWithIdButtonText': 'View Station',
@@ -99,7 +97,7 @@ define(function(require) {
         'groupCheckInHeaderText': 'With Crew?',
         'additionalInfoHeaderText': 'Additional Info',
         'additionalInfoPlaceholder': 'enter your notes',
-        'distanceFormatString': '{0} mi',
+        'distanceFormatString': '{0} miles',
         'goToDirectionsButtonText': 'directions',
         'goToLinkedLocusButtonTextFormatString': 'Linked Station: {0}',
 

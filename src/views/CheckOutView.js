@@ -17,10 +17,12 @@ define(function (require) {
         initialize: function (options) {
             console.trace('CheckOutView.initialize');
             options || (options = {});
+            this.controller = options.controller;
             this.dispatcher = options.dispatcher || this;
 
             this.listenTo(this.dispatcher, EventNamesEnum.checkOutSuccess, this.onCheckOutSuccess);
             this.listenTo(this.model, 'validated', this.onValidated);
+            this.listenTo(this, 'loaded', this.onLoaded);
             this.listenTo(this, 'leave', this.onLeave);
         },
         render: function () {
