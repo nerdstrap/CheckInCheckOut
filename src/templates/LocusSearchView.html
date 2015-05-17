@@ -1,0 +1,29 @@
+<h3>{{resource "locusSearchViewHeaderText"}}</h3>
+<div class="search-query">
+    <a id="open-locus-search-query-button" href="#"><i class="fa fa-search"></i>{{resource "searchButtonText"}}</a>
+    <span id="locus-search-query-input-container" class="hidden">
+        <i class="fa fa-search"></i>
+        <input id="locus-search-query-input" type="search" placeholder='{{resource "searchQueryPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+        <a id="clear-locus-search-query-button" class="hidden" href="#"><i class="fa fa-times-circle"></i></a>
+    </span>
+    <a id="submit-locus-search-query-button" class="hidden" href="#">{{resource "searchButtonText"}}</a>
+    <a id="cancel-locus-search-query-button" class="hidden" href="#">{{resource "cancelButtonText"}}</a>
+</div>
+<ul class="button-group radius even-3">
+    <li>
+        <a id="filter-locus-search-by-alphabetic-button" class="button radius tiny" href="#">{{resource "alphabeticButtonText"}}</a>
+    </li>
+    <li>
+        <a id="filter-locus-search-by-nearby-button" class="button radius tiny secondary" href="#">{{resource "nearbyButtonText"}}</a>
+    </li>
+    <li>
+        <a id="filter-locus-search-by-favorites-button" class="button radius tiny secondary" href="#">{{resource "favoritesButtonText"}}</a>
+    </li>
+</ul>
+<div id="locus-search-view-loading-icon-container" class="hidden">
+    <img src="{{resource 'loadingIconSrc'}}" alt="{{resource 'loadingIconAlt'}}"/>
+</div>
+<div id="locus-search-alerts-container">
+</div>
+<div id="locus-search-results-container">
+</div>
