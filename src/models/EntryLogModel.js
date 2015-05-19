@@ -58,8 +58,8 @@ define(function (require) {
                 (attributes = {})[key] = val;
             }
             if (attributes) {
-                if (attributes.hasOwnProperty('identityName')) {
-                    var identityNameParts = attributes.identityName.split(', ');
+                if (attributes.hasOwnProperty('identityUserName')) {
+                    var identityNameParts = attributes.identityUserName.split(', ');
                     if (identityNameParts && identityNameParts.length > 1) {
                         attributes.identityInitials = identityNameParts[1][0] + identityNameParts[0][0];
                         attributes.identityFullName = identityNameParts[1] + ' ' + identityNameParts[0];

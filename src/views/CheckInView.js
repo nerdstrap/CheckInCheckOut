@@ -11,9 +11,23 @@ define(function (require) {
         env = require('env'),
         utils = require('utils'),
         optionTemplate = require('hbs!templates/Option'),
-        template = require('hbs!templates/CheckIn');
+        template = require('hbs!templates/CheckInView');
 
     var CheckInView = BaseView.extend({
+        /**
+         *
+         */
+        tagName: 'div',
+
+        /**
+         *
+         */
+        className: 'check-in-view',
+
+        /**
+         *
+         * @param options
+         */
         initialize: function (options) {
             console.trace('CheckInView.initialize');
             options || (options = {});
@@ -22,22 +36,42 @@ define(function (require) {
 
             this.listenTo(this.dispatcher, EventNamesEnum.checkInSuccess, this.onCheckInSuccess);
             this.listenTo(this.model, 'validated', this.onValidated);
+            this.listenTo(this, 'loaded', this.onLoaded);
             this.listenTo(this, 'leave', this.onLeave);
         },
+
+        /**
+         *
+         * @returns {CheckInView}
+         */
         render: function () {
             console.trace('CheckInView.render()');
             var currentContext = this;
-
-            var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
+            var renderModel = _.extend({}, currentContext.model);
             currentContext.$el.html(template(renderModel));
-
-            validation.bind(this, {
-                selector: 'name'
-            });
-
+            currentContext.bindValidation();
             return this;
         },
-        renderPurposes: function(purposes) {
+
+        /**
+         *
+         * @returns {CheckInView}
+         */
+        bindValidation: function() {
+            var currentContext = this;
+            validation.bind(currentContext, {
+                selector: 'name'
+            });
+            return this;
+        },
+
+        /**
+         *
+         * @param purposes
+         * @returns {CheckInView}
+         */
+        renderPurposes: function (purposes) {
+            var currentContext = this;
             var optionsHtml = '';
             _.each(purposes, function (purpose) {
                 optionsHtml += optionTemplate({
@@ -45,9 +79,17 @@ define(function (require) {
                     'text': purpose['purpose']
                 });
             })
-            this.$('#purpose-input').append(optionsHtml);
+            currentContext.$('#purpose-input').append(optionsHtml);
+            return this;
         },
-        renderDurations: function(durations) {
+
+        /**
+         *
+         * @param durations
+         * @returns {CheckInView}
+         */
+        renderDurations: function (durations) {
+            var currentContext = this;
             var optionsHtml = '';
             _.each(durations, function (duration) {
                 optionsHtml += optionTemplate({
@@ -55,132 +97,236 @@ define(function (require) {
                     'text': duration['description']
                 });
             })
-            this.$('#duration-input').append(optionsHtml);
+            currentContext.$('#duration-input').append(optionsHtml);
+            return this;
         },
+
+        /**
+         *
+         */
         events: {
             'change #purpose-input': 'purposeChanged',
             'change #duration-input': 'durationChanged',
-            'click #cancel-button': 'cancelCheckIn',
-            'click #check-in-button': 'validateModelAndCheckIn'
+            'click #cancel-check-in-button': 'cancelCheckIn',
+            'click #submit-check-in-button': 'submitCheckIn'
         },
+
+        /**
+         *
+         * @returns {CheckInView}
+         */
         updateViewFromModel: function () {
-            if (this.locusModel.has('locusId') && this.locusModel.has('locusName')) {
-                this.$('#locus-name-label').attr('data-locus-id', this.locusModel.get('locusId')).html(this.locusModel.get('locusName'));
+            var currentContext = this;
+
+            var locusId;
+            if (currentContext.locusModel.has('locusId')) {
+                locusId = currentContext.locusModel.get('locusId');
             }
-            if (this.locusModel.has('distance')) {
-                this.$('#distance-label').html(utils.formatString(utils.getResource('distanceFormatString'), [this.locusModel.get('distance')]));
+            var locusName;
+            if (currentContext.locusModel.has('locusName')) {
+                locusName = currentContext.locusModel.get('locusName');
             }
-            if (this.identityModel.has('contactNumber')) {
-                this.$('#contact-number-input').val(utils.formatPhone(this.identityModel.get('contactNumber')));
-            }
-            if (this.identityModel.has('email')) {
-                this.$('#email-input').val(this.identityModel.get('email'));
-            }
-        },
-        purposeChanged: function(event) {
-            if (event) {
-                event.preventDefault();
-            }
-            var purpose = this.$('#purpose-input option:selected').text();
-            this.togglePurposeOther(purpose === 'Other');
-            if (!this.manualDurationEntry) {
-                var defaultDuration = this.$('#purpose-input').val();
-                this.$('#duration-input').val(defaultDuration);
-            }
-        },
-        togglePurposeOther: function(show) {
-            if (show) {
-                this.$('#purpose-other-input-container').removeClass('hidden');
+            currentContext.$('#locus-name-label').attr('data-locus-id', locusId).html(locusName);
+
+            var formattedDistance;
+            if (currentContext.locusModel.has('distance') && currentContext.locusModel.has('latitude') && currentContext.locusModel.has('longitude')) {
+                currentContext.hasCoordinates = true;
+                var distance = currentContext.locusModel.get('distance').toFixed(0);
+                formattedDistance = utils.formatString(utils.getResource('distanceFormatString'), [distance]);
             } else {
-                this.$('#purpose-other-input-container').addClass('hidden');
+                formattedDistance = utils.getResource('coordinatesUnavailableErrorMessage');
             }
-        },
-        durationChanged: function(event) {
-            if (event) {
-                event.preventDefault();
-            }
+            currentContext.$('#distance-label').html(formattedDistance);
 
-            var duration = this.$('#duration-input').val();
-            this.manualDurationEntry = true;
+            var formattedContactNumber;
+            if (currentContext.identityModel.has('contactNumber')) {
+                var contactNumber = currentContext.identityModel.get('contactNumber');
+                var cleanedContactNumber = utils.cleanPhone(contactNumber);
+                formattedContactNumber = utils.formatPhone(cleanedContactNumber);
+            }
+            currentContext.$('#contact-number-input').val(formattedContactNumber);
+
+            var email;
+            if (currentContext.identityModel.has('email')) {
+                email = currentContext.identityModel.get('email');
+            }
+            currentContext.$('#email-input').val(email);
+
+            return this;
         },
-        validateModelAndCheckIn: function(event) {
+
+        /**
+         *
+         * @param event
+         * @returns {CheckInView}
+         */
+        purposeChanged: function (event) {
             if (event) {
                 event.preventDefault();
             }
-            this.updateModelFromView();
-            this.model.validate();
+            var currentContext = this;
+            var purpose = currentContext.$('#purpose-input option:selected').text();
+            currentContext.togglePurposeOther(purpose === 'Other');
+            if (!currentContext.manualDurationEntry) {
+                var defaultDuration = currentContext.$('#purpose-input').val();
+                currentContext.$('#duration-input').val(defaultDuration);
+            }
+            return this;
         },
+
+        /**
+         *
+         * @param show
+         * @returns {CheckInView}
+         */
+        togglePurposeOther: function (show) {
+            var currentContext = this;
+            if (show) {
+                currentContext.$('#purpose-other-input-container').removeClass('hidden');
+            } else {
+                currentContext.$('#purpose-other-input-container').addClass('hidden');
+            }
+            return this;
+        },
+
+        /**
+         *
+         * @param event
+         */
+        durationChanged: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+            var currentContext = this;
+            var duration = currentContext.$('#duration-input').val();
+            currentContext.manualDurationEntry = true;
+        },
+
+        /**
+         *
+         * @param event
+         * @returns {CheckInView}
+         */
+        submitCheckIn: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+            var currentContext = this;
+            currentContext.updateModelFromView();
+            currentContext.model.validate();
+            return this;
+        },
+
+        /**
+         *
+         * @returns {CheckInView}
+         */
         updateModelFromView: function () {
+            var currentContext = this;
             var attributes = {};
-
-            if (this.locusModel.has('locusId')) {
-                attributes.locusId = this.locusModel.get('locusId');
+            if (currentContext.locusModel.has('locusId')) {
+                attributes.locusId = currentContext.locusModel.get('locusId');
             }
-            if (this.locusModel.has('locusName')) {
-                attributes.locusName = this.locusModel.get('locusName');
+            if (currentContext.locusModel.has('locusName')) {
+                attributes.locusName = currentContext.locusModel.get('locusName');
             }
-            if (this.locusModel.has('latitude')) {
-                attributes.latitude = this.locusModel.get('latitude');
+            if (currentContext.locusModel.has('latitude')) {
+                attributes.latitude = currentContext.locusModel.get('latitude');
             }
-            if (this.locusModel.has('longitude')) {
-                attributes.longitude = this.locusModel.get('longitude');
+            if (currentContext.locusModel.has('longitude')) {
+                attributes.longitude = currentContext.locusModel.get('longitude');
             }
-            if (this.identityModel.has('identityId')) {
-                attributes.identityId = this.identityModel.get('identityId');
+            if (currentContext.identityModel.has('identityId')) {
+                attributes.identityId = currentContext.identityModel.get('identityId');
             }
-            if (this.identityModel.has('identityName')) {
-                attributes.identityName = this.identityModel.get('identityName');
+            if (currentContext.identityModel.has('identityName')) {
+                attributes.identityName = currentContext.identityModel.get('identityName');
             }
-            var rawContactNumber = this.$('#contact-number-input').val();
+            var rawContactNumber = currentContext.$('#contact-number-input').val();
             attributes.contactNumber = utils.cleanPhone(rawContactNumber);
-            attributes.email = this.$('#email-input').val();
-            attributes.purpose = this.$('#purpose-input option:selected').text();
-            if (this.$('#purpose-input').prop('selectedIndex') === 0) {
+            attributes.email = currentContext.$('#email-input').val();
+            attributes.purpose = currentContext.$('#purpose-input option:selected').text();
+            if (currentContext.$('#purpose-input').prop('selectedIndex') === 0) {
                 attributes.purpose = '';
             }
             if (attributes.purpose === 'Other') {
-                attributes.purposeOther = this.$('#purpose-other-input').val();
+                attributes.purposeOther = currentContext.$('#purpose-other-input').val();
             }
-            attributes.duration = this.$('#duration-input').val();
-            attributes.groupCheckIn = this.$('#group-check-in-input').is(':checked');
-            attributes.additionalInfo = this.$('#additional-info-input').val();
+            attributes.duration = currentContext.$('#duration-input').val();
+            attributes.groupCheckIn = currentContext.$('#group-check-in-input').is(':checked');
+            attributes.additionalInfo = currentContext.$('#additional-info-input').val();
 
-            this.model.set(attributes);
+            currentContext.model.set(attributes);
+            return this;
         },
-        onValidated: function(isValid, model, errors) {
-            var currentContext = this;
 
-            currentContext.$('.validate').each(function() {
-                $(this).parent().parent().removeClass('invalid');
-            });
-
-            if (isValid) {
-                this.dispatchCheckIn();
-            } else {
-                for(var error in errors) {
-                    currentContext.$('[name="' + error + '"]').parent().parent().addClass('invalid');
-                }
-            }
-        },
+        /**
+         *
+         * @param event
+         * @returns {CheckInView}
+         */
         cancelCheckIn: function (event) {
             if (event) {
                 event.preventDefault();
             }
-
-            var locusId = this.locusModel.get('locusId');
-            this.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
+            var currentContext = this;
+            var locusId = currentContext.locusModel.get('locusId');
+            currentContext.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
+            return this;
         },
-        dispatchCheckIn: function (event) {
+
+        /**
+         *
+         * @param event
+         * @returns {CheckInView}
+         */
+        checkIn: function (event) {
             if (event) {
                 event.preventDefault();
             }
-            this.dispatcher.trigger(EventNamesEnum.checkIn, this.model);
+            var currentContext = this;
+            currentContext.dispatcher.trigger(EventNamesEnum.checkIn, currentContext.model);
+            return this;
         },
+
+        /**
+         *
+         * @param isValid
+         * @param model
+         * @param errors
+         * @returns {CheckInView}
+         */
+        onValidated: function (isValid, model, errors) {
+            var currentContext = this;
+            currentContext.$('.validate').each(function () {
+                $(this).parent().parent().removeClass('invalid');
+            });
+            if (isValid) {
+                currentContext.checkIn();
+            } else {
+                for (var error in errors) {
+                    currentContext.$('[name="' + error + '"]').parent().parent().addClass('invalid');
+                }
+            }
+            return this;
+        },
+
+        /**
+         *
+         * @returns {CheckInView}
+         */
         onCheckInSuccess: function () {
-            var locusId = this.locusModel.get('locusId');
-            this.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
+            var currentContext = this;
+            var locusId = currentContext.locusModel.get('locusId');
+            currentContext.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
+            return this;
         },
+
+        /**
+         *
+         */
         onLeave: function () {
+            var currentContext = this;
             console.trace('LocusSearchView.onLeave');
         }
     });

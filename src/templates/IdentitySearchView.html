@@ -1,0 +1,29 @@
+<h3>{{resource "identitySearchViewHeaderText"}}</h3>
+<div class="search-query">
+    <a id="open-identity-search-query-button" href="#"><i class="fa fa-search"></i>{{resource "searchButtonText"}}</a>
+    <span id="identity-search-query-input-container" class="hidden">
+        <i class="fa fa-search"></i>
+        <input id="identity-search-query-input" type="search" placeholder='{{resource "searchQueryPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+        <a id="clear-identity-search-query-button" class="hidden" href="#"><i class="fa fa-times-circle"></i></a>
+    </span>
+    <a id="submit-identity-search-query-button" class="hidden" href="#">{{resource "searchButtonText"}}</a>
+    <a id="cancel-identity-search-query-button" class="hidden" href="#">{{resource "cancelButtonText"}}</a>
+</div>
+<ul class="button-group radius even-3">
+    <li>
+        <a id="filter-identity-search-by-alphabetic-button" class="button radius tiny" href="#">{{resource "alphabeticButtonText"}}</a>
+    </li>
+    <li>
+        <a id="filter-identity-search-by-nearby-button" class="button radius tiny secondary" href="#">{{resource "nearbyButtonText"}}</a>
+    </li>
+    <li>
+        <a id="filter-identity-search-by-favorites-button" class="button radius tiny secondary" href="#">{{resource "favoritesButtonText"}}</a>
+    </li>
+</ul>
+<div id="identity-search-view-loading-icon-container" class="hidden">
+    <img src="{{resource 'loadingIconSrc'}}" alt="{{resource 'loadingIconAlt'}}"/>
+</div>
+<div id="identity-search-alerts-container">
+</div>
+<div id="identity-search-results-container">
+</div>

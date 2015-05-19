@@ -18,16 +18,24 @@ define(function(require) {
         'locusHeaderImageSrc': 'images/transmission_station.jpg',
         'loadingIconAlt': 'loading',
 
+        'identitySearchViewHeaderText': 'Personnel',
+        'identityListViewHeaderTextFormatString': '{0} Personnel',
+        'identityHeaderImageSrc': 'images/cico_user.jpg',
+
         'currentCheckInDetailLabelTextFormatString': 'You checked-in to this Station at {0}. You are working on {1}, and expect to check-out at {2}.',
         'openCheckInDetailLabelTextFormatString': 'You checked-in to Station {0} at {1}. Check-out of that Station if you wish to check-in at this Station.',
         'locusLockMessage': 'There is a hazard at this Station. You will need to call the dispatch desk if you need to check-in, extend your current check-in, or check-out.',
 
         'locusPhoneTypeHeaderText': 'Station',
-        'entryLogListViewHeaderTextFormatString': '{} Check-ins',
-        'openEntryLogListViewHeaderTextFormatString': '{} Open Check-ins',
-        'recentEntryLogListViewHeaderTextFormatString': '{} Recent Check-ins',
+        'identityPhoneTypeHeaderText': 'Mobile',
+        'entryLogListViewHeaderTextFormatString': '{0} Check-ins',
+        'openEntryLogListViewHeaderTextFormatString': '{0} Open Check-ins',
+        'recentEntryLogListViewHeaderTextFormatString': '{0} Recent Check-ins',
 
         'appTitleText': 'Check-in&#124;Check-out',
+
+        'checkInViewHeaderText': 'Check-in',
+        'locusDescriptionPlaceholder': 'description',
 
         'goToLocusSearchButtonText': 'Stations',
         'goToLocusWithIdButtonText': 'View Station',

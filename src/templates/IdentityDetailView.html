@@ -1,0 +1,57 @@
+<div class="header-card">
+    <div class="header-card-image">
+        <div class="header-card-menu">
+            <div class="row">
+                <div class="small-1 columns">
+                    <a id="go-back-button" class="overlay" href="#"><i class="fa fa-arrow-left"></i></a>
+                </div>
+                <div class="small-1 small-offset-8 columns">
+                    <a id="go-to-map-button" class="overlay" href="#"><i class="fa fa-map-marker"></i></a>
+                </div>
+                <div class="small-1 columns">
+                    <a id="toggle-favorite-button" class="overlay" href="#"><i class="fa fa-heart"></i></a>
+                </div>
+                <div class="small-1 columns">
+                    <a id="toggle-menu-button" class="overlay" href="#"><i class="fa fa-ellipsis-v"></i></a>
+                </div>
+            </div>
+        </div>
+        <img src='{{resource "identityHeaderImageSrc"}}' class="detail-header-background-image" alt=""/>
+        <h1 id="identity-name-header" class="header-card-title center overlay"></h1>
+        <a id="go-to-check-in-button" class="header-card-action overlay hidden" href="#"><i class="fa fa-check"></i></a>
+        <a id="go-to-check-out-button" class="header-card-action overlay hidden" href="#"><i class="fa fa-minus"></i></a>
+        <a id="go-to-open-check-in-button" class="header-card-action overlay hidden" href="#"><i class="fa fa-arrow-right"></i></a>
+        <a id="call-coordinator-button" class="header-card-action overlay hidden" href="#"><i class="fa fa-phone"></i></a>
+    </div>
+    <div class="header-card-content">
+        <span id="check-in-detail-label"></span>
+    </div>
+</div>
+<div class="row">
+    <div class="small-10 columns go-to-phone-button" tabindex="0" role="button">
+        <div class="row">
+            <div class="small-3 columns avatar">
+                <i class="fa fa-phone"></i>
+            </div>
+            <div class="small-9 columns">
+                <div class="row">
+                    <div class="small-12 columns">
+                        <span id="phone-label" class="-style-primary"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-12 columns">
+                        <span id="phone-type-label" class="-style-secondary">{{resource "identityPhoneTypeHeaderText"}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="small-2 columns go-to-messaging-button" tabindex="0" role="button">
+        &nbsp;
+    </div>
+</div>
+<div id="open-entry-log-results-container">
+</div>
+<div id="recent-entry-log-results-container">
+</div>

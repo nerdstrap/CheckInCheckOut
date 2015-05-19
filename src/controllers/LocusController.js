@@ -8,11 +8,10 @@ define(function (require) {
         LocusService = require('services/LocusService'),
         LocusModel = require('models/LocusModel'),
         LocusCollection = require('collections/LocusCollection'),
+        EntryLogCollection = require('collections/EntryLogCollection'),
         LocusSearchView = require('views/LocusSearchView'),
-        AdminView = require('views/AdminView'),
-        ListView = require('views/ListView'),
-        LocusTileView = require('views/LocusTileView'),
         LocusDetailView = require('views/LocusDetailView'),
+        AdminView = require('views/AdminView'),
         EventNamesEnum = require('enums/EventNamesEnum'),
         SearchTypesEnum = require('enums/SearchTypesEnum'),
         globals = require('globals'),
@@ -92,8 +91,8 @@ define(function (require) {
                 deferred = $.Deferred();
 
             var locusModelInstance = new LocusModel({locusId: locusId});
-            var openEntryLogCollectionInstance = new Backbone.Collection();
-            var recentEntryLogCollectionInstance = new Backbone.Collection();
+            var openEntryLogCollectionInstance = new EntryLogCollection();
+            var recentEntryLogCollectionInstance = new EntryLogCollection();
             var locusDetailViewInstance = new LocusDetailView({
                 controller: currentContext,
                 dispatcher: currentContext.dispatcher,
@@ -144,7 +143,7 @@ define(function (require) {
             return deferred.promise();
         },
 
-        refreshLocusList: function (locusCollectionInstance, options) {
+        refreshLocusList: function (locusCollection, options) {
             console.trace('LocusController.refreshLocusList');
             options || (options = {});
             var currentContext = this,
@@ -156,17 +155,17 @@ define(function (require) {
                         currentContext.locusService.getLocusList(_.extend(options, position))
                             .then(function (getLocusListResponse) {
                                 utils.computeDistances(position.coords, getLocusListResponse.locusList);
-                                locusCollectionInstance.reset(getLocusListResponse.locusList);
-                                deferred.resolve(locusCollectionInstance);
+                                locusCollection.reset(getLocusListResponse.locusList);
+                                deferred.resolve(locusCollection);
                             })
                             .fail(function (error) {
-                                locusCollectionInstance.reset();
-                                deferred.reject(locusCollectionInstance);
+                                locusCollection.reset();
+                                deferred.reject(locusCollection);
                             });
                     })
                     .fail(function (error) {
-                        locusCollectionInstance.reset();
-                        deferred.reject(locusCollectionInstance);
+                        locusCollection.reset();
+                        deferred.reject(locusCollection);
                     });
             } else {
                 currentContext.locusService.getLocusList(options)
@@ -174,17 +173,17 @@ define(function (require) {
                         currentContext.geoLocationService.getCurrentPosition()
                             .then(function (position) {
                                 utils.computeDistances(position.coords, getLocusListResponse.locusList);
-                                locusCollectionInstance.reset(getLocusListResponse.locusList);
-                                deferred.resolve(locusCollectionInstance);
+                                locusCollection.reset(getLocusListResponse.locusList);
+                                deferred.resolve(locusCollection);
                             })
                             .fail(function () {
-                                locusCollectionInstance.reset(getLocusListResponse.locusList);
-                                deferred.resolve(locusCollectionInstance);
+                                locusCollection.reset(getLocusListResponse.locusList);
+                                deferred.resolve(locusCollection);
                             });
                     })
                     .fail(function (error) {
-                        locusCollectionInstance.reset();
-                        deferred.reject(locusCollectionInstance);
+                        locusCollection.reset();
+                        deferred.reject(locusCollection);
                     });
             }
 
@@ -233,17 +232,17 @@ define(function (require) {
             return deferred.promise();
         },
 
-        adminAddLocusList: function (locusCollectionInstance, options) {
+        adminAddLocusList: function (locusCollection, options) {
             console.trace('LocusController.adminAddLocusList');
             options || (options = {});
             var currentContext = this,
                 deferred = $.Deferred();
 
             var index = 0;
-            var count = 100;//locusCollectionInstance.length;
+            var count = 100;//locusCollection.length;
             for (index; index < count; index++) {
 
-                var locusModel = locusCollectionInstance.at(index);
+                var locusModel = locusCollection.at(index);
 
                 currentContext.locusService.postLocus(locusModel.attributes)
                     .then(function (postLocusResponse) {

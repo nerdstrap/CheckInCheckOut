@@ -1,50 +1,36 @@
-<div class="locus-entry-log-list-item-view">
-    <div class="row">
-        <div class="small-2 columns">
-            <div class="circle">
-                <span class="initials-label"><i class="fa fa-question"></i></span>
+<div class="row">
+    <div class="small-10 columns go-to-identity-button go-to-locus-button" tabindex="0" role="button">
+        <div class="row">
+            <div class="small-3 columns avatar">
+                <i class="identity-avatar fa fa-user"></i>
+                <i class="locus-avatar fa fa-building hidden"></i>
             </div>
-        </div>
-        <div class="small-10 columns -border-bottom">
-            <div class="row">
-                <div class="small-12 columns">
-                    <div class="row">
-                        <div class="small-12 columns">
-                            <span class="purpose-label t-span -size-s -color-grey -style-italic">{{withDefault purpose "&nbsp;"}}</span>
-                        </div>
+            <div class="small-9 columns">
+                <div class="row">
+                    <div class="small-12 columns">
+                        <span class="identity-name-label -style-primary" data-locus-id="{{identityId}}" href="#">{{withDefault identityFullName "&nbsp;"}}</span>
+                        <span class="locus-name-label -style-primary hidden" data-locus-id="{{locusId}}" href="#">{{withDefault locusName "&nbsp;"}}</span>
                     </div>
-                    <div class="row locus-container hidden">
-                        <div class="small-11 columns">
-                            <a class="go-to-locus-button" data-locus-id="{{locusId}}" href="#">{{withDefault locusName "&nbsp;"}}</a>
-                        </div>
-                        <div class="small-1 columns">
-                            <i class="fa fa-info-circle"></i>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="small-12 columns">
+                        <span class="purpose-label -style-secondary">{{withDefault purpose "&nbsp;"}}</span>
                     </div>
-                    <div class="row identity-container">
-                        <div class="small-11 columns">
-                            <a class="go-to-identity-button" data-locus-id="{{identityId}}" href="#">{{withDefault identityFullName "&nbsp;"}}</a>
-                        </div>
-                        <div class="small-1 columns">
-                            <i class="fa fa-info-circle"></i>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="small-6 columns">
+                        <span class="in-time-label -style-secondary">{{formatDateWithDefault inTime "&nbsp;"}}</span>
                     </div>
-                    <div class="row">
-                        <div class="small-6 columns">
-                            <span class="in-time-label t-span -size-s -color-grey -style-italic">{{formatDateWithDefault inTime "&nbsp;"}}</span>
-                        </div>
-                        <div class="small-6 columns">
-                            <span class="out-time-label t-span -size-s -color-grey -style-italic">{{formatDateWithDefault outTime "&nbsp;"}}</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="small-12 columns">
-                            <span class="additional-info-label t-span -size-s -color-grey -style-italic">{{withDefault additionalInfo "&nbsp;"}}</span>
-                        </div>
+                    <div class="small-6 columns">
+                        <span class="out-time-label -style-secondary">{{formatDateWithDefault outTime "&nbsp;"}}</span>
                     </div>
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="small-2 columns go-to-directions-button" tabindex="0" role="button">
+        <div class="icon">
+            <i class="fa fa-map-marker"></i>
+        </div>
     </div>
 </div>

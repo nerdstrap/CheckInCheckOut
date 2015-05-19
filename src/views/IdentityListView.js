@@ -5,14 +5,14 @@ define(function (require) {
         _ = require('underscore'),
         Backbone = require('backbone'),
         BaseView = require('views/BaseView'),
-        EntryLogListItemView = require('views/EntryLogListItemView'),
+        IdentityListItemView = require('views/IdentityListItemView'),
         globals = require('globals'),
         env = require('env'),
         utils = require('utils'),
         EventNamesEnum = require('enums/EventNamesEnum'),
-        template = require('hbs!templates/EntryLogListView');
+        template = require('hbs!templates/IdentityListView');
 
-    var EntryLogListView = BaseView.extend({
+    var IdentityListView = BaseView.extend({
         /**
          *
          */
@@ -21,44 +21,22 @@ define(function (require) {
         /**
          *
          */
-        className: 'entry-log-list-view',
+        className: 'identity-list-view',
 
         /**
          *
          */
-        headerTextFormatString: utils.getResource('entryLogListViewHeaderTextFormatString'),
-
-        /**
-         *
-         */
-        showIdentity: true,
-
-        /**
-         *
-         */
-        showLocus: false,
+        headerTextFormatString: utils.getResource('identityListViewHeaderTextFormatString'),
 
         /**
          *
          * @param options
          */
         initialize: function (options) {
-            console.trace('EntryLogListView.initialize');
+            console.trace('IdentityListView.initialize');
             options || (options = {});
             this.controller = options.controller;
             this.dispatcher = options.dispatcher || this;
-
-            if (options.headerTextFormatString) {
-                this.headerTextFormatString = options.headerTextFormatString;
-            }
-
-            if (options.showIdentity) {
-                this.showIdentity = options.showIdentity;
-            }
-
-            if (options.showLocus) {
-                this.showLocus = options.showLocus;
-            }
 
             this.listenTo(this.collection, 'reset', this.addAll);
             this.listenTo(this, 'leave', this.onLeave);
@@ -66,10 +44,10 @@ define(function (require) {
 
         /**
          *
-         * @returns {EntryLogListView}
+         * @returns {IdentityListView}
          */
         render: function () {
-            console.trace('EntryLogListView.render()');
+            console.trace('IdentityListView.render()');
             var currentContext = this;
             var renderModel = _.extend({}, currentContext.model);
             currentContext.$el.html(template(renderModel));
@@ -78,21 +56,22 @@ define(function (require) {
 
         /**
          *
-         * @returns {EntryLogListView}
+         * @returns {IdentityListView}
          */
         updateHeader: function () {
             var currentContext = this;
             var headerText = '';
-            if (currentContext.collection && currentContext.collection.length) {
+            if (currentContext.collection) {
                 headerText = utils.formatString(currentContext.headerTextFormatString, [currentContext.collection.length]);
+
             }
-            currentContext.$('#entry-log-list-view-header').html(headerText);
+            currentContext.$('#identity-list-view-header').html(headerText);
             return this;
         },
 
         /**
          *
-         * @returns {EntryLogListView}
+         * @returns {IdentityListView}
          */
         addAll: function () {
             var currentContext = this;
@@ -105,24 +84,22 @@ define(function (require) {
         /**
          *
          * @param model
-         * @returns {EntryLogListView}
+         * @returns {IdentityListView}
          */
         addOne: function (model) {
             var currentContext = this;
-            var entryLogListItemViewInstance = new EntryLogListItemView({
+            var identityListItemViewInstance = new IdentityListItemView({
                 'controller': currentContext.controller,
                 'dispatcher': currentContext.dispatcher,
-                'model': model,
-                'showIdentity': currentContext.showIdentity,
-                'showLocus': currentContext.showLocus
+                'model': model
             });
-            currentContext.appendChildTo(entryLogListItemViewInstance, '#entry-log-rows-container');
+            currentContext.appendChildTo(identityListItemViewInstance, '#identity-rows-container');
             return this;
         },
 
         /**
          *
-         * @returns {EntryLogListView}
+         * @returns {IdentityListView}
          */
         removeAll: function () {
             var currentContext = this;
@@ -136,9 +113,9 @@ define(function (require) {
          */
         onLeave: function () {
             var currentContext = this;
-            console.trace('EntryLogListView.onLeave');
+            console.trace('IdentityListView.onLeave');
         }
     });
 
-    return EntryLogListView;
+    return IdentityListView;
 });

@@ -6,7 +6,7 @@ define(function (require) {
         Backbone = require('backbone'),
         CompositeView = require('views/CompositeView'),
         EventNamesEnum = require('enums/EventNamesEnum'),
-        template = require('hbs!templates/Footer');
+        template = require('hbs!templates/FooterView');
 
     var FooterView = CompositeView.extend({
         initialize: function (options) {

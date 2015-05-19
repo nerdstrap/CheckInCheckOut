@@ -8,79 +8,116 @@ define(function (require) {
         CompositeView = require('views/CompositeView'),
         EventNamesEnum = require('enums/EventNamesEnum'),
         utils = require('utils'),
-        template = require('hbs!templates/IdentityListItem');
+        template = require('hbs!templates/IdentityListItemView');
 
     var IdentityListItemView = CompositeView.extend({
+        /**
+         *
+         */
+        tagName: 'li',
+
+        /**
+         *
+         */
+        className: 'identity-list-item-view',
+
+        /**
+         *
+         * @param options
+         */
         initialize: function (options) {
             console.trace('IdentityListItemView.initialize');
             options || (options = {});
+            this.controller = options.controller;
             this.dispatcher = options.dispatcher || this;
 
             this.listenTo(this.model, 'reset', this.updateViewFromModel);
             this.listenTo(this, 'leave', this.onLeave);
         },
+
+        /**
+         *
+         * @returns {IdentityListItemView}
+         */
         render: function () {
             console.trace('IdentityListItemView.render()');
             var currentContext = this;
-
-            var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
+            var renderModel = _.extend({}, currentContext.model.attributes);
             currentContext.$el.html(template(renderModel));
-
             this.updateViewFromModel();
-
             return this;
         },
+
+        /**
+         *
+         */
         events: {
-            'click .go-to-identity-button': 'goToIdentityWithId'
+            'click .go-to-identity-button': 'goToIdentity',
+            'click .go-to-directions-button': 'goToDirections'
         },
+
+        /**
+         *
+         * @returns {IdentityListItemView}
+         */
         updateViewFromModel: function () {
             var currentContext = this;
 
             var identityName;
-            if (currentContext.model.has('fullName')) {
-                identityName = currentContext.model.get('fullName');
+            if (currentContext.model.has('identityName')) {
+                identityName = currentContext.model.get('identityName');
             }
-            currentContext.$('.go-to-identity-button').html(identityName);
+            currentContext.$('.identity-name-label').html(identityName);
 
-            //var cleanedContactNumber;
-            //var formattedContactNumber;
-            //if (currentContext.model.has('contactNumber')) {
-            //    currentContext.hasContactNumber = true;
-            //    var contactNumber = currentContext.model.get('contactNumber');
-            //    cleanedContactNumber = utils.cleanPhone(contactNumber);
-            //    formattedContactNumber = utils.formatPhone(cleanedContactNumber);
-            //}
-            //if (currentContext.hasContactNumber) {
-            //    currentContext.$('.contact-number-label').html(formattedContactNumber);
-            //    currentContext.$('.message-contact-number-button').attr('href', 'sms:' + cleanedContactNumber);
-            //    currentContext.$('.call-contact-number-button').attr('href', 'tel:' + cleanedContactNumber);
-            //    currentContext.$('.contact-number-container').removeClass('hidden');
-            //} else {
-            //    currentContext.$('.contact-number-container').addClass('hidden');
-            //}
-            //
-            //var email;
-            //if (currentContext.model.has('email')) {
-            //    currentContext.hasEmail = true
-            //    email = currentContext.model.get('email');
-            //}
-            //if (currentContext.hasEmail) {
-            //    currentContext.$('.email-label').html(email);
-            //    currentContext.$('.email-button').attr('href', 'mailto:' + email)
-            //    currentContext.$('.email-container').removeClass('hidden');
-            //} else {
-            //    currentContext.$('.email-container').addClass('hidden');
-            //}
+            var formattedDistance;
+            if (currentContext.model.has('distance') && currentContext.model.has('latitude') && currentContext.model.has('longitude')) {
+                currentContext.hasCoordinates = true;
+                var distance = currentContext.model.get('distance').toFixed(0);
+                formattedDistance = utils.formatString(utils.getResource('distanceFormatString'), [distance]);
+            } else {
+                formattedDistance = utils.getResource('coordinatesUnavailableErrorMessage');
+            }
+            currentContext.$('.distance-label').html(formattedDistance);
+
+            return this;
         },
-        goToIdentityWithId: function (event) {
+
+        /**
+         *
+         * @param event
+         * @returns {IdentityListItemView}
+         */
+        goToIdentity: function (event) {
             if (event) {
                 event.preventDefault();
             }
-
+            var currentContext = this;
             var identityId = this.model.get('identityId');
-            this.dispatcher.trigger(EventNamesEnum.goToIdentityWithId, identityId);
+            currentContext.dispatcher.trigger(EventNamesEnum.goToIdentityWithId, identityId);
+            return this;
         },
+
+        /**
+         *
+         * @param event
+         * @returns {IdentityListItemView}
+         */
+        goToDirections: function (event) {
+            if (event) {
+                event.preventDefault();
+            }
+            var currentContext = this;
+            var latitude = currentContext.model.get('latitude');
+            var longitude = currentContext.model.get('longitude');
+            currentContext.dispatcher.trigger(EventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
+            return this;
+        },
+
+        /**
+         *
+         */
         onLeave: function () {
+            var currentContext = this;
             console.trace('IdentityListItemView.onLeave');
         }
     });

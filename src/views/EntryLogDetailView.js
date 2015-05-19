@@ -74,8 +74,8 @@ define(function (require) {
                 controller: currentContext.controller,
                 dispatcher: currentContext.dispatcher,
                 collection: currentContext.openEntryLogCollection,
-                showIdentity: true,
                 showLocus: false,
+                showIdentity: true,
                 headerTextFormatString: currentContext.openEntryLogListViewHeaderTextFormatString
             });
             currentContext.appendChildTo(currentContext.openEntryLogListViewInstance, '#open-entry-log-results-container');
@@ -83,8 +83,8 @@ define(function (require) {
                 controller: currentContext.controller,
                 dispatcher: currentContext.dispatcher,
                 collection: currentContext.recentEntryLogCollection,
-                showIdentity: true,
                 showLocus: false,
+                showIdentity: true,
                 headerTextFormatString: currentContext.recentEntryLogListViewHeaderTextFormatString
             });
             currentContext.appendChildTo(currentContext.recentEntryLogListViewInstance, '#recent-entry-log-results-container');

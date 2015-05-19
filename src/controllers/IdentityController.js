@@ -6,11 +6,13 @@ define(function (require) {
         Backbone = require('backbone'),
         GeoLocationService = require('services/GeoLocationService'),
         IdentityService = require('services/IdentityService'),
-        SimpleSearchView = require('views/SimpleSearchView'),
+        IdentitySearchView = require('views/IdentitySearchView'),
         IdentityModel = require('models/IdentityModel'),
         IdentityCollection = require('collections/IdentityCollection'),
+        EntryLogCollection = require('collections/EntryLogCollection'),
+        IdentityListView = require('views/IdentityListView'),
         IdentityListItemView = require('views/IdentityListItemView'),
-        IdentityView = require('views/IdentityView'),
+        IdentityDetailView = require('views/IdentityDetailView'),
         EventNamesEnum = require('enums/EventNamesEnum'),
         SearchTypesEnum = require('enums/SearchTypesEnum'),
         globals = require('globals'),
@@ -43,8 +45,6 @@ define(function (require) {
             this.listenTo(this.dispatcher, EventNamesEnum.goToIdentitySearch, this.goToIdentitySearch);
             this.listenTo(this.dispatcher, EventNamesEnum.goToIdentityWithId, this.goToIdentityWithId);
             this.listenTo(this.dispatcher, EventNamesEnum.refreshIdentityList, this.refreshIdentityList);
-
-            this.listenTo(this.dispatcher, EventNamesEnum.goToDirectionsWithLatLng, this.goToDirectionsWithLatLng);
         },
 
         goToIdentitySearch: function () {
@@ -52,18 +52,15 @@ define(function (require) {
             var currentContext = this,
                 deferred = $.Deferred();
 
-            var identitySearchViewInstance = new SimpleSearchView({
+            var identityCollectionInstance = new IdentityCollection();
+            var identitySearchViewInstance = new IdentitySearchView({
                 controller: currentContext,
                 dispatcher: currentContext.dispatcher,
-                headerText: utils.getResource('identitySearch.headerText'),
-                listCollection: IdentityCollection,
-                listItemView: IdentityListItemView,
-                headerTextFormatString: utils.getResource('identityList.headerTextFormatString'),
-                refreshListTrigger: EventNamesEnum.refreshIdentityList
+                collection: identityCollectionInstance
             });
 
             currentContext.router.swapContent(identitySearchViewInstance);
-            var routerFragment = utils.getResource('identity.fragment');
+            var routerFragment = 'identity'
             var fragmentAlreadyMatches = (Backbone.history.fragment === routerFragment || Backbone.history.fragment === '');
             currentContext.router.navigate(routerFragment, {replace: fragmentAlreadyMatches});
 
@@ -90,40 +87,44 @@ define(function (require) {
                 deferred = $.Deferred();
 
             var identityModelInstance = new IdentityModel({identityId: identityId});
-            var identityViewInstance = new IdentityView({
+            var openEntryLogCollectionInstance = new EntryLogCollection();
+            var recentEntryLogCollectionInstance = new EntryLogCollection();
+            var identityDetailViewInstance = new IdentityDetailView({
                 controller: currentContext,
                 dispatcher: currentContext.dispatcher,
-                model: identityModelInstance
+                model: identityModelInstance,
+                openEntryLogCollection: openEntryLogCollectionInstance,
+                recentEntryLogCollection: recentEntryLogCollectionInstance
             });
 
-            currentContext.router.swapContent(identityViewInstance);
-            var routerFragment = utils.getResource('identityWithId.fragment');
-            var fragmentAlreadyMatches = (Backbone.history.fragment === routerFragment + identityId || Backbone.history.fragment === '');
-            currentContext.router.navigate(routerFragment + identityId, {replace: fragmentAlreadyMatches});
+            currentContext.router.swapContent(identityDetailViewInstance);
+            var routerFragment = 'identity/' + identityId
+            var fragmentAlreadyMatches = (Backbone.history.fragment === routerFragment || Backbone.history.fragment === '');
+            currentContext.router.navigate(routerFragment, {replace: fragmentAlreadyMatches});
 
-            identityViewInstance.showLoading();
+            identityDetailViewInstance.showLoading();
             currentContext.identityService.getIdentityList({identityId: identityId})
                 .then(function (getIdentityListResponse) {
-                    identityViewInstance.setIdentityModel(getIdentityListResponse.identity);
-                    currentContext.dispatcher.trigger(EventNamesEnum.identityUpdated, identityViewInstance.identityModel);
+                    identityDetailViewInstance.setIdentityModel(getIdentityListResponse.identity);
+                    currentContext.dispatcher.trigger(EventNamesEnum.identityUpdated, identityDetailViewInstance.identityModel);
                     if (getIdentityListResponse.identityList && getIdentityListResponse.identityList.length > 0) {
                         identityModelInstance.set(getIdentityListResponse.identityList[0]);
-                        identityViewInstance.updateViewFromModel();
-                        identityViewInstance.completeLoading();
-                        deferred.resolve(identityViewInstance);
+                        identityDetailViewInstance.updateViewFromModel();
+                        identityDetailViewInstance.completeLoading();
+                        deferred.resolve(identityDetailViewInstance);
                     }
                 })
                 .fail(function (error) {
                     identityModelInstance.clear();
-                    identityViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
-                    identityViewInstance.completeLoading();
-                    deferred.reject(identityViewInstance);
+                    identityDetailViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
+                    identityDetailViewInstance.completeLoading();
+                    deferred.reject(identityDetailViewInstance);
                 });
 
             return deferred.promise();
         },
 
-        refreshIdentityList: function (identityCollectionInstance, options) {
+        refreshIdentityList: function (identityCollection, options) {
             console.trace('IdentityController.refreshIdentityList');
             options || (options = {});
             var currentContext = this,
@@ -135,12 +136,12 @@ define(function (require) {
                         currentContext.identityService.getIdentityList(_.extend(options, position))
                             .then(function (getIdentityListResponse) {
                                 utils.computeDistances(position.coords, getIdentityListResponse.identityList);
-                                identityCollectionInstance.reset(getIdentityListResponse.identityList);
-                                deferred.resolve(identityCollectionInstance);
+                                identityCollection.reset(getIdentityListResponse.identityList);
+                                deferred.resolve(identityCollection);
                             })
                             .fail(function (error) {
-                                identityCollectionInstance.reset();
-                                deferred.reject(identityCollectionInstance);
+                                identityCollection.reset();
+                                deferred.reject(identityCollection);
                             });
                     })
                     .fail(function (error) {
@@ -150,12 +151,12 @@ define(function (require) {
             } else {
                 currentContext.identityService.getIdentityList(options)
                     .then(function (getIdentityListResponse) {
-                        identityCollectionInstance.reset(getIdentityListResponse.identityList);
-                        deferred.resolve(identityCollectionInstance);
+                        identityCollection.reset(getIdentityListResponse.identityList);
+                        deferred.resolve(identityCollection);
                     })
                     .fail(function (error) {
-                        identityCollectionInstance.reset();
-                        deferred.reject(identityCollectionInstance);
+                        identityCollection.reset();
+                        deferred.reject(identityCollection);
                     });
             }
 

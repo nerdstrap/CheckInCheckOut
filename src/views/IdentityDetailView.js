@@ -9,9 +9,9 @@ define(function (require) {
         EntryLogListView = require('views/EntryLogListView'),
         EventNamesEnum = require('enums/EventNamesEnum'),
         utils = require('utils'),
-        template = require('hbs!templates/LocusDetailView');
+        template = require('hbs!templates/IdentityDetailView');
 
-    var LocusDetailView = BaseView.extend({
+    var IdentityDetailView = BaseView.extend({
         /**
          *
          */
@@ -20,7 +20,7 @@ define(function (require) {
         /**
          *
          */
-        className: 'locus-detail-view',
+        className: 'identity-detail-view',
 
         /**
          *
@@ -37,15 +37,15 @@ define(function (require) {
          * @param options
          */
         initialize: function (options) {
-            console.trace('LocusDetailView.initialize');
+            console.trace('IdentityDetailView.initialize');
             options || (options = {});
             this.controller = options.controller;
             this.dispatcher = options.dispatcher || this;
 
             this.openEntryLogCollection = options.openEntryLogCollection;
             this.recentEntryLogCollection = options.recentEntryLogCollection;
-            this.openLocusReportCollection = options.openLocusReportCollection;
-            this.currentLocusIssueCollection = options.currentLocusIssueCollection;
+            this.openIdentityReportCollection = options.openIdentityReportCollection;
+            this.currentIdentityIssueCollection = options.currentIdentityIssueCollection;
 
             this.listenTo(this, 'loaded', this.onLoaded);
             this.listenTo(this, 'leave', this.onLeave);
@@ -53,10 +53,10 @@ define(function (require) {
 
         /**
          *
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         render: function () {
-            console.trace('LocusDetailView.render()');
+            console.trace('IdentityDetailView.render()');
             var currentContext = this;
             var renderModel = _.extend({}, currentContext.model.attributes);
             currentContext.$el.html(template(renderModel));
@@ -66,7 +66,7 @@ define(function (require) {
 
         /**
          *
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         renderChildViews: function () {
             var currentContext = this;
@@ -74,8 +74,8 @@ define(function (require) {
                 controller: currentContext.controller,
                 dispatcher: currentContext.dispatcher,
                 collection: currentContext.openEntryLogCollection,
-                showIdentity: true,
-                showLocus: false,
+                showIdentity: false,
+                showLocus: true,
                 headerTextFormatString: currentContext.openEntryLogListViewHeaderTextFormatString
             });
             currentContext.appendChildTo(currentContext.openEntryLogListViewInstance, '#open-entry-log-results-container');
@@ -83,23 +83,23 @@ define(function (require) {
                 controller: currentContext.controller,
                 dispatcher: currentContext.dispatcher,
                 collection: currentContext.recentEntryLogCollection,
-                showIdentity: true,
-                showLocus: false,
+                showIdentity: false,
+                showLocus: true,
                 headerTextFormatString: currentContext.recentEntryLogListViewHeaderTextFormatString
             });
             currentContext.appendChildTo(currentContext.recentEntryLogListViewInstance, '#recent-entry-log-results-container');
-            //currentContext.openLocusReportListViewInstance = new LocusReportListView({
+            //currentContext.openIdentityReportListViewInstance = new IdentityReportListView({
             //    controller: currentContext.controller,
             //    dispatcher: currentContext.dispatcher,
-            //    collection: currentContext.openLocusReportCollection
+            //    collection: currentContext.openIdentityReportCollection
             //});
-            //currentContext.appendChildTo(currentContext.openLocusReportListViewInstance, '#open-locus-report-results-container');
-            //currentContext.openLocusIssueListViewInstance = new LocusIssueListView({
+            //currentContext.appendChildTo(currentContext.openIdentityReportListViewInstance, '#open-identity-report-results-container');
+            //currentContext.openIdentityIssueListViewInstance = new IdentityIssueListView({
             //    controller: currentContext.controller,
             //    dispatcher: currentContext.dispatcher,
-            //    collection: currentContext.currentLocusIssueCollection
+            //    collection: currentContext.currentIdentityIssueCollection
             //});
-            //currentContext.appendChildTo(currentContext.openLocusIssueListViewInstance, '#current-locus-issue-results-container');
+            //currentContext.appendChildTo(currentContext.openIdentityIssueListViewInstance, '#current-identity-issue-results-container');
             return this;
         },
 
@@ -113,50 +113,50 @@ define(function (require) {
             'click #toggle-menu-button': 'toggleMenu',
             'click #go-to-check-in-button': 'goToCheckIn',
             'click #go-to-check-out-button': 'goToCheckOut',
-            'click #go-to-open-check-in-button': 'goToLocus',
+            'click #go-to-open-check-in-button': 'goToIdentity',
             'click #call-coordinator-button': 'callCoordinator',
-            'click #go-to-parent-locus-button': 'goToLocus',
-            'click #go-to-child-locus-button': 'goToLocus'
+            'click #go-to-parent-identity-button': 'goToIdentity',
+            'click #go-to-child-identity-button': 'goToIdentity'
         },
 
         /**
          *
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         updateViewFromModel: function () {
             var currentContext = this;
-            var locusName;
-            if (currentContext.model.has('locusName')) {
-                locusName = currentContext.model.get('locusName');
+            var identityName;
+            if (currentContext.model.has('identityName')) {
+                identityName = currentContext.model.get('identityName');
             }
-            currentContext.$('#locus-name-header').html(locusName);
+            currentContext.$('#identity-name-header').html(identityName);
 
-            //var childLocusId;
-            //var childLocusName;
-            //if (currentContext.model.has('childLocusId') && currentContext.model.has('childLocusName')) {
-            //    currentContext.hasChildLocus = true;
-            //    childLocusId = currentContext.model.get('childLocusId');
-            //    childLocusName = currentContext.model.get('childLocusName');
+            //var childIdentityId;
+            //var childIdentityName;
+            //if (currentContext.model.has('childIdentityId') && currentContext.model.has('childIdentityName')) {
+            //    currentContext.hasChildIdentity = true;
+            //    childIdentityId = currentContext.model.get('childIdentityId');
+            //    childIdentityName = currentContext.model.get('childIdentityName');
             //}
-            //if (currentContext.hasChildLocus) {
-            //    currentContext.$('#go-to-child-locus-button').attr('data-locus-id', childLocusId).html(childLocusName);
-            //    currentContext.$('#child-locus-container').removeClass('hidden');
+            //if (currentContext.hasChildIdentity) {
+            //    currentContext.$('#go-to-child-identity-button').attr('data-identity-id', childIdentityId).html(childIdentityName);
+            //    currentContext.$('#child-identity-container').removeClass('hidden');
             //} else {
-            //    currentContext.$('#child-locus-container').addClass('hidden');
+            //    currentContext.$('#child-identity-container').addClass('hidden');
             //}
             //
-            //var parentLocusId;
-            //var parentLocusName;
-            //if (currentContext.model.has('parentLocusId') && currentContext.model.has('parentLocusName')) {
-            //    currentContext.hasParentLocus = true;
-            //    parentLocusId = currentContext.model.get('parentLocusId');
-            //    parentLocusName = currentContext.model.get('parentLocusName');
+            //var parentIdentityId;
+            //var parentIdentityName;
+            //if (currentContext.model.has('parentIdentityId') && currentContext.model.has('parentIdentityName')) {
+            //    currentContext.hasParentIdentity = true;
+            //    parentIdentityId = currentContext.model.get('parentIdentityId');
+            //    parentIdentityName = currentContext.model.get('parentIdentityName');
             //}
-            //if (currentContext.hasParentLocus) {
-            //    currentContext.$('#go-to-parent-locus-button').attr('data-locus-id', parentLocusId).html(parentLocusName);
-            //    currentContext.$('#parent-locus-container').removeClass('hidden');
+            //if (currentContext.hasParentIdentity) {
+            //    currentContext.$('#go-to-parent-identity-button').attr('data-identity-id', parentIdentityId).html(parentIdentityName);
+            //    currentContext.$('#parent-identity-container').removeClass('hidden');
             //} else {
-            //    currentContext.$('#parent-locus-container').addClass('hidden');
+            //    currentContext.$('#parent-identity-container').addClass('hidden');
             //}
             //
 
@@ -170,16 +170,16 @@ define(function (require) {
             }
             currentContext.$('#distance-label').html(formattedDistance);
 
-            var formattedLocusPhone;
+            var formattedIdentityPhone;
             if (currentContext.model.has('phone')) {
-                currentContext.hasLocusPhone = true;
+                currentContext.hasIdentityPhone = true;
                 var phone = currentContext.model.get('phone');
-                var cleanedLocusPhone = utils.cleanPhone(phone);
-                formattedLocusPhone = utils.formatPhone(cleanedLocusPhone);
+                var cleanedIdentityPhone = utils.cleanPhone(phone);
+                formattedIdentityPhone = utils.formatPhone(cleanedIdentityPhone);
             } else {
-                formattedLocusPhone = utils.getResource('phoneUnavailableErrorMessage');
+                formattedIdentityPhone = utils.getResource('phoneUnavailableErrorMessage');
             }
-            currentContext.$('#phone-label').html(formattedLocusPhone);
+            currentContext.$('#phone-label').html(formattedIdentityPhone);
 
             currentContext.updateCheckInControls();
             return this;
@@ -187,12 +187,12 @@ define(function (require) {
 
         /**
          *
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         updateCheckInControls: function () {
             var currentContext = this;
             if (currentContext.identityModel.openEntryLogCollection.length > 0) {
-                if (currentContext.identityModel.openEntryLogCollection.at(0).get('locusId') === currentContext.model.get('locusId')) {
+                if (currentContext.identityModel.openEntryLogCollection.at(0).get('identityId') === currentContext.model.get('identityId')) {
                     currentContext.showCheckOutButton(currentContext.identityModel.openEntryLogCollection.at(0));
                 } else {
                     currentContext.showGoToOpenCheckInButton(currentContext.identityModel.openEntryLogCollection.at(0));
@@ -205,7 +205,7 @@ define(function (require) {
 
         /**
          *
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         showCheckInButton: function () {
             var currentContext = this;
@@ -222,7 +222,7 @@ define(function (require) {
         /**
          *
          * @param entryLogModel
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         showCheckOutButton: function (entryLogModel) {
             var currentContext = this;
@@ -248,7 +248,7 @@ define(function (require) {
         /**
          *
          * @param entryLogModel
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         showGoToOpenCheckInButton: function (entryLogModel) {
             var currentContext = this;
@@ -258,27 +258,27 @@ define(function (require) {
                 currentContext.openEntryLogModel = entryLogModel;
                 var formattedOpenCheckInDetail = '';
                 if (currentContext.openEntryLogModel) {
-                    var locusName = currentContext.openEntryLogModel.get('locusName');
+                    var identityName = currentContext.openEntryLogModel.get('identityName');
                     var inTime = currentContext.openEntryLogModel.get('inTime');
-                    formattedOpenCheckInDetail = utils.formatString(utils.getResource('openCheckInDetailLabelTextFormatString'), [locusName, inTime]);
+                    formattedOpenCheckInDetail = utils.formatString(utils.getResource('openCheckInDetailLabelTextFormatString'), [identityName, inTime]);
                     currentContext.$('#check-in-detail-label').html(formattedOpenCheckInDetail);
                 }
                 currentContext.$('#go-to-check-in-button').addClass('hidden');
                 currentContext.$('#go-to-check-out-button').addClass('hidden');
-                currentContext.$('#go-to-open-check-in-button').attr('data-locus-id', currentContext.openEntryLogModel.get('locusId')).attr('data-locus-name', currentContext.openEntryLogModel.get('locusName')).removeClass('hidden');
+                currentContext.$('#go-to-open-check-in-button').attr('data-identity-id', currentContext.openEntryLogModel.get('identityId')).attr('data-identity-name', currentContext.openEntryLogModel.get('identityName')).removeClass('hidden');
             }
             return this;
         },
 
         /**
          *
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         showCallCoordinatorButton: function () {
             var currentContext = this;
             if (currentContext.model.has('hasLock') && currentContext.model.get('hasLock') === 'true') {
-                var locusLockMessage = utils.getResource('locusLockMessage');
-                currentContext.$('#check-in-detail-label').html(locusLockMessage);
+                var identityLockMessage = utils.getResource('identityLockMessage');
+                currentContext.$('#check-in-detail-label').html(identityLockMessage);
                 currentContext.$('#go-to-check-in-button').addClass('hidden');
                 currentContext.$('#go-to-check-out-button').addClass('hidden');
                 currentContext.$('#go-to-open-check-in-button').addClass('hidden');
@@ -290,7 +290,7 @@ define(function (require) {
         /**
          *
          * @param event
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         goBack: function (event) {
             if (event) {
@@ -298,14 +298,14 @@ define(function (require) {
             }
             var currentContext = this;
 
-            currentContext.dispatcher.trigger(EventNamesEnum.goToLocusSearch);
+            currentContext.dispatcher.trigger(EventNamesEnum.goToIdentitySearch);
             return this;
         },
 
         /**
          *
          * @param event
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         goToMap: function (event) {
             if (event) {
@@ -321,36 +321,36 @@ define(function (require) {
         /**
          *
          * @param event
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         toggleFavorite: function (event) {
             if (event) {
                 event.preventDefault();
             }
             var currentContext = this;
-            var locusId = currentContext.model.get('locusId');
-            currentContext.dispatcher.trigger(EventNamesEnum.goToUpdateFavorite, locusId);
+            var identityId = currentContext.model.get('identityId');
+            currentContext.dispatcher.trigger(EventNamesEnum.goToUpdateFavorite, identityId);
             return this;
         },
 
         /**
          *
          * @param event
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         toggleMenu: function (event) {
             if (event) {
                 event.preventDefault();
             }
             var currentContext = this;
-            currentContext.$('locus-detail-menu').toggleClass('hidden');
+            currentContext.$('identity-detail-menu').toggleClass('hidden');
             return this;
         },
 
         /**
          *
          * @param event
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         goToCheckIn: function (event) {
             if (event) {
@@ -364,7 +364,7 @@ define(function (require) {
         /**
          *
          * @param event
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         goToCheckOut: function (event) {
             if (event) {
@@ -378,16 +378,16 @@ define(function (require) {
         /**
          *
          * @param event
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
-        goToLocus: function (event) {
+        goToIdentity: function (event) {
             if (event) {
                 event.preventDefault();
                 if (event.target) {
                     var currentContext = this;
-                    var locusId = $(event.target).attr('data-locus-id');
-                    if (locusId) {
-                        currentContext.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
+                    var identityId = $(event.target).attr('data-identity-id');
+                    if (identityId) {
+                        currentContext.dispatcher.trigger(EventNamesEnum.goToIdentityWithId, identityId);
                     }
                 }
             }
@@ -397,7 +397,7 @@ define(function (require) {
         /**
          *
          * @param event
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         goToDirections: function (event) {
             if (event) {
@@ -412,21 +412,21 @@ define(function (require) {
 
         /**
          *
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         showLoading: function () {
             var currentContext = this;
-            currentContext.$('#locus-detail-view-loading-icon-container').removeClass('hidden');
+            currentContext.$('#identity-detail-view-loading-icon-container').removeClass('hidden');
             return this;
         },
 
         /**
          *
-         * @returns {LocusDetailView}
+         * @returns {IdentityDetailView}
          */
         hideLoading: function () {
             var currentContext = this;
-            currentContext.$('#locus-detail-view-loading-icon-container').addClass('hidden');
+            currentContext.$('#identity-detail-view-loading-icon-container').addClass('hidden');
             return this;
         },
 
@@ -436,7 +436,7 @@ define(function (require) {
         onLoaded: function () {
             var currentContext = this;
             var options = {
-                locusId: currentContext.model.get('locusId')
+                identityId: currentContext.model.get('identityId')
             };
             currentContext.dispatcher.trigger(EventNamesEnum.refreshEntryLogList, currentContext.openEntryLogCollection, _.extend(options, {'open': true}));
             currentContext.dispatcher.trigger(EventNamesEnum.refreshEntryLogList, currentContext.recentEntryLogCollection, _.extend(options, {'recent': true}));
@@ -447,10 +447,10 @@ define(function (require) {
          */
         onLeave: function () {
             var currentContext = this;
-            console.trace('LocusDetailView.onLeave');
+            console.trace('IdentityDetailView.onLeave');
         }
     });
 
-    return LocusDetailView;
+    return IdentityDetailView;
 
 });

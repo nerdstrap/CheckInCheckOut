@@ -8,171 +8,179 @@ define(function (require) {
         CompositeView = require('views/CompositeView'),
         EventNamesEnum = require('enums/EventNamesEnum'),
         utils = require('utils'),
-        template = require('hbs!templates/EntryLogListItem');
+        template = require('hbs!templates/EntryLogListItemView');
 
     var EntryLogListItemView = CompositeView.extend({
+        /**
+         *
+         */
         tagName: 'li',
+
+        /**
+         *
+         */
         className: 'entry-log-list-item-view',
 
+        /**
+         *
+         */
+        showIdentity: true,
+
+        /**
+         *
+         */
+        showLocus: false,
+
+        /**
+         *
+         * @param options
+         */
         initialize: function (options) {
             console.trace('EntryLogListItemView.initialize');
             options || (options = {});
             this.controller = options.controller;
             this.dispatcher = options.dispatcher || this;
 
-            this.showLocus = options.showLocus;
-            this.showIdentity = options.showIdentity;
+            if (options.showIdentity) {
+                this.showIdentity = options.showIdentity;
+            }
+
+            if (options.showLocus) {
+                this.showLocus = options.showLocus;
+            }
 
             this.listenTo(this.model, 'change', this.updateViewFromModel);
             this.listenTo(this, 'leave', this.onLeave);
         },
+
+        /**
+         *
+         * @returns {EntryLogListItemView}
+         */
         render: function () {
             console.trace('EntryLogListItemView.render()');
             var currentContext = this;
-
-            var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
+            var renderModel = _.extend({}, currentContext.model.attributes);
             currentContext.$el.html(template(renderModel));
-
             this.updateViewFromModel();
-
             return this;
         },
+
+        /**
+         *
+         */
         events: {
-            'click .go-to-locus-button': 'goToLocusWithId',
-            'click .go-to-identity-button': 'goToIdentityWithId',
-            'click .go-to-directions-button': 'goToDirectionsWithLatLng'
+            'click .go-to-item-button': 'goToItem'
         },
+
+        /**
+         *
+         * @returns {EntryLogListItemView}
+         */
         updateViewFromModel: function () {
             var currentContext = this;
 
-            var initials;
-            if (currentContext.showLocus) {
-                var locusName;
-                if (currentContext.model.has('locusName')) {
-                    locusName = currentContext.model.get('locusName');
-                }
-                currentContext.$('.go-to-locus-button').html(locusName);
-
-                if (currentContext.model.has('locusInitials')) {
-                    initials = currentContext.model.get('locusInitials');
-                }
-
-                //var distance;
-                //var formattedDistance;
-                //var latitude;
-                //var longitude;
-                //if (currentContext.model.has('distance') && currentContext.model.has('latitude') && currentContext.model.has('longitude')) {
-                //    currentContext.hasCoordinates = true;
-                //    distance = currentContext.model.get('distance').toFixed(0);
-                //    formattedDistance = utils.formatString(utils.getResource('distanceFormatString'), [distance]);
-                //    latitude = currentContext.model.get('latitude');
-                //    longitude = currentContext.model.get('longitude');
-                //}
-                //if (currentContext.hasCoordinates) {
-                //    currentContext.$('.coordinates-unavailable-label').addClass('hidden');
-                //    currentContext.$('.go-to-directions-button').attr('data-latitude', latitude).attr('data-longitude', longitude).html(formattedDistance).removeClass('hidden');
-                //} else {
-                //    currentContext.$('.coordinates-unavailable-label').removeClass('hidden');
-                //    currentContext.$('.go-to-directions-button').addClass('hidden');
-                //}
-                currentContext.$('.locus-container').removeClass('hidden');
-            } else {
-                currentContext.$('.locus-container').addClass('hidden');
+            var identityFullName;
+            if (currentContext.model.has('identityFullName')) {
+                identityFullName = currentContext.model.get('identityFullName');
             }
+            currentContext.$('.identity-name-label').html(identityFullName);
+
+            var locusName;
+            if (currentContext.model.has('locusName')) {
+                locusName = currentContext.model.get('locusName');
+            }
+            currentContext.$('.locus-name-label').html(locusName);
 
             if (currentContext.showIdentity) {
-                var identityName;
-                if (currentContext.model.has('identityName')) {
-                    identityName = currentContext.model.get('identityName');
-                }
-                currentContext.$('.go-to-identity-button').html(identityName);
-
-
-                if (currentContext.model.has('identityInitials')) {
-                    initials = currentContext.model.get('identityInitials');
-                }
-
-                //var cleanedContactNumber;
-                //var formattedContactNumber;
-                //if (currentContext.model.has('contactNumber')) {
-                //    currentContext.hasContactNumber = true;
-                //    var contactNumber = currentContext.model.get('contactNumber');
-                //    cleanedContactNumber = utils.cleanPhone(contactNumber);
-                //    formattedContactNumber = utils.formatPhone(cleanedContactNumber);
-                //}
-                //if (currentContext.hasContactNumber) {
-                //    currentContext.$('.message-contact-number-button').attr('href', 'sms:' + cleanedContactNumber).removeClass('hidden');
-                //    currentContext.$('.call-contact-number-button').attr('href', 'tel:' + cleanedContactNumber).removeClass('hidden');
-                //} else {
-                //    currentContext.$('.message-contact-number-button').addClass('hidden');
-                //    currentContext.$('.call-contact-number-button').addClass('hidden');
-                //}
-                currentContext.$('.identity-container').removeClass('hidden');
+                currentContext.$('.identity-avatar').removeClass('hidden');
+                currentContext.$('.identity-name-label').removeClass('hidden');
+                currentContext.$('.locus-avatar').addClass('hidden');
+                currentContext.$('.locus-name-label').addClass('hidden');
             } else {
-                currentContext.$('.identity-container').addClass('hidden');
+                currentContext.$('.identity-avatar').addClass('hidden');
+                currentContext.$('.identity-name-label').addClass('hidden');
+                currentContext.$('.locus-avatar').removeClass('hidden');
+                currentContext.$('.locus-name-label').removeClass('hidden');
             }
-            currentContext.$('.initials-label').html(initials);
 
-
+            var formattedDistance;
+            if (currentContext.model.has('distance') && currentContext.model.has('latitude') && currentContext.model.has('longitude')) {
+                currentContext.hasCoordinates = true;
+                var distance = currentContext.model.get('distance').toFixed(0);
+                formattedDistance = utils.formatString(utils.getResource('distanceFormatString'), [distance]);
+            } else {
+                formattedDistance = utils.getResource('coordinatesUnavailableErrorMessage');
+            }
+            currentContext.$('.distance-label').html(formattedDistance);
+            
             var purpose;
-            if (this.model.has('purpose')) {
-                purpose = this.model.get('purpose');
+            if (currentContext.model.has('purpose')) {
+                purpose = currentContext.model.get('purpose');
             }
-            this.$('.purpose-label').html(purpose);
+            currentContext.$('.purpose-label').html(purpose);
 
             var inTime;
             var inTimeFormatted;
             var duration;
             var outTime;
             var outTimeFormatted;
-            if (this.model.has('inTime')) {
-                inTime = this.model.get('inTime');
+            if (currentContext.model.has('inTime')) {
+                inTime = currentContext.model.get('inTime');
                 inTimeFormatted = utils.formatDate(inTime);
-                this.$('.in-time-label').html(inTimeFormatted);
-                if (this.model.has('outTime')) {
-                    outTime = this.model.get('outTime');
+                currentContext.$('.in-time-label').html(inTimeFormatted);
+                if (currentContext.model.has('outTime')) {
+                    outTime = currentContext.model.get('outTime');
                     outTimeFormatted = utils.formatDate(outTime);
-                    this.$('.out-time-label').html(outTimeFormatted);
+                    currentContext.$('.out-time-label').html(outTimeFormatted);
                 } else {
-                    if (this.model.has('duration')) {
-                        duration = this.model.get('duration');
+                    if (currentContext.model.has('duration')) {
+                        duration = currentContext.model.get('duration');
                         outTime = utils.addMinutes(inTime, duration);
                         outTimeFormatted = utils.formatDate(outTime);
-                        this.$('.out-time-label').html('est. ' + outTimeFormatted);
+                        currentContext.$('.out-time-label').html('est. ' + outTimeFormatted);
                     }
                 }
             }
+
+            return this;
         },
-        goToLocusWithId: function (event) {
+
+        /**
+         *
+         * @param event
+         * @returns {EntryLogListItemView}
+         */
+        goToItem: function (event) {
             if (event) {
                 event.preventDefault();
             }
-
-            var locusId = this.model.get('locusId');
-            this.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
-        },
-        goToIdentityWithId: function (event) {
-            if (event) {
-                event.preventDefault();
+            var currentContext = this;
+            if (currentContext.showIdentity) {
+                var identityId = currentContext.model.get('identityId');
+                currentContext.dispatcher.trigger(EventNamesEnum.goToIdentityWithId, identityId);
+            } else {
+                var locusId = currentContext.model.get('locusId');
+                currentContext.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
             }
-
-            var identityId = this.model.get('identityId');
-            this.dispatcher.trigger(EventNamesEnum.goToIdentityWithId, identityId);
+            return this;
         },
-        //goToDirectionsWithLatLng: function (event) {
-        //    if (event) {
-        //        event.preventDefault();
-        //    }
-        //
-        //    var latitude = this.model.get('latitude');
-        //    var longitude = this.model.get('longitude');
-        //    this.dispatcher.trigger(EventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
-        //},
+
+        /**
+         *
+         */
+        onLoaded: function () {
+            var currentContext = this;
+        },
+
+        /**
+         *
+         */
         onLeave: function () {
+            var currentContext = this;
             console.trace('EntryLogListItemView.onLeave');
         }
     });
 
     return EntryLogListItemView;
-
 });

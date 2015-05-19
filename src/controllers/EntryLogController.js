@@ -7,6 +7,7 @@ define(function (require) {
         EntryLogService = require('services/EntryLogService'),
         GeoLocationService = require('services/GeoLocationService'),
         EntryLogModel = require('models/EntryLogModel'),
+        EntryLogCollection = require('collections/EntryLogCollection'),
         CheckInView = require('views/CheckInView'),
         CheckOutView = require('views/CheckOutView'),
         EventNamesEnum = require('enums/EventNamesEnum'),
@@ -45,7 +46,7 @@ define(function (require) {
             this.listenTo(this.dispatcher, EventNamesEnum.checkOut, this.checkOut);
         },
 
-        refreshEntryLogList: function (entryLogCollectionInstance, options) {
+        refreshEntryLogList: function (entryLogCollection, options) {
             console.trace('EntryLogController.refreshEntryLogList');
             options || (options = {});
             var currentContext = this,
@@ -56,16 +57,16 @@ define(function (require) {
                     currentContext.geoLocationService.getCurrentPosition()
                         .then(function (position) {
                             utils.computeDistances(position.coords, getEntryLogListResponse.entryLogList);
-                            entryLogCollectionInstance.reset(getEntryLogListResponse.entryLogList);
-                            deferred.resolve(entryLogCollectionInstance);
+                            entryLogCollection.reset(getEntryLogListResponse.entryLogList);
+                            deferred.resolve(entryLogCollection);
                         })
                         .fail(function () {
-                            entryLogCollectionInstance.reset(getEntryLogListResponse.entryLogList);
-                            deferred.resolve(entryLogCollectionInstance);
+                            entryLogCollection.reset(getEntryLogListResponse.entryLogList);
+                            deferred.resolve(entryLogCollection);
                         });
                 })
                 .fail(function (error) {
-                    entryLogCollectionInstance.reset();
+                    entryLogCollection.reset();
                     deferred.reject(entryLogCollectionInstance);
                 });
 
