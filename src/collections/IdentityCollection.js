@@ -1,17 +1,15 @@
-define(function (require) {
-    'use strict';
+'use strict';
 
-    var $ = require('jquery'),
-        _ = require('underscore'),
-        Backbone = require('backbone'),
-        IdentityModel = require('models/IdentityModel');
+var $ = require('jquery');
+var _ = require('underscore');
+var Backbone = require('backbone');
+var IdentityModel = require('models/IdentityModel');
 
-    var IdentityCollection = Backbone.Collection.extend({
-        model: IdentityModel,
-        initialize: function (options) {
-            options || (options = {});
-        }
-    });
-
-    return IdentityCollection;
+var IdentityCollection = Backbone.Collection.extend({
+    model: IdentityModel,
+    initialize: function (options) {
+        options || (options = {});
+    }
 });
+
+module.exports = IdentityCollection;

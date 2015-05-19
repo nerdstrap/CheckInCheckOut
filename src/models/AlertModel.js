@@ -1,13 +1,10 @@
-define(function (require) {
-    'use strict';
+'use strict';
 
-    var $ = require('jquery'),
-        _ = require('underscore'),
-        Backbone = require('backbone'),
-        env = require('env');
+var $ = require('jquery');
+var _ = require('underscore');
+var Backbone = require('backbone');
 
-    var AlertModel = Backbone.Model.extend({
-    });
-
-    return AlertModel;
+var AlertModel = Backbone.Model.extend({
 });
+
+module.exports = AlertModel;

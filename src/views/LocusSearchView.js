@@ -223,7 +223,7 @@ define(function (require) {
          */
         showLoading: function () {
             var currentContext = this;
-            currentContext.$('#locus-search-view-loading-icon-container').removeClass('hidden');
+            currentContext.$(currentContext.loadingIconContainerId).removeClass('hidden');
             return this;
         },
 
@@ -233,7 +233,7 @@ define(function (require) {
          */
         hideLoading: function () {
             var currentContext = this;
-            currentContext.$('#locus-search-view-loading-icon-container').addClass('hidden');
+            currentContext.$(currentContext.loadingIconContainerId).addClass('hidden');
             return this;
         },
 

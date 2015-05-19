@@ -1,52 +1,50 @@
-define(function (require) {
-    'use strict';
+'use strict';
 
-    var EventNamesEnum = {
-        login: 'login',
-        logout: 'logout',
-        identityUpdated: 'identityUpdated',
+var EventNamesEnum = {
+    login: 'login',
+    logout: 'logout',
+    identityUpdated: 'identityUpdated',
 
-        goToMyIdentity: 'goToMyIdentity',
+    goToMyIdentity: 'goToMyIdentity',
 
-        goToLocusSearch: 'goToLocusSearch',
-        goToLocusWithId: 'goToLocusWithId',
-        refreshLocusList: 'refreshLocusList',
+    goToLocusSearch: 'goToLocusSearch',
+    goToLocusWithId: 'goToLocusWithId',
+    refreshLocusList: 'refreshLocusList',
 
-        goToIdentitySearch: 'goToIdentitySearch',
-        goToIdentityWithId: 'goToIdentityWithId',
-        refreshIdentityList: 'refreshIdentityList',
+    goToIdentitySearch: 'goToIdentitySearch',
+    goToIdentityWithId: 'goToIdentityWithId',
+    refreshIdentityList: 'refreshIdentityList',
 
-        goToAdHocCheckIn: 'goToAdHocCheckIn',
-        goToSettings: 'goToSettings',
+    goToAdHocCheckIn: 'goToAdHocCheckIn',
+    goToSettings: 'goToSettings',
 
-        refreshEntryLogList: 'refreshEntryLogList',
+    refreshEntryLogList: 'refreshEntryLogList',
 
-        goToCheckIn: 'goToCheckIn',
-        checkIn: 'checkIn',
-        checkInSuccess: 'checkInSuccess',
-        checkInError: 'checkInError',
+    goToCheckIn: 'goToCheckIn',
+    checkIn: 'checkIn',
+    checkInSuccess: 'checkInSuccess',
+    checkInError: 'checkInError',
 
-        goToEditCheckIn: 'goToEditCheckIn',
-        editCheckIn: 'editCheckIn',
-        editCheckInSuccess: 'editCheckInSuccess',
-        editCheckInError: 'editCheckInError',
+    goToEditCheckIn: 'goToEditCheckIn',
+    editCheckIn: 'editCheckIn',
+    editCheckInSuccess: 'editCheckInSuccess',
+    editCheckInError: 'editCheckInError',
 
-        goToCheckOut: 'goToCheckOut',
-        checkOut: 'checkOut',
-        checkOutSuccess: 'checkOutSuccess',
-        checkOutError: 'checkOutError',
+    goToCheckOut: 'goToCheckOut',
+    checkOut: 'checkOut',
+    checkOutSuccess: 'checkOutSuccess',
+    checkOutError: 'checkOutError',
 
-        goToDirectionsWithLatLng: 'goToDirectionsWithLatLng',
+    goToDirectionsWithLatLng: 'goToDirectionsWithLatLng',
 
-        goToLocusAdmin: 'goToLocusAdmin',
-        adminAddLocusList: 'adminAddLocusList',
-        addLocusSuccess: 'addLocusSuccess',
-        addLocusError: 'addLocusError'
-    };
+    goToLocusAdmin: 'goToLocusAdmin',
+    adminAddLocusList: 'adminAddLocusList',
+    addLocusSuccess: 'addLocusSuccess',
+    addLocusError: 'addLocusError'
+};
 
-    if (Object.freeze) {
-        Object.freeze(EventNamesEnum);
-    }
+if (Object.freeze) {
+    Object.freeze(EventNamesEnum);
+}
 
-    return EventNamesEnum;
-});
+module.exports = EventNamesEnum;

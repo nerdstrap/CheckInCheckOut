@@ -18,7 +18,7 @@
     "tests"
   ],
   "dependencies": {
-    "foundation": "zurb/bower-foundation#~5.5.1",
-    "font-awesome": "~4.3.0"
+    "font-awesome": "4.3.0",
+    "materialize": "0.96.1"
   }
 }

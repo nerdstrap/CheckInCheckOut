@@ -26,6 +26,16 @@ define(function (require) {
 
         /**
          *
+         */
+        loadingIconContainerId: 'check-in-view-loading-icon-container',
+
+        /**
+         *
+         */
+        alertsContainerId: 'check-in-view-alerts-container',
+
+        /**
+         *
          * @param options
          */
         initialize: function (options) {
@@ -319,6 +329,26 @@ define(function (require) {
             var currentContext = this;
             var locusId = currentContext.locusModel.get('locusId');
             currentContext.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
+            return this;
+        },
+
+        /**
+         *
+         * @returns {CheckInView}
+         */
+        showLoading: function () {
+            var currentContext = this;
+            currentContext.$(currentContext.loadingIconContainerId).removeClass('hidden');
+            return this;
+        },
+
+        /**
+         *
+         * @returns {CheckInView}
+         */
+        hideLoading: function () {
+            var currentContext = this;
+            currentContext.$(currentContext.loadingIconContainerId).addClass('hidden');
             return this;
         },
 

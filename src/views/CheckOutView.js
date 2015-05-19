@@ -26,6 +26,16 @@ define(function (require) {
 
         /**
          *
+         */
+        loadingIconContainerId: 'check-out-view-loading-icon-container',
+
+        /**
+         *
+         */
+        alertsContainerId: 'check-out-view-alerts-container',
+
+        /**
+         *
          * @param options
          */
         initialize: function (options) {
@@ -49,6 +59,7 @@ define(function (require) {
             var currentContext = this;
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
             currentContext.$el.html(template(renderModel));
+            currentContext.bindValidation();
             return this;
         },
 
@@ -144,8 +155,8 @@ define(function (require) {
                 event.preventDefault();
             }
             var currentContext = this;
-            var duration = this.$('#duration-input').val();
-            this.manualDurationEntry = true;
+            var duration = currentContext.$('#duration-input').val();
+            currentContext.manualDurationEntry = true;
             return this;
         },
 
@@ -154,13 +165,13 @@ define(function (require) {
          * @param event
          * @returns {CheckOutView}
          */
-        validateModelAndCheckOut: function(event) {
+        submitCheckOut: function (event) {
             if (event) {
                 event.preventDefault();
             }
             var currentContext = this;
-            this.updateModelFromView();
-            this.model.validate();
+            currentContext.updateModelFromView();
+            currentContext.model.validate();
             return this;
         },
 
@@ -172,9 +183,9 @@ define(function (require) {
             var currentContext = this;
             var attributes = {};
 
-            attributes.additionalInfo = this.$('#additional-info-input').val();
+            attributes.additionalInfo = currentContext.$('#additional-info-input').val();
 
-            this.model.set(attributes);
+            currentContext.model.set(attributes);
             return this;
         },
 
@@ -193,7 +204,7 @@ define(function (require) {
             });
 
             if (isValid) {
-                this.dispatchCheckOut();
+                currentContext.checkOut();
             } else {
                 for(var error in errors) {
                     currentContext.$('[name="' + error + '"]').parent().parent().addClass('invalid');
@@ -212,8 +223,8 @@ define(function (require) {
                 event.preventDefault();
             }
             var currentContext = this;
-            var locusId = this.model.get('locusId');
-            this.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
+            var locusId = currentContext.model.get('locusId');
+            currentContext.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
             return this;
         },
 
@@ -222,12 +233,12 @@ define(function (require) {
          * @param event
          * @returns {CheckOutView}
          */
-        dispatchCheckOut: function (event) {
+        checkOut: function (event) {
             if (event) {
                 event.preventDefault();
             }
             var currentContext = this;
-            this.dispatcher.trigger(EventNamesEnum.checkOut, this.model);
+            currentContext.dispatcher.trigger(EventNamesEnum.checkOut, currentContext.model);
             return this;
         },
 
@@ -237,8 +248,28 @@ define(function (require) {
          */
         onCheckOutSuccess: function() {
             var currentContext = this;
-            var locusId = this.model.get('locusId');
-            this.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
+            var locusId = currentContext.model.get('locusId');
+            currentContext.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
+            return this;
+        },
+
+        /**
+         *
+         * @returns {CheckOutView}
+         */
+        showLoading: function () {
+            var currentContext = this;
+            currentContext.$(currentContext.loadingIconContainerId).removeClass('hidden');
+            return this;
+        },
+
+        /**
+         *
+         * @returns {CheckOutView}
+         */
+        hideLoading: function () {
+            var currentContext = this;
+            currentContext.$(currentContext.loadingIconContainerId).addClass('hidden');
             return this;
         },
 

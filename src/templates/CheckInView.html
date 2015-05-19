@@ -8,7 +8,7 @@
 <div class="row">
     <div class="small-12 columns read-only-field">
         <span id="distance-label" name="distance">{{withDefault distance "&nbsp;"}}</span>
-        <label for="distance-label">{{resource "coordinatesHeaderText"}}</label>
+        <label for="distance-label">{{resource "distanceHeaderText"}}</label>
     </div>
 </div>
 <div id="locus-description-input-container" class="row hidden">
@@ -40,8 +40,8 @@
     <div class="small-12 columns input-field">
         <select id="purpose-input" name="purpose" class="validate required">
             <option disabled="disabled" selected="selected" value="">{{resource "purposePlaceholder"}}</option>
-            <label for="purpose-input">{{resource "purposeHeaderText"}}</label>
         </select>
+        <label for="purpose-input">{{resource "purposeHeaderText"}}</label>
     </div>
 </div>
 <div id="purpose-other-input-container" class="row hidden">
@@ -61,7 +61,7 @@
 <div class="row">
     <div class="small-12 columns input-field">
         <input id="group-check-in-input" name="groupCheckIn" type="checkBox"/>
-        <label for="group-check-in-input"></label>
+        <label for="group-check-in-input">{{resource "groupCheckInHeaderText"}}</label>
     </div>
 </div>
 <div class="row">
@@ -70,7 +70,11 @@
         <label for="additional-info-input">{{resource "additionalInfoHeaderText"}}</label>
     </div>
 </div>
-
+<div id="check-in-view-loading-icon-container" class="hidden">
+    <img src="{{resource 'loadingIconSrc'}}" alt="" />
+</div>
+<div id="check-in-alerts-container">
+</div>
 <div class="row">
     <div class="small-12 columns">
         <a id="cancel-check-in-button" class="button radius secondary" href="#">{{resource "cancelButtonText"}}</a>

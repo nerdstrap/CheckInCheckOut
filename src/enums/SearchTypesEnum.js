@@ -1,15 +1,13 @@
-define(function (require) {
-    'use strict';
+'use strict';
 
-    var SearchTypesEnum = {
-        alphabetic: 'alphabetic',
-        nearby: 'nearby',
-        favorites: 'favorites'
-    };
+var SearchTypesEnum = {
+    alphabetic: 'alphabetic',
+    nearby: 'nearby',
+    favorites: 'favorites'
+};
 
-    if (Object.freeze) {
-        Object.freeze(SearchTypesEnum);
-    }
+if (Object.freeze) {
+    Object.freeze(SearchTypesEnum);
+}
 
-    return SearchTypesEnum;
-});
+module.exports = SearchTypesEnum;

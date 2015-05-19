@@ -1,15 +1,13 @@
-define(function(require) {
-    'use strict';
+'use strict';
 
-    var UserRolesEnum = {
-        Admin: 'Admin',
-        User: 'User',
-        ReadOnly: 'ReadOnly'
-    };
+var UserRolesEnum = {
+    Admin: 'Admin',
+    User: 'User',
+    ReadOnly: 'ReadOnly'
+};
 
-    if (Object.freeze) {
-        Object.freeze(UserRolesEnum);
-    }
+if (Object.freeze) {
+    Object.freeze(UserRolesEnum);
+}
 
-    return UserRolesEnum;
-});
+module.exports = UserRolesEnum;
