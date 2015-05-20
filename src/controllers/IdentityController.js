@@ -15,7 +15,6 @@ define(function (require) {
         IdentityDetailView = require('views/IdentityDetailView'),
         EventNamesEnum = require('enums/EventNamesEnum'),
         SearchTypesEnum = require('enums/SearchTypesEnum'),
-        globals = require('globals'),
         utils = require('utils');
 
     /**

@@ -50,7 +50,6 @@ require.config({
         'env': 'app/env',
         'EventBus': 'app/EventBus',
         'eventBusSingleton': 'app/eventBusSingleton',
-        'globals': 'app/globals',
         'resources': 'app/resources',
         'utils': 'app/utils',
 

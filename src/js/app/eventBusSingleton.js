@@ -1,11 +1,15 @@
-define(function(require) {
-    'use strict';
+'use strict';
 
-    var $ = require('jquery'),
-        _ = require('underscore'),
-        Backbone = require('backbone'),
-        EventBus = require('EventBus');
+var $ = require('jquery');
+var _ = require('underscore');
+var Backbone = require('backbone');
+var EventBus = require('EventBus');
 
-    var eventBusSingleton = new EventBus();
-    return eventBusSingleton;
-});
+var eventBusSingleton = function () {
+    if (this._instance === undefined) {
+        this._instance = new EventBus();
+    }
+    return this._instance;
+};
+
+module.exports = eventBusSingleton;

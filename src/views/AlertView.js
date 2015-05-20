@@ -1,12 +1,9 @@
-define(function(require) {
-
     'use strict';
 
     var $ = require('jquery'),
             _ = require('underscore'),
             Backbone = require('backbone'),
             CompositeView = require('views/CompositeView'),
-            globals = require('globals'),
             env = require('env'),
             template = require('hbs!templates/Alert');
 
@@ -26,7 +23,7 @@ define(function(require) {
             var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model.attributes);
             currentContext.$el.html(template(renderModel));
             
-            currentContext.timeoutId = globals.window.setTimeout(function() {
+            currentContext.timeoutId = window.setTimeout(function() {
                 currentContext.dismiss();
             }, currentContext.dismissDelay);
 
@@ -46,11 +43,9 @@ define(function(require) {
         },
         onLeave: function() {
             if (this.timeoutId) {
-                globals.window.clearTimeout(this.timeoutId);
+                window.clearTimeout(this.timeoutId);
             }
         }
     });
 
-    return AlertView;
-
-});
+    module.exports = AlertView;

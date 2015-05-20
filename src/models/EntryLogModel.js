@@ -3,7 +3,7 @@
 var $ = require('jquery');
 var _ = require('underscore');
 var Backbone = require('backbone');
-var env = require('env')
+var env = require('env');
 var utils = require('utils');
 
 var EntryLogModel = Backbone.Model.extend({

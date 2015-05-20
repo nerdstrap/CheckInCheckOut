@@ -14,7 +14,6 @@ define(function (require) {
         AdminView = require('views/AdminView'),
         EventNamesEnum = require('enums/EventNamesEnum'),
         SearchTypesEnum = require('enums/SearchTypesEnum'),
-        globals = require('globals'),
         utils = require('utils');
 
     /**
@@ -193,7 +192,7 @@ define(function (require) {
         goToDirectionsWithLatLng: function (latitude, longitude) {
             console.trace('LocusController.goToDirectionsWithLatLng');
             var directionsUri = 'http://maps.google.com?daddr=' + latitude + ',' + longitude;
-            globals.window.open(directionsUri);
+            window.open(directionsUri);
         },
 
         goToLocusAdmin: function () {

@@ -6,10 +6,10 @@ var Backbone = require('backbone');
 var AppRouter = require('routers/AppRouter');
 
 var appRouterSingleton = function () {
-    if (_instance === undefined) {
-        _instance = new AppRouter();
+    if (this._instance === undefined) {
+        this._instance = new AppRouter();
     }
-    return _instance;
+    return this._instance;
 };
 
 module.exports = appRouterSingleton;

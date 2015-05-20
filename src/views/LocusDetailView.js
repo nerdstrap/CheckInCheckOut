@@ -1,15 +1,13 @@
-define(function (require) {
-
     'use strict';
 
-    var $ = require('jquery'),
-        _ = require('underscore'),
-        Backbone = require('backbone'),
-        BaseView = require('views/BaseView'),
-        EntryLogListView = require('views/EntryLogListView'),
-        EventNamesEnum = require('enums/EventNamesEnum'),
-        utils = require('utils'),
-        template = require('hbs!templates/LocusDetailView');
+    var $ = require('jquery');
+    var _ = require('underscore');
+    var Backbone = require('backbone');
+    var BaseView = require('views/BaseView');
+    var EntryLogListView = require('views/EntryLogListView');
+    var EventNamesEnum = require('enums/EventNamesEnum');
+    var utils = require('utils');
+    var template = require('hbs!templates/LocusDetailView');
 
     var LocusDetailView = BaseView.extend({
         /**
@@ -451,6 +449,4 @@ define(function (require) {
         }
     });
 
-    return LocusDetailView;
-
-});
+    module.exports = LocusDetailView;

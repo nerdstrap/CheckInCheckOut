@@ -1,17 +1,15 @@
-define(function (require) {
     'use strict';
 
-    var $ = require('jquery'),
-        _ = require('underscore'),
-        Backbone = require('backbone'),
-        validation = require('backbone.validation'),
-        BaseView = require('views/BaseView'),
-        EventNamesEnum = require('enums/EventNamesEnum'),
-        globals = require('globals'),
-        env = require('env'),
-        utils = require('utils'),
-        optionTemplate = require('hbs!templates/Option'),
-        template = require('hbs!templates/CheckOutView');
+    var $ = require('jquery');
+    var _ = require('underscore');
+    var Backbone = require('backbone');
+    var validation = require('backbone.validation');
+    var BaseView = require('views/BaseView');
+    var EventNamesEnum = require('enums/EventNamesEnum');
+    var env = require('env');
+    var utils = require('utils');
+    var optionTemplate = require('hbs!templates/Option');
+    var template = require('hbs!templates/CheckOutView');
 
     var CheckOutView = BaseView.extend({
         /**
@@ -282,5 +280,4 @@ define(function (require) {
         }
     });
 
-    return CheckOutView;
-});
+    module.exports = CheckOutView;

@@ -1,32 +1,29 @@
-define(function (require) {
-    'use strict';
+'use strict';
 
-    var module = require('module'),
-        globals = require('globals'),
-        masterConfig = module.config(),
-        apiUrl = masterConfig.apiUrl || '',
-        siteRoot = masterConfig.siteRoot || '',
-        distanceThreshold = masterConfig.distanceThreshold || 50,
-        searchResultsThreshold = masterConfig.searchResultsThreshold || 20,
-        expirationThreshold = masterConfig.expirationThreshold || 1800000;
+var module = require('module');
+var masterConfig = module.config();
+var apiUrl = masterConfig.apiUrl || '';
+var siteRoot = masterConfig.siteRoot || '';
+var distanceThreshold = masterConfig.distanceThreshold || 50;
+var searchResultsThreshold = masterConfig.searchResultsThreshold || 20;
+var expirationThreshold = masterConfig.expirationThreshold || 1800000;
 
 
-    var env = {
-        getApiUrl: function () {
-            return apiUrl;
-        },
-        getSiteRoot: function () {
-            return siteRoot;
-        },
-        getDistanceThreshold: function () {
-            return distanceThreshold;
-        },
-        getSearchResultsThreshold: function () {
-            return searchResultsThreshold;
-        },
-        getExpirationThreshold: function () {
-            return expirationThreshold;
-        }
-    };
-    return env;
-});
+var env = {
+    getApiUrl: function () {
+        return apiUrl;
+    },
+    getSiteRoot: function () {
+        return siteRoot;
+    },
+    getDistanceThreshold: function () {
+        return distanceThreshold;
+    },
+    getSearchResultsThreshold: function () {
+        return searchResultsThreshold;
+    },
+    getExpirationThreshold: function () {
+        return expirationThreshold;
+    }
+};
+module.exports = env;

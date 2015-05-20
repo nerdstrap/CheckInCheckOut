@@ -11,7 +11,6 @@ define(function (require) {
         CheckInView = require('views/CheckInView'),
         CheckOutView = require('views/CheckOutView'),
         EventNamesEnum = require('enums/EventNamesEnum'),
-        globals = require('globals'),
         utils = require('utils');
 
     /**
