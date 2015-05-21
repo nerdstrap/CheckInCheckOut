@@ -9,7 +9,7 @@ var env = require('env');
 var utils = require('utils');
 var EventNamesEnum = require('enums/EventNamesEnum');
 var SearchTypesEnum = require('enums/SearchTypesEnum');
-var template = require('hbs!templates/LocusSearchView');
+var template = require('templates/LocusSearchView.hbs');
 
 var LocusSearchView = BaseView.extend({
     /**

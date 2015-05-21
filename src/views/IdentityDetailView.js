@@ -7,7 +7,7 @@ var BaseView = require('views/BaseView');
 var EntryLogListView = require('views/EntryLogListView');
 var EventNamesEnum = require('enums/EventNamesEnum');
 var utils = require('utils');
-var template = require('hbs!templates/IdentityDetailView');
+var template = require('templates/IdentityDetailView.hbs');
 
 var IdentityDetailView = BaseView.extend({
     /**

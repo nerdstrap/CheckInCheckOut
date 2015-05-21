@@ -5,7 +5,7 @@
             Backbone = require('backbone'),
             CompositeView = require('views/CompositeView'),
             env = require('env'),
-            template = require('hbs!templates/Alert');
+            template = require('templates/AlertView.hbs');
 
     var AlertView = CompositeView.extend({
         initialize: function(options) {

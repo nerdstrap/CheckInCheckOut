@@ -6,7 +6,7 @@ var Backbone = require('backbone');
 var CompositeView = require('views/CompositeView');
 var EventNamesEnum = require('enums/EventNamesEnum');
 var utils = require('utils');
-var template = require('hbs!templates/LocusListItemView');
+var template = require('templates/LocusListItemView.hbs');
 
 var LocusListItemView = CompositeView.extend({
     /**

@@ -6,7 +6,7 @@ var Backbone = require('backbone');
 var CompositeView = require('views/CompositeView');
 var HeaderView = require('views/HeaderView');
 var EventNamesEnum = require('enums/EventNamesEnum');
-var template = require('hbs!templates/ShellView');
+var template = require('templates/ShellView.hbs');
 
 var ShellView = CompositeView.extend({
     initialize: function (options) {

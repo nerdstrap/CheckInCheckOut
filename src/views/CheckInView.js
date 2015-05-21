@@ -8,8 +8,8 @@ var BaseView = require('views/BaseView');
 var EventNamesEnum = require('enums/EventNamesEnum');
 var env = require('env');
 var utils = require('utils');
-var optionTemplate = require('hbs!templates/Option');
-var template = require('hbs!templates/CheckInView');
+var optionTemplate = require('templates/Option.hbs');
+var template = require('templates/CheckInView.hbs');
 
 var CheckInView = BaseView.extend({
     /**

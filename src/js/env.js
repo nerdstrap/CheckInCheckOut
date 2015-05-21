@@ -1,13 +1,13 @@
 'use strict';
 
-var module = require('module');
-var masterConfig = module.config();
-var apiUrl = masterConfig.apiUrl || '';
-var siteRoot = masterConfig.siteRoot || '';
-var distanceThreshold = masterConfig.distanceThreshold || 50;
-var searchResultsThreshold = masterConfig.searchResultsThreshold || 20;
-var expirationThreshold = masterConfig.expirationThreshold || 1800000;
-
+var apiUrl = '';
+var siteRoot = '';
+var distanceThreshold = 50;
+var searchResultsThreshold = 20;
+var expirationThreshold = 1800000;
+var locatorTimeout = 30000;
+var locatorEnableHighAccuracy = false;
+var locatorMaximumAge = 60000;
 
 var env = {
     getApiUrl: function () {
@@ -26,4 +26,5 @@ var env = {
         return expirationThreshold;
     }
 };
+
 module.exports = env;

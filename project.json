@@ -1,0 +1,29 @@
+{
+  "webroot": "wwwroot",
+  "version": "1.0.0-*",
+  "dependencies": {
+  },
+  "commands": {
+  },
+  "frameworks": {
+  },
+  "exclude": [
+    "wwwroot",
+    "node_modules",
+    "bower_components"
+  ],
+  "publishExclude": [
+    "node_modules",
+    "bower_components",
+    "**.xproj",
+    "**.user",
+    "**.vspscc"
+  ],
+  "scripts": {
+    "postrestore": [
+      "npm install",
+      "gulp bower:install"
+    ],
+    "prepare": ["gulp bower:deploy"]
+  }
+}

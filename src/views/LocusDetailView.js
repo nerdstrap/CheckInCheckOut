@@ -7,7 +7,7 @@
     var EntryLogListView = require('views/EntryLogListView');
     var EventNamesEnum = require('enums/EventNamesEnum');
     var utils = require('utils');
-    var template = require('hbs!templates/LocusDetailView');
+    var template = require('templates/LocusDetailView.hbs');
 
     var LocusDetailView = BaseView.extend({
         /**

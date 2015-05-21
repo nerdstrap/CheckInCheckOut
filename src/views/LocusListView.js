@@ -8,7 +8,7 @@ var LocusListItemView = require('views/LocusListItemView');
 var env = require('env');
 var utils = require('utils');
 var EventNamesEnum = require('enums/EventNamesEnum');
-var template = require('hbs!templates/LocusListView');
+var template = require('templates/LocusListView.hbs');
 
 var LocusListView = BaseView.extend({
     /**

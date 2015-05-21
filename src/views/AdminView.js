@@ -7,7 +7,7 @@ var BaseView = require('views/BaseView');
 var env = require('env');
 var utils = require('utils');
 var EventNamesEnum = require('enums/EventNamesEnum');
-var template = require('hbs!templates/Admin');
+var template = require('templates/Admin.hbs');
 
 var AdminView = BaseView.extend({
     initialize: function (options) {
@@ -25,7 +25,7 @@ var AdminView = BaseView.extend({
         console.trace('AdminView.render()');
         var currentContext = this;
 
-        var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
+        var renderModel = _.extend({}, currentContext.model);
         currentContext.$el.html(template(renderModel));
 
         return this;

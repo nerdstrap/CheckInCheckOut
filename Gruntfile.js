@@ -1,62 +1,52 @@
-module.exports = function (grunt) {
-    'use strict';
+'use strict';
 
-    // Project configuration.
+var browserify = require('browserify');
+var path = require('path');
+var pathmodify = require('pathmodify');
+
+var opts = {
+    mods: [
+        pathmodify.mod.dir('collections', '/src/collections'),
+        pathmodify.mod.dir('controllers', '/src/controllers'),
+        pathmodify.mod.dir('enums', '/src/enums'),
+        pathmodify.mod.dir('models', '/src/models'),
+        pathmodify.mod.dir('routers', '/src/routers'),
+        pathmodify.mod.dir('services', '/src/services'),
+        pathmodify.mod.dir('templates', '/src/templates'),
+        pathmodify.mod.dir('views', '/src/views')
+    ]
+};
+
+browserify('./src/entry').plugin(pathmodify(), opts);
+
+module.exports = function (grunt) {
     grunt.initConfig({
-        jasmine: {
-            src: 'src/controllers/LocusController.js',
-            options: {
-                specs: 'src/specs/**/*.js',
-                template: require('grunt-template-jasmine-requirejs'),
-                templateOptions: {
-                    requireConfigFile: 'src/js/spec-main.js',
-                    requireConfig: {
-                        baseUrl: 'src/js/'
-                    }
-                }
-            }
-        },
-        jshint: {
-            all: [
-                'Gruntfile.js',
-                'collections/*.js',
-                'controllers/*.js',
-                'enums/*.js',
-                'fakes/*.js',
-                'models/*.js',
-                'js/app/*.js',
-                'routers/*.js',
-                'views/*.js',
-                'specs/*.js'
-            ],
-            options: {
-                "-W030": false
-            }
-        },
-        sass: {
-            dist: {
+        bower: {
+            install: {
                 options: {
-                    style: 'expanded',
-                    loadPath: ['bower_components/foundation/scss', 'bower_components/font-awesome/scss' ]
-                },
-                files: [{
-                    expand: true,
-                    cwd: 'src/scss',
-                    src: ['*.scss'],
-                    dest: 'src/css',
-                    ext: '.css'
+                    targetDir: 'build/lib',
+                    layout: 'byComponent',
+                    cleanTargetDir: false
                 }
-                ]
+            }
+        },
+
+        clean: {
+            build: {
+                src: ['./bower_components']
             }
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-jasmine');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-sass');
+    grunt.registerTask('initialize', ['bower:install']);
+    grunt.registerTask('clean:bower', ['clean']);
+    grunt.registerTask('default', ['initialize']);
+    grunt.registerTask('browserify', function(){
 
-    grunt.registerTask('validate', ['jshint']);
-    grunt.registerTask('precompile', ['sass']);
-    grunt.registerTask('test', ['jasmine']);
-    grunt.registerTask('default', ['test']);
-};
+    });
+
+    grunt.loadNpmTasks('grunt-bower-task');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+}

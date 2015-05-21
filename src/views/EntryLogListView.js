@@ -8,7 +8,7 @@ var EntryLogListItemView = require('views/EntryLogListItemView');
 var env = require('env');
 var utils = require('utils');
 var EventNamesEnum = require('enums/EventNamesEnum');
-var template = require('hbs!templates/EntryLogListView');
+var template = require('templates/EntryLogListView.hbs');
 
 var EntryLogListView = BaseView.extend({
     /**

@@ -8,7 +8,7 @@ var IdentityListItemView = require('views/IdentityListItemView');
 var env = require('env');
 var utils = require('utils');
 var EventNamesEnum = require('enums/EventNamesEnum');
-var template = require('hbs!templates/IdentityListView');
+var template = require('templates/IdentityListView.hbs');
 
 var IdentityListView = BaseView.extend({
     /**

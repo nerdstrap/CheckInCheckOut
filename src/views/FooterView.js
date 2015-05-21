@@ -5,7 +5,7 @@ var _ = require('underscore');
 var Backbone = require('backbone');
 var CompositeView = require('views/CompositeView');
 var EventNamesEnum = require('enums/EventNamesEnum');
-var template = require('hbs!templates/FooterView');
+var template = require('templates/FooterView.hbs');
 
 var FooterView = CompositeView.extend({
     initialize: function (options) {
