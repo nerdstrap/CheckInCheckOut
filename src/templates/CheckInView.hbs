@@ -1,83 +1,106 @@
-<h3>{{resource "checkInViewHeaderText"}}</h3>
-<div class="row">
-    <div class="small-12 columns read-only-field">
-        <span id="locus-name-label" data-locus-id="{{locusId}}">{{withDefault locusName "&nbsp;"}}</span>
-        <label for="locus-name-label">{{resource "locusNameHeaderText"}}</label>
+<div class="locus-search-view content">
+    <div class="content-heading">
+        <div class="container">
+            <h1 class="heading">{{resource "checkInViewHeaderText"}}</h1>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="small-12 columns read-only-field">
-        <span id="distance-label" name="distance">{{withDefault distance "&nbsp;"}}</span>
-        <label for="distance-label">{{resource "distanceHeaderText"}}</label>
-    </div>
-</div>
-<div id="locus-description-input-container" class="row hidden">
-    <div class="small-12 columns input-field">
-        <input id="locus-description-input" name="locusName" type="text" class="validate required" placeholder='{{resource "locusDescriptionPlaceholder"}}'/>
-        <label for="locus-description-input">{{resource "locusNameHeaderText"}}</label>
-    </div>
-</div>
-<div id="coordinates-input-container" class="row hidden">
-    <div class="small-12 columns input-field">
-        <input id="latitude-input" name="latitude" type="text" class="validate required" placeholder='{{resource "latitudePlaceholder"}}'/>
-        <input id="longitude-input" name="longitude" type="text" class="validate required" placeholder='{resource "longitudePlaceholder"}}'/>
-        <label for="latitude-input">{{resource "coordinatesHeaderText"}}</label>
-    </div>
-</div>
-<div class="row">
-    <div class="small-12 columns input-field">
-        <input id="contact-number-input" name="contactNumber" type="text" class="validate required pattern" placeholder='{{resource "contactNumberPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
-        <label for="contact-number-input">{{resource "contactNumberHeaderText"}}</label>
-    </div>
-</div>
-<div class="row">
-    <div class="small-12 columns input-field">
-        <input id="email-input" name="email" type="text" class="validate pattern" placeholder='{{resource "emailPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
-        <label for="email-input">{{resource "emailHeaderText"}}</label>
-    </div>
-</div>
-<div class="row">
-    <div class="small-12 columns input-field">
-        <select id="purpose-input" name="purpose" class="validate required">
-            <option disabled="disabled" selected="selected" value="">{{resource "purposePlaceholder"}}</option>
-        </select>
-        <label for="purpose-input">{{resource "purposeHeaderText"}}</label>
-    </div>
-</div>
-<div id="purpose-other-input-container" class="row hidden">
-    <div class="small-12 columns input-field">
-        <input id="purpose-other-input" name="purposeOther" type="text" class="validate required" placeholder='{{resource "purposeOtherPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
-        <label for="purpose-other-input">{{resource "purposeOtherHeaderText"}}</label>
-    </div>
-</div>
-<div class="row">
-    <div class="small-12 columns input-field">
-        <select id="duration-input" name="duration" class="validate required">
-            <option disabled="disabled" selected="selected" value="">{{resource "durationPlaceholder"}}</option>
-        </select>
-        <label for="duration-input">{{resource "durationHeaderText"}}</label>
-    </div>
-</div>
-<div class="row">
-    <div class="small-12 columns input-field">
-        <input id="group-check-in-input" name="groupCheckIn" type="checkBox"/>
-        <label for="group-check-in-input">{{resource "groupCheckInHeaderText"}}</label>
-    </div>
-</div>
-<div class="row">
-    <div class="small-12 columns input-field">
-        <input id="additional-info-input" name="additionalInfo" type="text" placeholder='{{resource "additionalInfoPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
-        <label for="additional-info-input">{{resource "additionalInfoHeaderText"}}</label>
-    </div>
-</div>
-<div id="check-in-view-loading-icon-container" class="hidden">
-    <img src="{{resource 'loadingIconSrc'}}" alt="" />
-</div>
-<div id="check-in-alerts-container">
-</div>
-<div class="row">
-    <div class="small-12 columns">
-        <a id="cancel-check-in-button" class="button radius secondary" href="#">{{resource "cancelButtonText"}}</a>
-        <a id="submit-check-in-button" class="button radius success" href="#">{{resource "checkInButtonText"}}<i class="fa fa-check-circle-o"></i></a>
+    <div class="content-inner">
+        <div class="container form-group-wrap el-loading">
+            <div class="el-loading-indicator">
+                <div class="progress-circular progress-circular-inline progress-circular-">
+                    <div class="progress-circular-wrapper">
+                        <div class="progress-circular-inner">
+                            <div class="progress-circular-left">
+                                <div class="progress-circular-spinner"></div>
+                            </div>
+                            <div class="progress-circular-gap"></div>
+                            <div class="progress-circular-right">
+                                <div class="progress-circular-spinner"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="identity-name-input-container" class="form-group form-group-label">
+                <label class="floating-label" for="identity-name-input">{{resource "identityNameHeaderText"}}</label>
+                <input id="identity-name-input" class="form-control" name="identityName" type="text" placeholder='{{resource "identityNamePlaceholder"}}'/>
+            </div>
+            <div class="form-group form-group-label">
+                <label class="floating-label" for="locus-name-input">{{resource "locusNameHeaderText"}}</label>
+                <input id="locus-name-input" class="form-control" name="locusName" type="text" placeholder='{{resource "locusNamePlaceholder"}}'/>
+            </div>
+            <div id="locus-description-input-container" class="form-group form-group-label">
+                <label class="floating-label" for="locus-description-input">{{resource "locusDescriptionHeaderText"}}</label>
+                <input id="locus-description-input" class="form-control" name="locusDescription" type="text" length="100" placeholder='{{resource "locusDescriptionPlaceholder"}}'/>
+                <span class="form-help form-help-msg text-alt">{{resource "locusDescriptionHelpMessageText"}}<span class="form-help-icon icon">error</span></span>
+            </div>
+            <div class="form-group form-group-label">
+                <label class="floating-label" for="latitude-input">{{resource "latitudeHeaderText"}}</label>
+                <input id="latitude-input" class="form-control" name="latitude" type="text" placeholder='{{resource "latitudePlaceholder"}}'/>
+            </div>
+            <div class="form-group form-group-label">
+                <label class="floating-label" for="longitude-input">{{resource "longitudeHeaderText"}}</label>
+                <input id="longitude-input" class="form-control" name="longitude" type="text" placeholder='{resource "longitudePlaceholder"}}'/>
+            </div>
+            <div id="distance-input-container" class="form-group form-group-label">
+                <label class="floating-label" for="distance-input">{{resource "distanceHeaderText"}}</label>
+                <input id="distance-input" class="form-control" type="text" placeholder='{{resource "distancePlaceholder"}}'/>
+            </div>
+            <div class="form-group form-group-label">
+                <label class="floating-label" for="contact-number-input">{{resource "contactNumberHeaderText"}}</label>
+                <input id="contact-number-input" class="form-control" name="contactNumber" type="text" placeholder='{{resource "contactNumberPlaceholder"}}'/>
+            </div>
+            <div class="form-group form-group-label">
+                <label class="floating-label" for="email-input">{{resource "emailHeaderText"}}</label>
+                <input id="email-input" class="form-control" name="email" type="text" placeholder='{{resource "emailPlaceholder"}}'/>
+            </div>
+            <div class="form-group form-group-label">
+                <label class="floating-label" for="purpose-input">{{resource "purposeHeaderText"}}</label>
+                <select id="purpose-input" class="form-control" name="purpose">
+                    <option disabled="disabled" selected="selected" value="">&nbsp;</option>
+                </select>
+            </div>
+            <div id="purpose-other-input-container" class="form-group form-group-label">
+                <label class="floating-label" for="purpose-other-input">{{resource "purposeOtherHeaderText"}}</label>
+                <input id="purpose-other-input" class="form-control" name="purposeOther" type="text" placeholder='{{resource "purposeOtherPlaceholder"}}'/>
+            </div>
+            <div class="form-group form-group-label">
+                <label class="floating-label" for="duration-input">{{resource "durationHeaderText"}}</label>
+                <select id="duration-input" class="form-control" name="duration">
+                    <option disabled="disabled" selected="selected" value="">&nbsp;</option>
+                </select>
+            </div>
+            <div id="in-time-input-container" class="form-group form-group-label">
+                <label class="floating-label" for="in-time-input">{{resource "inTimeHeaderText"}}</label>
+                <input id="in-time-input" class="form-control" type="text" placeholder='{{resource "inTimePlaceholder"}}'/>
+            </div>
+            <div id="expected-out-time-input-container" class="form-group form-group-label">
+                <label class="floating-label" for="expected-out-time-input">{{resource "expectedOutTimeHeaderText"}}</label>
+                <input id="expected-out-time-input" class="form-control" type="text" placeholder='{{resource "expectedOutTimePlaceholder"}}'/>
+            </div>
+            <div id="actual-duration-input-container" class="form-group form-group-label">
+                <label class="floating-label" for="actual-duration-input">{{resource "durationHeaderText"}}</label>
+                <input id="actual-duration-input" class="form-control" type="text" placeholder='{{resource "durationPlaceholder"}}'/>
+            </div>
+            <div id="out-time-input-container" class="form-group form-group-label">
+                <label class="floating-label" for="out-time-input">{{resource "outTimeHeaderText"}}</label>
+                <input id="out-time-input" class="form-control" type="text" placeholder='{{resource "outTimePlaceholder"}}'/>
+            </div>
+            <div class="form-group">
+                <div class="checkbox checkbox-adv">
+                    <label for="has-group-check-in-input">{{resource "hasGroupCheckInHeaderText"}}
+                        <input id="has-group-check-in-input" class="access-hide" name="hasGroupCheckIn" type="checkBox"/>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group form-group-label">
+                <label class="floating-label" for="additional-info-input">{{resource "additionalInfoHeaderText"}}</label>
+                <input id="additional-info-input" class="form-control" name="additionalInfo" type="text" length="1000" placeholder='{{resource "additionalInfoPlaceholder"}}'/>
+            </div>
+            <div class="form-group-btn">
+                <a id="submit-check-in-button" class="btn btn-green waves-button waves-light waves-effect" href="#">{{resource "checkInButtonText"}}<span class="icon icon-large">{{resource "checkInIcon"}}</span></a>
+                <a id="cancel-check-in-button" class="btn waves-button waves-light waves-effect" href="#">{{resource "cancelButtonText"}}<span class="icon icon-large">{{resource "cancelIcon"}}</span></a>
+            </div>
+        </div>
     </div>
 </div>

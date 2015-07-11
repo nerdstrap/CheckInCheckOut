@@ -1,0 +1,71 @@
+<div class="locus-tile-view tile tile-collapse">
+
+    <div data-target="#tile-collapse-{{locusId}}" data-toggle="tile">
+
+        <div class="pull-left tile-side" data-ignore="tile">
+            <div class="avatar avatar-blue avatar-sm">
+                <span class="icon icon-lg">{{resource "locusIcon"}}</span>
+            </div>
+        </div>
+
+        <div class="tile-action" data-ignore="tile">
+            <ul class="nav nav-list pull-right">
+                <li>
+                    <a class="go-to-locus-button" data-locus-id="{{locusId}}" href="#" tabindex="0"><span class="icon icon-lg">{{resource "goToLocusIcon"}}</span></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tile-inner">
+            <span class="text-overflow"><span class="locus-name-label text-overflow">{{default locusName}}</span></span>
+        </div>
+        <div class="tile-inner">
+            <span class="hazard-icon icon hidden">{{resource "hazardIcon"}}</span>
+            <span class="active-issues-icon icon hidden">{{resource "activeIssuesIcon"}}</span>
+            <span class="open-reports-icon icon hidden">{{resource "openReportsIcon"}}</span>
+            <span class="open-check-ins-icon icon hidden">{{resource "openCheckInsIcon"}}</span>
+        </div>
+    </div>
+
+    <div id="tile-collapse-{{locusId}}" class="tile-active-show collapse">
+
+        <div class="tile-sub">
+            <span class="distance-label text-overflow">{{default distance}}</span>
+            <span class="hazard-detail-label">{{default hazardDetail}}</span>
+        </div>
+
+        <div class="tile-footer">
+            <ul class="nav nav-list pull-left">
+                <li>
+                    <a class="dismiss-button" href="#" data-dismiss="tile" tabindex="0">{{resource "closeButtonText"}}<span class="icon icon-lg">{{resource "closeIcon"}}</span></a>
+                </li>
+                <li>
+                    <a class="add-favorite-button" data-locus-id="{{locusId}}" href="#" tabindex="0">{{resource "addFavoriteButtonText"}}<span class="icon icon-lg">{{resource "favoriteIcon"}}</span></a>
+                </li>
+                <li>
+                    <a class="go-to-map-button" href="#" data-locus-id="{{locusId}}" tabindex="0">{{resource "mapButtonText"}}<span class="icon icon-lg">{{resource "mapIcon"}}</span></a>
+                </li>
+                <li>
+                    <a class="share-locus-button" href="#" tabindex="0">{{resource "shareButtonText"}}<span class="icon icon-lg">{{resource "shareIcon"}}</span></a>
+                </li>
+                <!--<li class="dropdown">-->
+                    <!--<a class="dropdown-toggle" data-toggle="dropdown" href="#" tabindex="0"><span class="icon icon-lg">{{resource "moreVerticalIcon"}}</span></a>-->
+                    <!--<ul class="dropdown-menu">-->
+                        <!--<li>-->
+                            <!--<a class="view-open-reports-button" href="#" data-locus-id="{{locusId}}" tabindex="0">{{resource "viewOpenReportsButtonText"}}</a>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<a class="view-active-issues-button" href="#" data-locus-id="{{locusId}}" tabindex="0">{{resource "viewActiveIssuesButtonText"}}</a>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<a class="view-open-check-ins-button" href="#" data-locus-id="{{locusId}}" tabindex="0">{{resource "viewOpenCheckInsButtonText"}}</a>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<a class="view-recent-check-ins-button" href="#" data-locus-id="{{locusId}}" tabindex="0">{{resource "viewRecentCheckInsButtonText"}}</a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</li>-->
+            </ul>
+        </div>
+    </div>
+</div>

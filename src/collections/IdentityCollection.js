@@ -1,15 +1,17 @@
 'use strict';
 
-var $ = require('jquery');
-var _ = require('underscore');
 var Backbone = require('backbone');
+Backbone.$ = require('jquery');
+var $ = Backbone.$;
+var _ = require('underscore');
 var IdentityModel = require('models/IdentityModel');
 
+/**
+ *
+ * @type {IdentityCollection}
+ */
 var IdentityCollection = Backbone.Collection.extend({
-    model: IdentityModel,
-    initialize: function (options) {
-        options || (options = {});
-    }
+    model: IdentityModel
 });
 
 module.exports = IdentityCollection;

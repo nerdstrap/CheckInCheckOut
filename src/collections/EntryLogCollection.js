@@ -1,15 +1,17 @@
 'use strict';
 
-var $ = require('jquery');
-var _ = require('underscore');
 var Backbone = require('backbone');
+Backbone.$ = require('jquery');
+var $ = Backbone.$;
+var _ = require('underscore');
 var EntryLogModel = require('models/EntryLogModel');
 
+/**
+ *
+ * @type {EntryLogCollection}
+ */
 var EntryLogCollection = Backbone.Collection.extend({
-    model: EntryLogModel,
-    initialize: function (options) {
-        options || (options = {});
-    }
+    model: EntryLogModel
 });
 
 module.exports = EntryLogCollection;

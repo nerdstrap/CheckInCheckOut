@@ -1,39 +1,52 @@
 'use strict';
 
-var $ = require('jquery');
-var _ = require('underscore');
 var Backbone = require('backbone');
-var CompositeView = require('views/CompositeView');
+Backbone.$ = require('jquery');
+var $ = Backbone.$;
+var _ = require('underscore');
+var BaseView = require('views/BaseView');
 var HeaderView = require('views/HeaderView');
-var EventNamesEnum = require('enums/EventNamesEnum');
+var FooterView = require('views/FooterView');
 var template = require('templates/ShellView.hbs');
 
-var ShellView = CompositeView.extend({
+/**
+ *
+ */
+var ShellView = BaseView.extend({
+
     initialize: function (options) {
         console.trace('ShellView.initialize');
         options || (options = {});
         this.dispatcher = options.dispatcher || this;
 
+        this.listenTo(this, 'loaded', this.onLoaded);
         this.listenTo(this, 'leave', this.onLeave);
     },
     render: function () {
-        console.trace('ShellView.render()');
         var currentContext = this;
 
         var renderModel = _.extend({}, currentContext.model);
-        currentContext.$el.html(template(renderModel));
+        currentContext.setElement(template(renderModel));
 
         currentContext.headerViewInstance = new HeaderView({
             model: currentContext.model,
-            el: $('#header-container', currentContext.$el),
             dispatcher: currentContext.dispatcher
         });
-        this.renderChild(currentContext.headerViewInstance);
+        this.replaceWithChild(currentContext.headerViewInstance, '#header-view-container');
+
+        currentContext.footerViewInstance = new FooterView({
+            model: currentContext.model,
+            dispatcher: currentContext.dispatcher
+        });
+        this.replaceWithChild(currentContext.footerViewInstance, '#footer-view-container');
 
         return this;
     },
     contentViewEl: function () {
-        return $('#content-container', this.el);
+        return $('#content-view-container', this.el);
+    },
+    onLoaded: function () {
+        console.trace('ShellView.onLoaded');
     },
     onLeave: function () {
         console.trace('ShellView.onLeave');

@@ -1,29 +1,30 @@
-<h3>{{resource "locusSearchViewHeaderText"}}</h3>
-<div class="search-query">
-    <a id="open-locus-search-query-button" href="#"><i class="fa fa-search"></i>{{resource "searchButtonText"}}</a>
-    <span id="locus-search-query-input-container" class="hidden">
-        <i class="fa fa-search"></i>
-        <input id="locus-search-query-input" type="search" placeholder='{{resource "searchQueryPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
-        <a id="clear-locus-search-query-button" class="hidden" href="#"><i class="fa fa-times-circle"></i></a>
-    </span>
-    <a id="submit-locus-search-query-button" class="hidden" href="#">{{resource "searchButtonText"}}</a>
-    <a id="cancel-locus-search-query-button" class="hidden" href="#">{{resource "cancelButtonText"}}</a>
-</div>
-<ul class="button-group radius even-3">
-    <li>
-        <a id="filter-locus-search-by-alphabetic-button" class="button radius tiny" href="#">{{resource "alphabeticButtonText"}}</a>
-    </li>
-    <li>
-        <a id="filter-locus-search-by-nearby-button" class="button radius tiny secondary" href="#">{{resource "nearbyButtonText"}}</a>
-    </li>
-    <li>
-        <a id="filter-locus-search-by-favorites-button" class="button radius tiny secondary" href="#">{{resource "favoritesButtonText"}}</a>
-    </li>
-</ul>
-<div id="locus-search-view-loading-icon-container" class="hidden">
-    <img src="{{resource 'loadingIconSrc'}}" alt="{{resource 'loadingIconAlt'}}"/>
-</div>
-<div id="locus-search-alerts-container">
-</div>
-<div id="locus-search-results-container">
+<div class="locus-search-view content">
+    <div class="content-heading">
+        <div class="container">
+            <h1 class="heading">{{resource "locusSearchViewHeaderText"}}</h1>
+        </div>
+    </div>
+    <div class="content-inner">
+        <div class="container">
+            <nav class="tab-nav tab-nav-alt">
+                <ul class="nav nav-justified">
+                    <li>
+                        <a id="search-by-alphabetic-button" class="waves-color-alt waves-effect" data-toggle="tab" href="#" tabindex="0">{{resource "alphabeticButtonText"}}</a>
+                    </li>
+                    <li class="active">
+                        <a id="search-by-nearby-button" class="waves-color-alt waves-effect" data-toggle="tab" href="#" tabindex="0">{{resource "nearbyButtonText"}}</a>
+                    </li>
+                    <li>
+                        <a id="search-by-favorites-button" class="waves-color-alt waves-effect" data-toggle="tab" href="#" tabindex="0">{{resource "favoritesButtonText"}}</a>
+                    </li>
+                </ul>
+            </nav>
+            <div id="search-query-input-container" class="form-group form-group-label form-group-alt hidden">
+                <label class="floating-label" for="search-query-input">{{resource "searchQueryPlaceholder"}}</label>
+                <input id="search-query-input" class="form-control" type="search" placeholder='{{resource "searchQueryPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+            </div>
+            <div class="search-results-container">
+            </div>
+        </div>
+    </div>
 </div>

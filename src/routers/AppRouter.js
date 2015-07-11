@@ -1,78 +1,196 @@
 'use strict';
 
-var $ = require('jquery');
-var _ = require('underscore');
 var Backbone = require('backbone');
+Backbone.$ = require('jquery');
+var $ = Backbone.$;
+var _ = require('underscore');
 var SwappingRouter = require('routers/SwappingRouter');
+var EventDispatcher = require('dispatchers/EventDispatcher');
 var ShellView = require('views/ShellView');
-var LocusController = require('controllers/LocusController');
-var IdentityController = require('controllers/IdentityController');
-var EntryLogController = require('controllers/EntryLogController');
-var eventBusSingleton = require('eventBusSingleton');
+var IdentityRepository = require('repositories/IdentityRepository');
+var LocusRepository = require('repositories/LocusRepository');
+var EntryLogRepository = require('repositories/EntryLogRepository');
+var LookupDataRepository = require('repositories/LookupDataRepository');
+var IssueRepository = require('repositories/IssueRepository');
+var ReportRepository = require('repositories/ReportRepository');
+var GeoLocationService = require('services/GeoLocationService');
+var IdentityViewController = require('controllers/LocusViewController');
+var LocusViewController = require('controllers/LocusViewController');
+var EntryLogViewController = require('controllers/EntryLogViewController');
+var PersistenceContext = require('contexts/PersistenceContext');
+var ModelMapper = require('mappers/ModelMapper');
 
 var AppRouter = SwappingRouter.extend({
-    
+
+    /**
+     *
+     * @param options
+     */
     initialize: function (options) {
         console.trace('appRouter.initialize');
         options || (options = {});
-        var currentContext = this;
 
-        //shell
-        var shellViewInstance = new ShellView({
-            model: new Backbone.Model({ id: 1 }),
-            el: $('body'),
-            dispatcher: eventBusSingleton
-        });
-        shellViewInstance.render();
-        this.contentViewEl = shellViewInstance.contentViewEl();
-
-        //controllers
-        this.locusControllerInstance = new LocusController({
-            router: currentContext,
-            dispatcher: eventBusSingleton
-        });
-        this.identityControllerInstance = new IdentityController({
-            router: currentContext,
-            dispatcher: eventBusSingleton
-        });
-        this.entryLogControllerInstance = new EntryLogController({
-            router: currentContext,
-            dispatcher: eventBusSingleton
-        });
+        this.initializeDependencies();
+        this.renderShellView();
+        this.contentViewEl = this.shellView.contentViewEl();
     },
 
+    /**
+     *
+     * @returns {AppRouter}
+     */
+    initializeDependencies: function () {
+        var currentContext = this;
+        // dispatchers
+        currentContext.dispatcher = new EventDispatcher();
+
+        //mappers
+        currentContext.mapper = new ModelMapper();
+
+        //repositories
+        currentContext.identityRepository = new IdentityRepository();
+        currentContext.locusRepository = new LocusRepository();
+        currentContext.entryLogRepository = new EntryLogRepository();
+        currentContext.lookupDataRepository = new LookupDataRepository();
+        currentContext.issueRepository = new IssueRepository();
+        currentContext.reportRepository = new ReportRepository();
+
+        //services
+        currentContext.geoLocationService = new GeoLocationService();
+
+        //contexts
+        currentContext.persistenceContext = new PersistenceContext({
+            dispatcher: currentContext.dispatcher,
+            identityRepository: currentContext.identityRepository,
+            locusRepository: currentContext.locusRepository,
+            entryLogRepository: currentContext.entryLogRepository,
+            lookupDataRepository: currentContext.lookupDataRepository,
+            issueRepository: currentContext.issueRepository,
+            reportRepository: currentContext.reportRepository,
+            geoLocationService: currentContext.geoLocationService,
+            mapper: currentContext.mapper
+        });
+
+        //view controllers
+        currentContext.identityViewController = new IdentityViewController({
+            router: currentContext,
+            dispatcher: currentContext.dispatcher,
+            persistenceContext: currentContext.persistenceContext
+        });
+        currentContext.locusViewController = new LocusViewController({
+            router: currentContext,
+            dispatcher: currentContext.dispatcher,
+            persistenceContext: currentContext.persistenceContext
+        });
+        currentContext.entryLogViewController = new EntryLogViewController({
+            router: currentContext,
+            dispatcher: currentContext.dispatcher,
+            persistenceContext: currentContext.persistenceContext
+        });
+        return this;
+    },
+
+    /**
+     *
+     * @returns {AppRouter}
+     */
+    renderShellView: function () {
+        var currentContext = this;
+        currentContext.shellView = new ShellView({
+            dispatcher: currentContext.dispatcher
+        });
+        currentContext.shellView.render();
+        $('body').append(currentContext.shellView.el);
+        return this;
+    },
+
+    /**
+     *
+     */
     routes: {
         '': 'goToLocusSearch',
         'locus': 'goToLocusSearch',
         'locus/:id': 'goToLocusWithId',
+        'locus/:id/checkIn': 'goToCheckIn',
+        'entryLog/:id': 'goToEditCheckIn',
+        'entryLog/:id/checkOut': 'goToCheckOut',
         'identity': 'goToIdentitySearch',
-        'identity/:id': 'goToIdentityWithId',
-        'admin/station': 'goToLocusAdmin'
+        'identity/:id': 'goToIdentityWithId'
     },
 
+    /**
+     *
+     * @returns {AppRouter}
+     */
     goToLocusSearch: function () {
-        console.trace('appRouter.goToLocusSearch');
-        this.locusControllerInstance.goToLocusSearch();
+        var currentContext = this;
+        currentContext.locusViewController.goToLocusSearch();
+        return this;
     },
 
+    /**
+     *
+     * @param locusId
+     * @returns {AppRouter}
+     */
     goToLocusWithId: function (locusId) {
-        console.trace('appRouter.goToLocusWithId');
-        this.locusControllerInstance.goToLocusWithId(locusId);
+        var currentContext = this;
+        currentContext.locusViewController.goToLocusWithId(locusId);
+        return this;
     },
 
+    /**
+     *
+     * @param locusId
+     * @returns {AppRouter}
+     */
+    goToCheckIn: function (locusId) {
+        var currentContext = this;
+        currentContext.entryLogViewController.goToCheckIn(locusId);
+        return this;
+    },
+
+    /**
+     *
+     * @param entryLogId
+     * @returns {AppRouter}
+     */
+    goToEditCheckIn: function (entryLogId) {
+        var currentContext = this;
+        currentContext.entryLogViewController.goToCheckIn(entryLogId);
+        return this;
+    },
+
+    /**
+     *
+     * @param entryLogId
+     * @returns {AppRouter}
+     */
+    goToCheckOut: function (entryLogId) {
+        var currentContext = this;
+        currentContext.entryLogViewController.goToCheckOut(entryLogId);
+        return this;
+    },
+
+    /**
+     *
+     * @returns {AppRouter}
+     */
     goToIdentitySearch: function () {
-        console.trace('appRouter.goToIdentitySearch');
-        this.identityControllerInstance.goToIdentitySearch();
+        var currentContext = this;
+        currentContext.identityViewController.goToIdentitySearch();
+        return this;
     },
 
+    /**
+     *
+     * @param identityId
+     * @returns {AppRouter}
+     */
     goToIdentityWithId: function (identityId) {
-        console.trace('appRouter.goToIdentityWithId');
-        this.identityControllerInstance.goToIdentityWithId(identityId);
-    },
-
-    goToLocusAdmin: function () {
-        console.trace('appRouter.goToAdmin');
-        this.locusControllerInstance.goToLocusAdmin();
+        var currentContext = this;
+        currentContext.identityViewController.goToIdentityWithId(identityId);
+        return this;
     }
 });
 

@@ -1,0 +1,60 @@
+<div class="entry-log-tile tile tile-collapse">
+    <div data-target="#tile-collapse-{{entryLogId}}" data-toggle="tile">
+
+        <div class="pull-left tile-side" data-ignore="tile">
+            <div class="avatar avatar-blue avatar-sm">
+                <span class="icon icon-lg">{{resource "entryLogIcon"}}</span>
+            </div>
+        </div>
+
+        <div class="tile-action" data-ignore="tile">
+            <ul class="nav nav-list pull-right">
+                <li>
+                    <a class="share-locus-button" href="#" tabindex="0"><span class="icon icon-lg">{{resource "shareIcon"}}</span></a>
+                </li>
+                <li>
+                    <a class="add-favorite-locus-button" href="#" tabindex="0"><span class="icon icon-lg">{{resource "favoriteIcon"}}</span></a>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" tabindex="0"><span class="icon icon-lg">{{resource "moreVerticalIcon"}}</span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="go-to-map-button" href="#" data-locus-id tabindex="0">{{resource "mapButtonText"}}<span class="icon icon-lg">{{resource "mapIcon"}}</span></a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tile-inner">
+            <span class="identity-name-label text-overflow" data-identity-id="{{identityId}}">{{default identityUserName}}</span>
+            <span class="locus-name-label text-overflow" data-locus-id="{{locusId}}">{{default locusName}}</span>
+        </div>
+    </div>
+
+    <div id="tile-collapse-{{entryLogId}}" class="tile-active-show collapse">
+
+        <div class="tile-sub">
+            <p class="distance-label">{{default distance}}</p>
+
+            <p class="purpose-label">{{default purpose}}</p>
+
+            <p class="in-time-label">{{datetime inTime}}</p>
+
+            <p class="out-time-label">{{datetime outTime}}</p>
+        </div>
+
+        <div class="tile-footer">
+            <ul class="nav nav-list pull-left">
+                <li>
+                    <a class="go-to-locus-button" data-locus-id="{{locusId}}" href="#" tabindex="0">{{resource "goToLocusButtonText"}}<span class="icon icon-lg">{{resource "goToLocusIcon"}}</span></a>
+                </li>
+                <li>
+                    <a class="dismiss-button" href="#" data-dismiss="tile" tabindex="0">{{resource "closeButtonText"}}<span class="icon icon-lg">{{resource "closeIcon"}}</span></a>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+</div>

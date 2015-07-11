@@ -1,0 +1,17 @@
+[
+  {
+    "warningId": "1",
+    "locusId": "1",
+    "description": "warning one"
+  },
+  {
+    "warningId": "2",
+    "locusId": "1",
+    "description": "warning two"
+  },
+  {
+    "warningId": "3",
+    "locusId": "2",
+    "description": "warning three"
+  }
+]

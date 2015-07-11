@@ -1,22 +1,19 @@
-<footer id="footer">
-    <ul class="tabs">
-        <li id="go-to-my-identity-container" class="tab-title">
-            <a id="go-to-my-identity-button" data-identity-id href="#"><i class="fa fa-user"></i>{{resource "goToMyIdentityButtonText"}}</a>
-        </li>
-        <li id="go-to-my-open-check-in-container" class="tab-title hidden">
-            <a id="go-to-my-open-check-in-button" class="open-check-in" data-locus-id href="#"><i class="fa fa-map-marker"></i>{{resource "goToMyIdentityButtonText"}}</a>
-        </li>
-        <li class="tab-title active">
-            <a id="go-to-locus-search-button" href="#"><i class="fa fa-map-marker"></i>{{resource "goToLocusSearchButtonText"}}</a>
-        </li>
-        <li class="tab-title">
-            <a id="go-to-identity-search-button" href="#"><i class="fa fa-users"></i>{{resource "goToIdentitySearchButtonText"}}</a>
-        </li>
-        <li class="tab-title">
-            <a id="go-to-ad-hoc-entry-button" href="#"><i class="fa fa-pencil-square-o"></i>{{resource "goToAdHocEntryButtonText"}}</a>
-        </li>
-        <li class="tab-title">
-            <a id="go-to-settings-button" href="#"><i class="fa fa-gear"></i>{{resource "goToSettingsButtonText"}}</a>
-        </li>
-    </ul>
-</footer>
+<div clas="footer-view">
+    <footer class="footer">
+        <p>Check-in|Check-out brought to you by Team Awesome!</p>
+    </footer>
+    <div id="edit-open-check-in-fbtn-container" class="fbtn-container hidden">
+        <div class="fbtn-inner">
+            <a id="open-check-in-floating-button" class="fbtn fbtn-red fbtn-lg" data-toggle="dropdown"><span class="fbtn-ori icon">{{resource "openEntryLogIcon"}}</span></a>
+            <div class="fbtn-dropdown">
+                <a class="fbtn fbtn-alt" href="#"><span class="icon">{{resource "editIcon"}}</span></a>
+                <a class="fbtn fbtn-blue" href="#"><span class="icon">{{resource "checkOutIcon"}}</span></a>
+            </div>
+        </div>
+    </div>
+    <div id="ad-hoc-check-in-fbtn-container" class="fbtn-container hidden">
+        <div class="fbtn-inner">
+            <a id="ad-hoc-check-in-floating-button" class="fbtn fbtn-green fbtn-lg"><span class="fbtn-text">{{resource "adHocButtonText"}}</span><span class="fbtn-ori icon">{{resource "adHocIcon"}}</span></a>
+        </div>
+    </div>
+</div>

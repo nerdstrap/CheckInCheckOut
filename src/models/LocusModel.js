@@ -1,14 +1,28 @@
 'use strict';
 
-var $ = require('jquery');
-var _ = require('underscore');
 var Backbone = require('backbone');
-var utils = require('utils');
+Backbone.$ = require('jquery');
+var $ = Backbone.$;
+var _ = require('underscore');
 
+/**
+ *
+ * @type {LocusModel}
+ */
 var LocusModel = Backbone.Model.extend({
 
+    /**
+     *
+     */
     idAttribute: 'locusId',
 
+    /**
+     *
+     * @param key
+     * @param val
+     * @param options
+     * @returns {LocusModel}
+     */
     set: function (key, val, options) {
         var attributes;
         if (typeof key === 'object') {
@@ -22,8 +36,6 @@ var LocusModel = Backbone.Model.extend({
                 var latitude = attributes.latitude;
                 if (latitude && !isNaN(latitude)) {
                     attributes.latitude = Number(latitude);
-                } else {
-                    delete attributes.latitude;
                 }
             }
 
@@ -31,8 +43,6 @@ var LocusModel = Backbone.Model.extend({
                 var longitude = attributes.longitude;
                 if (longitude && !isNaN(longitude)) {
                     attributes.longitude = Number(longitude);
-                } else {
-                    delete attributes.longitude;
                 }
             }
 
@@ -40,8 +50,34 @@ var LocusModel = Backbone.Model.extend({
                 var distance = attributes.distance;
                 if (distance && !isNaN(distance)) {
                     attributes.distance = Number(distance);
-                } else {
-                    delete attributes.distance;
+                }
+            }
+
+            if (attributes.hasOwnProperty('hasHazard')) {
+                var hasHazard = attributes.hasHazard;
+                if (hasHazard && hasHazard.match(this.boolRegex)) {
+                    attributes.hasHazard = (hasHazard === "true");
+                }
+            }
+
+            if (attributes.hasOwnProperty('hasActiveIssues')) {
+                var hasActiveIssues = attributes.hasActiveIssues;
+                if (hasActiveIssues && isNaN(hasActiveIssues)) {
+                    attributes.hasActiveIssues = (hasActiveIssues === "true");
+                }
+            }
+
+            if (attributes.hasOwnProperty('hasOpenReports')) {
+                var hasOpenReports = attributes.hasOpenReports;
+                if (hasOpenReports && isNaN(hasOpenReports)) {
+                    attributes.hasOpenReports = (hasOpenReports === "true");
+                }
+            }
+
+            if (attributes.hasOwnProperty('hasOpenCheckIns')) {
+                var hasOpenCheckIns = attributes.hasOpenCheckIns;
+                if (hasOpenCheckIns && isNaN(hasOpenCheckIns)) {
+                    attributes.hasOpenCheckIns = (hasOpenCheckIns === "true");
                 }
             }
         }

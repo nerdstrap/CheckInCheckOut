@@ -1,8 +1,9 @@
 'use strict';
 
-var $ = require('jquery');
-var _ = require('underscore');
 var Backbone = require('backbone');
+Backbone.$ = require('jquery');
+var $ = Backbone.$;
+var _ = require('underscore');
 
 var CompositeView = function (options) {
     this.children = _([]);
@@ -19,15 +20,15 @@ _.extend(CompositeView.prototype, Backbone.View.prototype, {
         this._removeFromParent();
     },
     renderChild: function (view) {
+        view.parent = this;
         view.render();
         this.children.push(view);
-        view.parent = this;
     },
     renderChildInto: function (view, container) {
         this.renderChild(view);
         this.$(container).html(view.el);
     },
-    replaceChild: function (view, container) {
+    replaceWithChild: function (view, container) {
         this.renderChild(view);
         this.$(container).replaceWith(view.el);
     },

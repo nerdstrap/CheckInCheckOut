@@ -1,0 +1,17 @@
+[
+  {
+    "reportId": "1",
+    "locusId": "1",
+    "description": "report one"
+  },
+  {
+    "reportId": "2",
+    "locusId": "1",
+    "description": "report two"
+  },
+  {
+    "reportId": "3",
+    "locusId": "2",
+    "description": "report three"
+  }
+]

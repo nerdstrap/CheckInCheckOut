@@ -1,15 +1,27 @@
 'use strict';
 
-var $ = require('jquery');
-var _ = require('underscore');
 var Backbone = require('backbone');
-var env = require('env');
-var utils = require('utils');
+Backbone.$ = require('jquery');
+var $ = Backbone.$;
+var _ = require('underscore');
+var CheckInStatusEnum = require('enums/CheckInStatusEnum');
+var config = require('lib/config');
+var utils = require('lib/utils');
 
+/**
+ *
+ * @type {EntryLogModel}
+ */
 var EntryLogModel = Backbone.Model.extend({
 
+    /**
+     *
+     */
     idAttribute: 'entryLogId',
 
+    /**
+     *
+     */
     validation: {
         locusId: {
             required: true,
@@ -42,7 +54,7 @@ var EntryLogModel = Backbone.Model.extend({
             minLength: 1
         },
         purposeOther: {
-            required: function() {
+            required: function () {
                 return (this.get('purpose') === 'Other');
             }
         },
@@ -51,6 +63,13 @@ var EntryLogModel = Backbone.Model.extend({
         }
     },
 
+    /**
+     *
+     * @param key
+     * @param val
+     * @param options
+     * @returns {EntryLogModel}
+     */
     set: function (key, val, options) {
         var attributes;
         if (typeof key === 'object') {
@@ -60,86 +79,57 @@ var EntryLogModel = Backbone.Model.extend({
             (attributes = {})[key] = val;
         }
         if (attributes) {
-            if (attributes.hasOwnProperty('identityUserName')) {
-                var identityNameParts = attributes.identityUserName.split(', ');
-                if (identityNameParts && identityNameParts.length > 1) {
-                    attributes.identityFullName = identityNameParts[1] + ' ' + identityNameParts[0];
-                }
-            }
-
             if (attributes.hasOwnProperty('latitude')) {
                 var latitude = attributes.latitude;
                 if (latitude && !isNaN(latitude)) {
                     attributes.latitude = Number(latitude);
-                } else {
-                    delete attributes.latitude;
                 }
             }
-                
+
             if (attributes.hasOwnProperty('longitude')) {
                 var longitude = attributes.longitude;
                 if (longitude && !isNaN(longitude)) {
                     attributes.longitude = Number(longitude);
-                } else {
-                    delete attributes.longitude;
                 }
             }
-                
+
             if (attributes.hasOwnProperty('distance')) {
                 var distance = attributes.distance;
                 if (distance && !isNaN(distance)) {
                     attributes.distance = Number(distance);
-                } else {
-                    delete attributes.distance;
                 }
             }
 
-            if (attributes.hasOwnProperty('inTime')) {
+            if (attributes.hasOwnProperty('inTime') && attributes.hasOwnProperty('duration')) {
                 var inTime = attributes.inTime;
-                if (inTime && !isNaN(inTime)) {
+                var duration = attributes.duration;
+                if (inTime && !isNaN(inTime) && duration && !isNaN(duration)) {
                     attributes.inTime = new Date(Number(inTime));
+                    attributes.duration = Number(duration);
+                    attributes.expectedOutTime = utils.addMinutes(attributes.inTime, attributes.duration);
+                    attributes.checkInStatus = CheckInStatusEnum.checkedIn;
+                }
+            }
 
-                    if (attributes.hasOwnProperty('duration')) {
-                        var duration = attributes.duration;
-                        if (duration && !isNaN(duration)) {
-                            attributes.duration = Number(duration);
-                            attributes.expectedOutTime = utils.addMinutes(attributes.inTime, attributes.duration);
-                        } else {
-                            delete attributes.duration;
-                        }
-                    }
+            if (attributes.hasOwnProperty('outTime')) {
+                var outTime = attributes.outTime;
+                if (outTime && !isNaN(outTime)) {
+                    attributes.outTime = new Date(Number(outTime));
+                    attributes.actualDuration = (attributes.outTime - attributes.inTime);
+                    attributes.checkInStatus = CheckInStatusEnum.checkedOut;
+                }
+            }
 
-                    var checkedOut = false;
-                    if (attributes.hasOwnProperty('outTime')) {
-                        var outTime = attributes.outTime;
-                        if (outTime && !isNaN(outTime)) {
-                            attributes.outTime = new Date(Number(outTime));
-                            attributes.actualDuration = (outTime - inTime);
-                            checkedOut = true;
-                        } else {
-                            delete attributes.outTime;
-                        }
-                    }
-
-                    if (checkedOut === false && attributes.expectedOutTime) {
-                        var expectedOutTimeElapsed = new Date() - attributes.expectedOutTime;
-                        if (expectedOutTimeElapsed >= env.getExpirationThreshold()) {
-                            attributes.checkOutOverdue = true;
-                        } else if (expectedOutTimeElapsed > 0) {
-                            attributes.checkOutExpired = true;
-                        }
-                    }
-                } else {
-                    delete attributes.inTime;
-                    if (attributes.hasOwnProperty('duration')) {
-                        delete attributes.duration;
-                    }
-                    if (attributes.hasOwnProperty('outTime')) {
-                        delete attributes.outTime;
-                    }
+            if (attributes.checkInStatus === CheckInStatusEnum.checkedIn) {
+                var expectedOutTimeElapsed = new Date() - attributes.expectedOutTime;
+                if (expectedOutTimeElapsed >= config.entryLogExpirationThreshold) {
+                    attributes.checkInStatus = CheckInStatusEnum.overdue;
+                } else if (expectedOutTimeElapsed > 0) {
+                    attributes.checkInStatus = CheckInStatusEnum.expired;
                 }
             }
         }
+
         return Backbone.Model.prototype.set.call(this, attributes, options);
     }
 });

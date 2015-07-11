@@ -1,0 +1,69 @@
+[
+  {
+    "locusId": "1",
+    "locusName": "Station One",
+    "regionName": "Summit",
+    "areaName": "Barberton",
+    "latitude": "41.038856",
+    "longitude": "-81.578962",
+    "phone": "6145551212",
+    "hasLock": "false",
+    "hasOpenReports": "false",
+    "hasActiveIssues": "false",
+    "hasOpenCheckIns": "true"
+  },
+  {
+    "locusId": "2",
+    "locusName": "Second Station",
+    "regionName": "Summit",
+    "areaName": "Akron",
+    "latitude": "41.0408143",
+    "longitude": "-81.5771596",
+    "phone": "3305551212",
+    "hasLock": "true",
+    "hazardDetail": "its really bad",
+    "hasOpenReports": "false",
+    "hasActiveIssues": "false",
+    "hasOpenCheckIns": "false"
+  },
+  {
+    "locusId": "3",
+    "locusName": "Station Tres",
+    "regionName": "Summit",
+    "areaName": "Akron",
+    "latitude": "41.0408143",
+    "longitude": "-81.5771596",
+    "phone": "3305551212",
+    "hasLock": "false",
+    "hasOpenReports": "false",
+    "hasActiveIssues": "false",
+    "hasOpenCheckIns": "true"
+  },
+  {
+    "locusId": "4",
+    "locusName": "Fore Station",
+    "regionName": "Summit",
+    "areaName": "Akron",
+    "latitude": "41.0408143",
+    "longitude": "-81.5771596",
+    "phone": "3305551212",
+    "hasLock": "false",
+    "hasOpenReports": "false",
+    "hasActiveIssues": "false",
+    "hasOpenCheckIns": "false"
+  },
+  {
+    "locusId": "666",
+    "locusName": "Devil Station",
+    "regionName": "Summit",
+    "areaName": "Akron",
+    "latitude": "41.0408143",
+    "longitude": "-81.5771596",
+    "phone": "3305551212",
+    "hasLock": "true",
+    "lockDetail": "demons are running amok!",
+    "hasOpenReports": "true",
+    "hasActiveIssues": "true",
+    "hasOpenCheckIns": "true"
+  }
+]

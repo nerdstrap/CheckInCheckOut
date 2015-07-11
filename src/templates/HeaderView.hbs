@@ -1,20 +1,79 @@
-<div class="icon-bar five-up" role="navigation">
-    <a id="go-to-my-identity-button" class="item" tabindex="0">
-        <i class="fa fa-user"></i>
-    </a>
-    <a id="go-to-open-check-in-button" class="item hidden" tabindex="0">
-        <i class="fa fa-map-marker open"></i>
-    </a>
-    <a id="go-to-locus-search-button" class="item" tabindex="0">
-        <i class="fa fa-map-marker"></i>
-    </a>
-    <a id="go-to-identity-search-button" class="item" tabindex="0" >
-        <i class="fa fa-users"></i>
-    </a>
-    <a id="go-to-ad-hoc-check-in-button" class="item" tabindex="0" >
-        <i class="fa fa-pencil-square-o"></i>
-    </a>
-    <a id="go-to-settings-button" class="item" tabindex="0" >
-        <i class="fa fa-gear"></i>
-    </a>
+<div class="header-view">
+    <nav class="menu menu-left nav-drawer nav-drawer-lg" id="menu">
+        <div class="menu-scroll">
+            <div class="menu-wrap">
+                <div class="menu-content">
+                    <a class="menu-logo" href="#" tabindex="0">{{resource "brandLogoButtonText"}}</a>
+                    <ul class="nav">
+                        <li>
+                            <a id="go-to-locus-search-button" href="#" tabindex="0">{{resource "locusSearchButtonText"}}<span class="icon icon-lg">{{resource "locusSearchIcon"}}</span></a>
+                        </li>
+                        <li>
+                            <a id="go-to-identity-search-button" href="#" tabindex="0">{{resource "identitySearchButtonText"}}<span class="icon icon-lg">{{resource "identitySearchIcon"}}</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <header class="header">
+        <ul class="nav nav-list pull-left hidden-lg">
+            <li>
+                <a data-toggle="menu" href="#menu">
+                    <span class="icon icon-lg">menu</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="nav nav-list pull-left">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" tabindex="0">Stations<span class="icon icon-lg">{{resource "moreVerticalIcon"}}</span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="view-open-reports-button" href="#" data-locus-id="{{locusId}}" tabindex="0">All</a>
+                    </li>
+                    <li>
+                        <a class="view-active-issues-button" href="#" data-locus-id="{{locusId}}" tabindex="0">Stations</a>
+                    </li>
+                    <li>
+                        <a class="view-open-check-ins-button" href="#" data-locus-id="{{locusId}}" tabindex="0">People</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="nav nav-list pull-right">
+            <li>
+                <a data-toggle="menu" href="#profile">
+                    <span class="access-hide">Michael Baltic</span>
+                    <span class="avatar avatar-sm"><img alt="Michael Baltic" src="images/avatar-001.jpg"></span>
+                </a>
+            </li>
+        </ul>
+        <nav class="menu menu-right" id="profile">
+            <div class="menu-scroll">
+                <div class="menu-wrap">
+                    <div class="menu-top">
+                        <div class="menu-top-img">
+                            <img alt="Michael Baltic" src="images/landscape.jpg">
+                        </div>
+                        <div class="menu-top-info">
+                            <a class="menu-top-user" href="#"><span class="avatar pull-left"><img alt="Michael Baltic" src="images/avatar-001.jpg"></span>Michael Baltic</a>
+                        </div>
+                        <div class="menu-top-info-sub">
+                            <small>Ginger Stache</small>
+                        </div>
+                    </div>
+                    <div class="menu-content">
+                        <ul class="nav">
+                            <li>
+                                <a href="#"><span class="icon icon-lg">account_box</span>settings</a>
+                            </li>
+                            <li>
+                                <a href="#"><span class="icon icon-lg">exit_to_app</span>Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
 </div>

@@ -1,83 +1,126 @@
-<h3>{{resource "checkOutViewHeaderText"}}</h3>
-<div class="row">
-    <div class="small-12 columns read-only-field">
-        <span id="locus-name-label" data-locus-id="{{locusId}}">{{withDefault locusName "&nbsp;"}}</span>
-        <label for="locus-name-label">{{resource "locusNameHeaderText"}}</label>
+<div class="locus-search-view content">
+    <div class="content-heading">
+        <div class="container">
+            <h1 class="heading">{{resource "checkOutViewHeaderText"}}</h1>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="small-12 columns read-only-field">
-        <span id="distance-label" name="distance">{{withDefault distance "&nbsp;"}}</span>
-        <label for="distance-label">{{resource "distanceHeaderText"}}</label>
-    </div>
-</div>
-<div id="locus-description-input-container" class="row hidden">
-    <div class="small-12 columns input-field">
-        <input id="locus-description-input" name="locusName" type="text" class="validate required" placeholder='{{resource "locusDescriptionPlaceholder"}}'/>
-        <label for="locus-description-input">{{resource "locusNameHeaderText"}}</label>
-    </div>
-</div>
-<div id="coordinates-input-container" class="row hidden">
-    <div class="small-12 columns input-field">
-        <input id="latitude-input" name="latitude" type="text" class="validate required" placeholder='{{resource "latitudePlaceholder"}}'/>
-        <input id="longitude-input" name="longitude" type="text" class="validate required" placeholder='{{resource "longitudePlaceholder"}}'/>
-        <label for="latitude-input">{{resource "coordinatesHeaderText"}}</label>
-    </div>
-</div>
-<div class="row">
-    <div class="small-12 columns input-field">
-        <input id="contact-number-input" name="contactNumber" type="text" class="validate required pattern" placeholder='{{resource "contactNumberPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
-        <label for="contact-number-input">{{resource "contactNumberHeaderText"}}</label>
-    </div>
-</div>
-<div class="row">
-    <div class="small-12 columns input-field">
-        <input id="email-input" name="email" type="text" class="validate pattern" placeholder='{{resource "emailPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
-        <label for="email-input">{{resource "emailHeaderText"}}</label>
-    </div>
-</div>
-<div class="row">
-    <div class="small-12 columns input-field">
-        <select id="purpose-input" name="purpose" class="validate required">
-            <option disabled="disabled" selected="selected" value="">{{resource "purposePlaceholder"}}</option>
-        </select>
-        <label for="purpose-input">{{resource "purposeHeaderText"}}</label>
-    </div>
-</div>
-<div id="purpose-other-input-container" class="row hidden">
-    <div class="small-12 columns input-field">
-        <input id="purpose-other-input" name="purposeOther" type="text" class="validate required" placeholder='{{resource "purposeOtherPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
-        <label for="purpose-other-input">{{resource "purposeOtherHeaderText"}}</label>
-    </div>
-</div>
-<div class="row">
-    <div class="small-12 columns input-field">
-        <select id="duration-input" name="duration" class="validate required">
-            <option disabled="disabled" selected="selected" value="">{{resource "durationPlaceholder"}}</option>
-        </select>
-        <label for="duration-input">{{resource "durationHeaderText"}}</label>
-    </div>
-</div>
-<div class="row">
-    <div class="small-12 columns input-field">
-        <input id="group-check-in-input" name="groupCheckIn" type="checkBox"/>
-        <label for="group-check-in-input">{{resource "groupCheckInHeaderText"}}</label>
-    </div>
-</div>
-<div class="row">
-    <div class="small-12 columns input-field">
-        <input id="additional-info-input" name="additionalInfo" type="text" placeholder='{{resource "additionalInfoPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
-        <label for="additional-info-input">{{resource "additionalInfoHeaderText"}}</label>
-    </div>
-</div>
-<div id="check-out-view-loading-icon-container" class="hidden">
-    <img src="{{resource 'loadingIconSrc'}}" alt="" />
-</div>
-<div id="check-out-alerts-container">
-</div>
-<div class="row">
-    <div class="small-12 columns">
-        <a id="cancel-check-out-button" class="button radius secondary" href="#">{{resource "cancelButtonText"}}</a>
-        <a id="submit-check-out-button" class="button radius success" href="#">{{resource "checkOutButtonText"}}<i class="fa fa-minus-square-o"></i></a>
+    <div class="content-inner">
+        <div class="container">
+            <form class="form">
+                <div id="identity-name-input-container" class="row hidden">
+                    <div class="col-sm-12">
+                        <input id="identity-name-input" name="identityName" data-identity-id="{{identityId}}" type="text" class="validate" placeholder='{{resource "identityNamePlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+                        <label class="active" for="identity-name-input">{{resource "identityNameHeaderText"}}</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input id="locus-name-input" name="locusName" data-locus-id="{{locusId}}" type="text" class="validate" placeholder='{{resource "locusNamePlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+                        <label class="active" for="locus-name-input">{{resource "locusNameHeaderText"}}</label>
+                    </div>
+                </div>
+                <div id="locus-description-input-container" class="row hidden">
+                    <div class="col-sm-12">
+                        <input id="locus-description-input" name="locusDescription" type="text" class="validate" length="100" placeholder='{{resource "locusDescriptionPlaceholder"}}'/>
+                        <label class="active" for="locus-description-input">{{resource "locusDescriptionHeaderText"}}</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <input id="latitude-input" name="latitude" type="text" class="validate" placeholder='{{resource "latitudePlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+                        <label class="active" for="latitude-input">{{resource "latitudeHeaderText"}}</label>
+                    </div>
+                    <div class="col-sm-6">
+                        <input id="longitude-input" name="longitude" type="text" class="validate" placeholder='{resource "longitudePlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+                        <label class="active" for="longitude-input">{{resource "longitudeHeaderText"}}</label>
+                    </div>
+                </div>
+                <div id="distance-input-container" class="row hidden">
+                    <div class="col-sm-12">
+                        <input id="distance-input" type="text" placeholder='{{resource "distancePlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+                        <label class="active" for="distance-input">{{resource "distanceHeaderText"}}</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input id="contact-number-input" name="contactNumber" type="text" class="validate" placeholder='{{resource "contactNumberPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+                        <label class="active" for="contact-number-input">{{resource "contactNumberHeaderText"}}</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input id="email-input" name="email" type="text" class="validate" placeholder='{{resource "emailPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+                        <label class="active" for="email-input">{{resource "emailHeaderText"}}</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <select id="purpose-input" name="purpose" class="browser-default validate">
+                            <option disabled="disabled" selected="selected" value="">{{resource "purposePlaceholder"}}</option>
+                        </select>
+                        <label class="active" for="purpose-input">{{resource "purposeHeaderText"}}</label>
+                    </div>
+                </div>
+                <div id="purpose-other-input-container" class="row hidden">
+                    <div class="col-sm-12">
+                        <input id="purpose-other-input" name="purposeOther" type="text" class="validate" placeholder='{{resource "purposeOtherPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+                        <label class="active" for="purpose-other-input">{{resource "purposeOtherHeaderText"}}</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <select id="duration-input" name="duration" class="browser-default validate">
+                            <option disabled="disabled" selected="selected" value="">{{resource "durationPlaceholder"}}</option>
+                        </select>
+                        <label class="active" for="duration-input">{{resource "durationHeaderText"}}</label>
+                    </div>
+                </div>
+                <div id="in-time-input-container" class="row hidden">
+                    <div class="col-sm-12">
+                        <input id="in-time-input" type="text" placeholder='{{resource "inTimePlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+                        <label class="active" for="in-time-input">{{resource "inTimeHeaderText"}}</label>
+                    </div>
+                </div>
+                <div id="expected-out-time-input-container" class="row hidden">
+                    <div class="col-sm-12">
+                        <input id="expected-out-time-input" type="text" placeholder='{{resource "expectedOutTimePlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+                        <label class="active" for="expected-out-time-input">{{resource "expectedOutTimeHeaderText"}}</label>
+                    </div>
+                </div>
+                <div id="actual-duration-input-container" class="row hidden">
+                    <div class="col-sm-12">
+                        <input id="actual-duration-input" type="text" placeholder='{{resource "durationPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+                        <label class="active" for="actual-duration-input">{{resource "durationHeaderText"}}</label>
+                    </div>
+                </div>
+                <div id="out-time-input-container" class="row hidden">
+                    <div class="col-sm-12">
+                        <input id="out-time-input" type="text" placeholder='{{resource "outTimePlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+                        <label class="active" for="out-time-input">{{resource "outTimeHeaderText"}}</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input id="has-group-check-in-input" name="hasGroupCheckIn" type="checkBox"/>
+                        <label class="active" for="has-group-check-in-input">{{resource "hasGroupCheckInHeaderText"}}</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input id="additional-info-input" name="additionalInfo" type="text" length="1000" placeholder='{{resource "additionalInfoPlaceholder"}}' spellcheck="false" autocomplete="off" autocorrect="off" autocapitalization="off"/>
+                        <label class="active" for="additional-info-input">{{resource "additionalInfoHeaderText"}}</label>
+                    </div>
+                </div>
+                <div id="check-out-view-progress-indicator" class="progress hidden">
+                    <div class="indeterminate"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <a id="cancel-check-out-button" class="waves-effect waves-light btn-large" href="#!">{{resource "cancelButtonText"}}</a>
+                        <a id="submit-check-out-button" class="waves-effect waves-light btn-large" data-entry-log-id="{{entryLogId}}" href="#!">{{resource "checkOutButtonText"}}<i class="mdi-action-done-all"></i></a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

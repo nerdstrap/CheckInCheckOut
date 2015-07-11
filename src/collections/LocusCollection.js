@@ -1,15 +1,17 @@
 'use strict';
 
-var $ = require('jquery');
-var _ = require('underscore');
 var Backbone = require('backbone');
+Backbone.$ = require('jquery');
+var $ = Backbone.$;
+var _ = require('underscore');
 var LocusModel = require('models/LocusModel');
 
+/**
+ *
+ * @type {LocusCollection}
+ */
 var LocusCollection = Backbone.Collection.extend({
-    model: LocusModel,
-    initialize: function (options) {
-        options || (options = {});
-    }
+    model: LocusModel
 });
 
 module.exports = LocusCollection;

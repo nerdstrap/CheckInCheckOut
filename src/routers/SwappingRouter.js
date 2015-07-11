@@ -1,8 +1,9 @@
 'use strict';
 
-var $ = require('jquery');
-var _ = require('underscore');
 var Backbone = require('backbone');
+Backbone.$ = require('jquery');
+var $ = Backbone.$;
+var _ = require('underscore');
 
 /**
  * Creates a new SwappingRouter with the specified attributes.

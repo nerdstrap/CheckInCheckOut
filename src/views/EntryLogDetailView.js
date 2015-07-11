@@ -1,24 +1,16 @@
 'use strict';
 
-var $ = require('jquery');
-var _ = require('underscore');
 var Backbone = require('backbone');
+Backbone.$ = require('jquery');
+var $ = Backbone.$;
+var _ = require('underscore');
 var BaseView = require('views/BaseView');
 var EntryLogListView = require('views/EntryLogListView');
-var EventNamesEnum = require('enums/EventNamesEnum');
-var utils = require('utils');
+var EventNameEnum = require('enums/EventNameEnum');
+var utils = require('lib/utils');
 var template = require('templates/LocusDetailView.hbs');
 
 var LocusDetailView = BaseView.extend({
-    /**
-     *
-     */
-    tagName: 'div',
-
-    /**
-     *
-     */
-    className: 'locus-detail-view',
 
     /**
      *
@@ -40,6 +32,7 @@ var LocusDetailView = BaseView.extend({
         this.controller = options.controller;
         this.dispatcher = options.dispatcher || this;
 
+        this.myIdentityModel = options.myIdentityModel;
         this.openEntryLogCollection = options.openEntryLogCollection;
         this.recentEntryLogCollection = options.recentEntryLogCollection;
         this.openLocusReportCollection = options.openLocusReportCollection;
@@ -57,7 +50,7 @@ var LocusDetailView = BaseView.extend({
         console.trace('LocusDetailView.render()');
         var currentContext = this;
         var renderModel = _.extend({}, currentContext.model.attributes);
-        currentContext.$el.html(template(renderModel));
+        currentContext.setElement(template(renderModel));
         this.renderChildViews();
         return this;
     },
@@ -189,14 +182,14 @@ var LocusDetailView = BaseView.extend({
      */
     updateCheckInControls: function () {
         var currentContext = this;
-        if (currentContext.identityModel.openEntryLogCollection.length > 0) {
-            if (currentContext.identityModel.openEntryLogCollection.at(0).get('locusId') === currentContext.model.get('locusId')) {
-                currentContext.showCheckOutButton(currentContext.identityModel.openEntryLogCollection.at(0));
+        if (currentContext.myIdentityModel.openEntryLogCollection.length > 0) {
+            if (currentContext.myIdentityModel.openEntryLogCollection.at(0).get('locusId') === currentContext.model.get('locusId')) {
+                currentContext.showCheckOutButton(currentContext.myIdentityModel.openEntryLogCollection.at(0));
             } else {
-                currentContext.showGoToOpenCheckInButton(currentContext.identityModel.openEntryLogCollection.at(0));
+                currentContext.showGoToOpenCheckInButton(currentContext.myIdentityModel.openEntryLogCollection.at(0));
             }
         } else {
-            currentContext.showCheckInButton();
+            currentContext.showCheckIn();
         }
         return this;
     },
@@ -205,7 +198,7 @@ var LocusDetailView = BaseView.extend({
      *
      * @returns {LocusDetailView}
      */
-    showCheckInButton: function () {
+    showCheckIn: function () {
         var currentContext = this;
         if (currentContext.model.has('hasLock') && currentContext.model.get('hasLock') === 'true') {
             currentContext.showCallCoordinatorButton();
@@ -296,7 +289,7 @@ var LocusDetailView = BaseView.extend({
         }
         var currentContext = this;
 
-        currentContext.dispatcher.trigger(EventNamesEnum.goToLocusSearch);
+        currentContext.dispatcher.trigger(EventNameEnum.goToLocusSearch);
         return this;
     },
 
@@ -312,7 +305,7 @@ var LocusDetailView = BaseView.extend({
         var currentContext = this;
         var latitude = currentContext.model.get('latitude');
         var longitude = currentContext.model.get('longitude');
-        currentContext.dispatcher.trigger(EventNamesEnum.goToMapWithLatLng, latitude, longitude);
+        currentContext.dispatcher.trigger(EventNameEnum.goToMapWithLatLng, latitude, longitude);
         return this;
     },
 
@@ -327,7 +320,7 @@ var LocusDetailView = BaseView.extend({
         }
         var currentContext = this;
         var locusId = currentContext.model.get('locusId');
-        currentContext.dispatcher.trigger(EventNamesEnum.goToUpdateFavorite, locusId);
+        currentContext.dispatcher.trigger(EventNameEnum.goToUpdateFavorite, locusId);
         return this;
     },
 
@@ -355,7 +348,7 @@ var LocusDetailView = BaseView.extend({
             event.preventDefault();
         }
         var currentContext = this;
-        currentContext.dispatcher.trigger(EventNamesEnum.goToCheckIn, currentContext.model);
+        currentContext.dispatcher.trigger(EventNameEnum.goToCheckIn, currentContext.model);
         return this;
     },
 
@@ -369,7 +362,7 @@ var LocusDetailView = BaseView.extend({
             event.preventDefault();
         }
         var currentContext = this;
-        currentContext.dispatcher.trigger(EventNamesEnum.goToCheckOut, currentContext.openEntryLogModel);
+        currentContext.dispatcher.trigger(EventNameEnum.goToCheckOut, currentContext.openEntryLogModel);
         return this;
     },
 
@@ -385,7 +378,7 @@ var LocusDetailView = BaseView.extend({
                 var currentContext = this;
                 var locusId = $(event.target).attr('data-locus-id');
                 if (locusId) {
-                    currentContext.dispatcher.trigger(EventNamesEnum.goToLocusWithId, locusId);
+                    currentContext.dispatcher.trigger(EventNameEnum.goToLocusWithId, locusId);
                 }
             }
         }
@@ -404,7 +397,7 @@ var LocusDetailView = BaseView.extend({
         var currentContext = this;
         var latitude = currentContext.model.get('latitude');
         var longitude = currentContext.model.get('longitude');
-        currentContext.dispatcher.trigger(EventNamesEnum.goToDirectionsWithLatLng, latitude, longitude);
+        currentContext.dispatcher.trigger(EventNameEnum.goToDirectionsWithLatLng, latitude, longitude);
         return this;
     },
 
@@ -436,8 +429,8 @@ var LocusDetailView = BaseView.extend({
         var options = {
             locusId: currentContext.model.get('locusId')
         };
-        currentContext.dispatcher.trigger(EventNamesEnum.refreshEntryLogList, currentContext.openEntryLogCollection, _.extend(options, {'open': true}));
-        currentContext.dispatcher.trigger(EventNamesEnum.refreshEntryLogList, currentContext.recentEntryLogCollection, _.extend(options, {'recent': true}));
+        currentContext.dispatcher.trigger(EventNameEnum.refreshEntryLogCollection, currentContext.openEntryLogCollection, _.extend(options, {'open': true}));
+        currentContext.dispatcher.trigger(EventNameEnum.refreshEntryLogCollection, currentContext.recentEntryLogCollection, _.extend(options, {'recent': true}));
     },
 
     /**

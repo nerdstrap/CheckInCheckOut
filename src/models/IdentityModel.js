@@ -1,15 +1,29 @@
 'use strict';
 
-var $ = require('jquery');
-var _ = require('underscore');
 var Backbone = require('backbone');
-var env = require('env');
+Backbone.$ = require('jquery');
+var $ = Backbone.$;
+var _ = require('underscore');
 var EntryLogCollection = require('collections/EntryLogCollection');
 
+/**
+ *
+ * @type {IdentityModel}
+ */
 var IdentityModel = Backbone.Model.extend({
 
+    /**
+     *
+     */
     idAttribute: 'identityId',
 
+    /**
+     *
+     * @param key
+     * @param val
+     * @param options
+     * @returns {IdentityModel}
+     */
     set: function (key, val, options) {
         var attributes;
         if (typeof key === 'object') {
@@ -18,24 +32,18 @@ var IdentityModel = Backbone.Model.extend({
         } else {
             (attributes = {})[key] = val;
         }
-        if (attributes) {
-            if (attributes.hasOwnProperty('identityName')) {
-                var identityNameParts = attributes.identityName.split(', ');
-                if (identityNameParts && identityNameParts.length > 1) {
-                    attributes.identityFullName = identityNameParts[1] + ' ' + identityNameParts[0];
-                }
-            }
-
-            if (attributes.hasOwnProperty('openEntryLogs')) {
+        var attributesToSet = _.extend({}, attributes);
+        if (attributesToSet) {
+            if (attributesToSet.hasOwnProperty('openEntryLogs')) {
                 if (this.openEntryLogCollection) {
-                    this.openEntryLogCollection.reset(attributes.openEntryLogs, { silent: true });
+                    this.openEntryLogCollection.reset(attributesToSet.openEntryLogs, {silent: true});
                 } else {
-                    this.openEntryLogCollection = new EntryLogCollection(attributes.openEntryLogs, { silent: true });
+                    this.openEntryLogCollection = new EntryLogCollection(attributes.openEntryLogs, {silent: true});
                 }
-                delete attributes.openEntryLogs;
+                delete attributesToSet.openEntryLogs;
             }
         }
-        return Backbone.Model.prototype.set.call(this, attributes, options);
+        return Backbone.Model.prototype.set.call(this, attributesToSet, options);
     }
 });
 
