@@ -205,7 +205,6 @@ var LocusSearchView = BaseView.extend({
         //options.searchType = currentContext.searchType;
         currentContext.searchType = SearchTypeEnum.admin;
         options.admin = true;
-        currentContext.locusCollection.trigger('loading');
         currentContext.dispatcher.trigger(EventNameEnum.refreshLocusCollection, currentContext.locusCollection, currentContext.searchType, options);
         return this;
     },

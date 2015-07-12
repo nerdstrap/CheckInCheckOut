@@ -37,6 +37,11 @@ _.extend(LocusViewController.prototype, Backbone.Events, {
         this.listenTo(this.dispatcher, EventNameEnum.goToLocusSearch, this.goToLocusSearch);
         this.listenTo(this.dispatcher, EventNameEnum.goToLocusWithId, this.goToLocusWithId);
         this.listenTo(this.dispatcher, EventNameEnum.goToDirectionsWithLatLng, this.goToDirectionsWithLatLng);
+
+        this.listenTo(this.dispatcher, EventNameEnum.refreshLocusCollection, this.refreshLocusCollection);
+        this.listenTo(this.dispatcher, EventNameEnum.refreshEntryLogCollection, this.refreshEntryLogCollection);
+        this.listenTo(this.dispatcher, EventNameEnum.refreshIssueCollection, this.refreshIssueCollection);
+        this.listenTo(this.dispatcher, EventNameEnum.refreshReportCollection, this.refreshReportCollection);
     },
 
     /**
@@ -115,6 +120,100 @@ _.extend(LocusViewController.prototype, Backbone.Events, {
     goToDirectionsWithLatLng: function (latitude, longitude) {
         //var directionsUri = 'http://maps.google.com?daddr=' + latitude + ',' + longitude;
         //window.open(directionsUri);
+    },
+
+
+    /**
+     * 
+     * @param locusCollection
+     * @param searchType
+     * @param options
+     * @returns {promise}
+     */
+    refreshLocusCollection: function (locusCollection, searchType, options) {
+        var currentContext = this;
+        var deferred = $.Deferred();
+
+        locusCollection.trigger('loading');
+        currentContext.persistenceContext.refreshLocusCollection(locusCollection, searchType, options)
+            .done(function () {
+                deferred.resolve(locusCollection);
+            })
+            .fail(function (error) {
+                deferred.reject(error);
+            });
+
+        return deferred.promise();
+    },
+
+
+    /**
+     *
+     * @param entryLogCollection
+     * @param searchType
+     * @param options
+     * @returns {promise}
+     */
+    refreshEntryLogCollection: function (entryLogCollection, searchType, options) {
+        var currentContext = this;
+        var deferred = $.Deferred();
+
+        entryLogCollection.trigger('sync');
+        currentContext.persistenceContext.refreshEntryLogCollection(entryLogCollection, searchType, options)
+            .done(function () {
+                deferred.resolve(entryLogCollection);
+            })
+            .fail(function (error) {
+                deferred.reject(error);
+            });
+
+        return deferred.promise();
+    },
+
+
+    /**
+     *
+     * @param reportCollection
+     * @param options
+     * @returns {promise}
+     */
+    refreshReportCollection: function (reportCollection, options) {
+        var currentContext = this;
+        var deferred = $.Deferred();
+
+        reportCollection.trigger('sync');
+        currentContext.persistenceContext.refreshReportCollection(reportCollection, options)
+            .done(function () {
+                deferred.resolve(reportCollection);
+            })
+            .fail(function (error) {
+                deferred.reject(error);
+            });
+
+        return deferred.promise();
+    },
+
+
+    /**
+     *
+     * @param issueCollection
+     * @param options
+     * @returns {promise}
+     */
+    refreshIssueCollection: function (issueCollection, options) {
+        var currentContext = this;
+        var deferred = $.Deferred();
+
+        issueCollection.trigger('sync');
+        currentContext.persistenceContext.refreshIssueCollection(issueCollection, options)
+            .done(function () {
+                deferred.resolve(issueCollection);
+            })
+            .fail(function (error) {
+                deferred.reject(error);
+            });
+
+        return deferred.promise();
     }
 });
 

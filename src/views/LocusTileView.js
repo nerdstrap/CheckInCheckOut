@@ -15,7 +15,6 @@ var LocusTileView = BaseView.extend({
      * @param options
      */
     initialize: function (options) {
-        console.trace('LocusTileView.initialize');
         options || (options = {});
         this.dispatcher = options.dispatcher || this;
 
@@ -39,13 +38,13 @@ var LocusTileView = BaseView.extend({
      *
      */
     events: {
-        'click [data-toggle="tile"]': 'tileToggleCollapse',
-        'click .add-favorite-locus-button': 'addFavoriteLocus',
-        'click [data-toggle="dropdown"]': 'dropdownToggleCollapse',
-        'click .go-to-map-button': 'goToMap',
-        'click .go-to-locus-button': 'goToLocus',
-        'click .share-locus-button': 'shareLocus',
-        'click .dismiss-button': 'tileToggleCollapse'
+        //'click [data-toggle="tile"]': 'tileToggleCollapse',
+        //'click .add-favorite-locus-button': 'addFavoriteLocus',
+        //'click [data-toggle="dropdown"]': 'dropdownToggleCollapse',
+        //'click .go-to-map-button': 'goToMap',
+        'click .go-to-locus-button': 'goToLocus'
+        //'click .share-locus-button': 'shareLocus',
+        //'click .dismiss-button': 'tileToggleCollapse'
     },
 
     /**
@@ -101,11 +100,10 @@ var LocusTileView = BaseView.extend({
      */
     updateLocusNameLabel: function () {
         var currentContext = this;
-        var locusName;
         if (currentContext.model.has('locusName')) {
-            locusName = currentContext.model.get('locusName');
+            var locusName = currentContext.model.get('locusName');
+            currentContext.$('.locus-name-label').html(locusName);
         }
-        currentContext.$('.locus-name-label').html(locusName);
         return this;
     },
 
@@ -282,7 +280,6 @@ var LocusTileView = BaseView.extend({
      */
     onLoaded: function () {
         var currentContext = this;
-        console.trace('LocusTileView.onLoaded');
     },
 
     /**
@@ -290,7 +287,6 @@ var LocusTileView = BaseView.extend({
      */
     onLeave: function () {
         var currentContext = this;
-        console.trace('LocusTileView.onLeave');
     }
 });
 

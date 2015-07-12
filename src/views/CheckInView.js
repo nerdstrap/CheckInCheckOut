@@ -7,6 +7,7 @@ var _ = require('underscore');
 var BaseView = require('views/BaseView');
 var EntryLogModel = require('models/EntryLogModel');
 var EventNameEnum = require('enums/EventNameEnum');
+var CheckInTypeEnum = require('enums/CheckInTypeEnum');
 var validation = require('backbone-validation');
 var utils = require('lib/utils');
 var optionTemplate = require('templates/Option.hbs');
@@ -24,8 +25,6 @@ var CheckInView = BaseView.extend({
         this.controller = options.controller;
         this.dispatcher = options.dispatcher || this;
 
-        this.model = new EntryLogModel();
-
         this.myIdentityModel = options.myIdentityModel;
         this.openEntryLogyModel = options.openEntryLogyModel;
         this.locusModel = options.locusModel;
@@ -36,6 +35,7 @@ var CheckInView = BaseView.extend({
         this.listenTo(this.purposeCollection, 'reset', this.renderPurposes);
         this.listenTo(this.durationCollection, 'reset', this.renderDurations);
         this.listenTo(this.dispatcher, EventNameEnum.checkInSuccess, this.onCheckInSuccess);
+        this.listenTo(this.dispatcher, EventNameEnum.checkInError, this.onCheckInError);
         this.listenTo(this, 'loaded', this.onLoaded);
         this.listenTo(this, 'leave', this.onLeave);
     },
@@ -119,15 +119,23 @@ var CheckInView = BaseView.extend({
             currentContext.trigger('error');
             return this;
         }
-        if (currentContext.locusModel && currentContext.locusModel.has('locusId')) {
-            currentContext.model.set({'locusId': currentContext.locusModel.get('locusId')});
-            currentContext.model.set({'locusName': currentContext.locusModel.get('locusName')});
-            currentContext.model.set({'distance': currentContext.locusModel.get('distance')});
-            currentContext.model.set({'latitude': currentContext.locusModel.get('latitude')});
-            currentContext.model.set({'longitude': currentContext.locusModel.get('longitude')});
+        if (currentContext.model.get('checkInType') === CheckInTypeEnum.locus) {
+            if (currentContext.locusModel && currentContext.locusModel.has('locusId')) {
+                currentContext.model.set({'locusId': currentContext.locusModel.get('locusId')});
+                currentContext.model.set({'locusName': currentContext.locusModel.get('locusName')});
+                currentContext.model.set({'distance': currentContext.locusModel.get('distance')});
+                currentContext.model.set({'latitude': currentContext.locusModel.get('latitude')});
+                currentContext.model.set({'longitude': currentContext.locusModel.get('longitude')});
+            } else {
+                currentContext.trigger('error');
+                return this;
+            }
         }
         currentContext.model.set({'identityId': currentContext.myIdentityModel.get('identityId')});
         currentContext.model.set({'identityName': currentContext.myIdentityModel.get('identityName')});
+        currentContext.model.set({'firstName': currentContext.myIdentityModel.get('firstName')});
+        currentContext.model.set({'middleName': currentContext.myIdentityModel.get('middleName')});
+        currentContext.model.set({'lastName': currentContext.myIdentityModel.get('lastName')});
         currentContext.model.set({'contactNumber': currentContext.myIdentityModel.get('contactNumber')});
         currentContext.model.set({'email': currentContext.myIdentityModel.get('email')});
         return this;
@@ -280,6 +288,16 @@ var CheckInView = BaseView.extend({
      *
      * @returns {CheckInView}
      */
+    setExpectedOutTimeInput: function (expectedOutTime) {
+        var currentContext = this;
+        currentContext.$('#expected-out-time-input').val(utils.formatDate(expectedOutTime)).parent().addClass('control-highlight');
+        return this;
+    },
+
+    /**
+     *
+     * @returns {CheckInView}
+     */
     updateExpectedOutTimeInput: function () {
         var currentContext = this;
         if (currentContext.model.has('expectedOutTime')) {
@@ -402,8 +420,11 @@ var CheckInView = BaseView.extend({
             event.preventDefault();
         }
         var currentContext = this;
-        var duration = currentContext.$('#duration-input').val();
         currentContext.manualDurationEntry = true;
+        var duration = Number(currentContext.$('#duration-input').val());
+        var currentTime = new Date();
+        var expectedOutTime = utils.addMinutes(currentTime, duration);
+        currentContext.setExpectedOutTimeInput(expectedOutTime);
         return this;
     },
 
@@ -520,10 +541,18 @@ var CheckInView = BaseView.extend({
 
     /**
      *
+     * @returns {CheckInView}
+     */
+    onCheckInError: function () {
+        var currentContext = this;
+        return this;
+    },
+
+    /**
+     *
      */
     onError: function (error) {
         var currentContext = this;
-
         currentContext.$('.form-group-wrap').addClass('el-loading-done');
         return this;
     },

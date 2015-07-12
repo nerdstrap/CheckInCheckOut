@@ -7,6 +7,7 @@ var _ = require('underscore');
 
 var _purposes = require('repositories/purposes.json');
 var _durations = require('repositories/durations.json');
+var _areas = require('repositories/areas.json');
 
 var LookupDataRepository = function (options) {
     console.trace('new LookupDataRepository()');
@@ -41,6 +42,21 @@ _.extend(LookupDataRepository.prototype, {
 
         var results = {
             durations: _durations
+        };
+
+        window.setTimeout(function () {
+            deferred.resolveWith(currentContext, [results]);
+        }, 20);
+
+        return deferred.promise();
+    },
+    getAreas: function (options) {
+        options || (options = {});
+        var currentContext = this;
+        var deferred = $.Deferred();
+
+        var results = {
+            areas: _areas
         };
 
         window.setTimeout(function () {

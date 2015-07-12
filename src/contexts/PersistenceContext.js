@@ -18,7 +18,7 @@ var PersistenceContext = function (options) {
     this.initialize.apply(this, arguments);
 };
 
-_.extend(PersistenceContext.prototype, Backbone.Events, {
+_.extend(PersistenceContext.prototype, {
     /**
      *
      * @param options
@@ -26,7 +26,6 @@ _.extend(PersistenceContext.prototype, Backbone.Events, {
     initialize: function (options) {
         console.trace('PersistenceContext.initialize');
         options || (options = {});
-        this.dispatcher = options.dispatcher;
         this.identityRepository = options.identityRepository;
         this.locusRepository = options.locusRepository;
         this.entryLogRepository = options.entryLogRepository;
@@ -35,11 +34,6 @@ _.extend(PersistenceContext.prototype, Backbone.Events, {
         this.issueRepository = options.issueRepository;
         this.geoLocationService = options.geoLocationService;
         this.mapper = options.mapper;
-
-        this.listenTo(this.dispatcher, EventNameEnum.refreshLocusCollection, this.refreshLocusCollection);
-        this.listenTo(this.dispatcher, EventNameEnum.refreshEntryLogCollection, this.refreshEntryLogCollection);
-        this.listenTo(this.dispatcher, EventNameEnum.checkIn, this.checkIn);
-        this.listenTo(this.dispatcher, EventNameEnum.checkOut, this.checkOut);
     },
 
     /**
@@ -49,6 +43,7 @@ _.extend(PersistenceContext.prototype, Backbone.Events, {
      * @returns {promise}
      */
     getMyIdentityAndOpenEntryLogs: function (myIdentityModel, openEntryLogModel) {
+        console.trace('PersistenceContext.getMyIdentityAndOpenEntryLogs');
         var currentContext = this;
         var deferred = $.Deferred();
 
@@ -74,6 +69,7 @@ _.extend(PersistenceContext.prototype, Backbone.Events, {
      * @returns {promise}
      */
     getLocusById: function (locusModel) {
+        console.trace('PersistenceContext.getLocusById');
         var currentContext = this;
         var deferred = $.Deferred();
 
@@ -97,6 +93,7 @@ _.extend(PersistenceContext.prototype, Backbone.Events, {
      * @returns {promise}
      */
     getOptions: function (purposeCollection, durationCollection) {
+        console.trace('PersistenceContext.getOptions');
         var currentContext = this;
         var deferred = $.Deferred();
 
@@ -121,17 +118,17 @@ _.extend(PersistenceContext.prototype, Backbone.Events, {
      * @returns {promise}
      */
     refreshLocusCollection: function (locusCollection, searchType, options) {
+        console.trace('PersistenceContext.refreshLocusCollection');
         options || (options = {});
         var currentContext = this;
         var deferred = $.Deferred();
 
-        locusCollection.trigger('sync');
         if (searchType === SearchTypeEnum.nearby) {
             currentContext.geoLocationService.getCurrentPosition()
-                .then(function (position) {
+                .done(function (position) {
                     var getNearbyLociRequest = _.extend({}, options, position);
                     currentContext.locusRepository.getLoci(getNearbyLociRequest)
-                        .then(function (getNearbyLociResponse) {
+                        .done(function (getNearbyLociResponse) {
                             utils.computeDistances(position.coords, getNearbyLociResponse.loci);
                             locusCollection.reset(getNearbyLociResponse.loci);
                             deferred.resolve(locusCollection);
@@ -148,9 +145,9 @@ _.extend(PersistenceContext.prototype, Backbone.Events, {
         } else {
             var getLociRequest = _.extend({}, options);
             currentContext.locusRepository.getLoci(getLociRequest)
-                .then(function (getLociResponse) {
+                .done(function (getLociResponse) {
                     currentContext.geoLocationService.getCurrentPosition()
-                        .then(function (position) {
+                        .done(function (position) {
                             utils.computeDistances(position.coords, getLociResponse.loci);
                             locusCollection.reset(getLociResponse.loci);
                             deferred.resolve(locusCollection);
@@ -177,11 +174,11 @@ _.extend(PersistenceContext.prototype, Backbone.Events, {
      * @returns {promise}
      */
     refreshEntryLogCollection: function (entryLogCollection, searchType, options) {
+        console.trace('PersistenceContext.refreshEntryLogCollection');
         options || (options = {});
         var currentContext = this;
         var deferred = $.Deferred();
 
-        entryLogCollection.trigger('sync');
         if (searchType === SearchTypeEnum.nearby) {
             currentContext.geoLocationService.getCurrentPosition()
                 .then(function (position) {
@@ -225,12 +222,67 @@ _.extend(PersistenceContext.prototype, Backbone.Events, {
         return deferred.promise();
     },
 
+
+    /**
+     *
+     * @param issueCollection
+     * @param options
+     * @returns {promise}
+     */
+    refreshIssueCollection: function (issueCollection, options) {
+        console.trace('PersistenceContext.refreshIssueCollection');
+        options || (options = {});
+        var currentContext = this;
+        var deferred = $.Deferred();
+
+        var getIssuesRequest = _.extend({}, options);
+        currentContext.issueRepository.getIssues(getIssuesRequest)
+            .done(function (getIssuesResponse) {
+                issueCollection.reset(getIssuesResponse.issues);
+                deferred.resolve(issueCollection);
+            })
+            .fail(function (error) {
+                issueCollection.trigger('error');
+                deferred.reject(error);
+            });
+
+        return deferred.promise();
+    },
+
+
+    /**
+     *
+     * @param reportCollection
+     * @param options
+     * @returns {promise}
+     */
+    refreshReportCollection: function (reportCollection, options) {
+        console.trace('PersistenceContext.refreshReportCollection');
+        options || (options = {});
+        var currentContext = this;
+        var deferred = $.Deferred();
+
+        var getReportsRequest = _.extend({}, options);
+        currentContext.reportRepository.getReports(getReportsRequest)
+            .done(function (getReportsResponse) {
+                reportCollection.reset(getReportsResponse.reports);
+                deferred.resolve(reportCollection);
+            })
+            .fail(function (error) {
+                reportCollection.trigger('error');
+                deferred.reject(error);
+            });
+
+        return deferred.promise();
+    },
+
     /**
      *
      * @param entryLogModel
      * @returns {promise}
      */
     checkIn: function (entryLogModel) {
+        console.trace('PersistenceContext.checkIn');
         var currentContext = this;
         var deferred = $.Deferred();
 
@@ -238,11 +290,32 @@ _.extend(PersistenceContext.prototype, Backbone.Events, {
         currentContext.entryLogRepository.postCheckIn(checkInRequest)
             .done(function (checkInResponse) {
                 entryLogModel.set(checkInResponse.entryLog);
-                currentContext.dispatcher.trigger(EventNameEnum.checkInSuccess, entryLogModel);
                 deferred.resolve(entryLogModel);
             })
             .fail(function (error) {
-                currentContext.dispatcher.trigger(EventNameEnum.checkInError, error);
+                deferred.reject(error);
+            });
+
+        return deferred.promise();
+    },
+
+    /**
+     *
+     * @param entryLogModel
+     * @returns {promise}
+     */
+    editCheckIn: function (entryLogModel) {
+        console.trace('PersistenceContext.editCheckIn');
+        var currentContext = this,
+            deferred = $.Deferred();
+
+        var editCheckInRequest = _.extend({}, entryLogModel.attributes);
+        currentContext.entryLogRepository.postEditCheckIn(editCheckInRequest)
+            .done(function (editCheckInResponse) {
+                entryLogModel.set(editCheckInResponse.entryLog);
+                deferred.resolve(entryLogModel);
+            })
+            .fail(function (error) {
                 deferred.reject(error);
             });
 
@@ -255,7 +328,7 @@ _.extend(PersistenceContext.prototype, Backbone.Events, {
      * @returns {promise}
      */
     checkOut: function (entryLogModel) {
-        console.trace('EntryLogController.checkOut');
+        console.trace('PersistenceContext.checkOut');
         var currentContext = this,
             deferred = $.Deferred();
 
@@ -263,11 +336,9 @@ _.extend(PersistenceContext.prototype, Backbone.Events, {
         currentContext.entryLogRepository.postCheckOut(checkOutRequest)
             .done(function (checkOutResponse) {
                 entryLogModel.set(checkOutResponse.entryLog);
-                currentContext.dispatcher.trigger(EventNameEnum.checkOutSuccess, entryLogModel);
                 deferred.resolve(entryLogModel);
             })
             .fail(function (error) {
-                currentContext.dispatcher.trigger(EventNameEnum.checkOutError, error);
                 deferred.reject(error);
             });
 

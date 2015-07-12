@@ -9,9 +9,10 @@ var EntryLogCollection = require('collections/EntryLogCollection');
 var ReportCollection = require('collections/EntryLogCollection');
 var IssueCollection = require('collections/EntryLogCollection');
 var EntryLogCollectionView = require('views/EntryLogCollectionView');
-var IssueCollectionView = require('views/EntryLogCollectionView');
-var ReportCollectionView = require('views/EntryLogCollectionView');
+var IssueCollectionView = require('views/IssueCollectionView');
+var ReportCollectionView = require('views/ReportCollectionView');
 var EventNameEnum = require('enums/EventNameEnum');
+var SearchTypeEnum = require('enums/SearchTypeEnum');
 var utils = require('lib/utils');
 var template = require('templates/LocusDetailView.hbs');
 
@@ -484,10 +485,10 @@ var LocusDetailView = BaseView.extend({
         };
         currentContext.updateViewFromModel();
         currentContext.updateCheckInControls();
-        currentContext.dispatcher.trigger(EventNameEnum.refreshEntryLogCollection, currentContext.openEntryLogCollection, _.extend(options, {'open': true}));
-        currentContext.dispatcher.trigger(EventNameEnum.refreshEntryLogCollection, currentContext.recentEntryLogCollection, _.extend(options, {'recent': true}));
-        //currentContext.dispatcher.trigger(EventNameEnum.refreshReportList, currentContext.openReportCollection, _.extend(options, {'open': true}));
-        //currentContext.dispatcher.trigger(EventNameEnum.refreshIssueList, currentContext.activeIssueCollection, _.extend(options, {'active': true}));
+        currentContext.dispatcher.trigger(EventNameEnum.refreshEntryLogCollection, currentContext.openEntryLogCollection, SearchTypeEnum.alphabetic, _.extend({}, options, {'open': true}));
+        currentContext.dispatcher.trigger(EventNameEnum.refreshEntryLogCollection, currentContext.recentEntryLogCollection, SearchTypeEnum.alphabetic, _.extend({}, options, {'recent': true}));
+        currentContext.dispatcher.trigger(EventNameEnum.refreshReportCollection, currentContext.openReportCollection, _.extend({}, options, {'open': true}));
+        currentContext.dispatcher.trigger(EventNameEnum.refreshIssueCollection, currentContext.activeIssueCollection, _.extend({}, options, {'active': true}));
     },
 
     /**

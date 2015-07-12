@@ -64,9 +64,21 @@ utils.formatDate = function (date) {
         var day = date.getDate();
         var month = date.getMonth();
         var fullYear = date.getFullYear();
+
+        var meridian = 'A.M';
         var hours = date.getHours();
+        if (hours > 12) {
+            hours = hours - 12;
+            meridian = 'P.M.'
+        }
         var minutes = date.getMinutes();
-        formattedDate = month + '/' + day + '/' + fullYear + ' ' + hours + ':' + minutes;
+        if (minutes < 10) {
+            minutes = '0' + minutes.toString();
+        } else {
+            minutes = minutes.toString();
+        }
+
+        formattedDate = month.toString() + '/' + day.toString() + '/' + fullYear.toString() + ' ' + hours.toString() + ':' + minutes + ' ' + meridian;
     }
     return formattedDate;
 };

@@ -5,76 +5,75 @@ Backbone.$ = require('jquery');
 var $ = Backbone.$;
 var _ = require('underscore');
 var BaseView = require('views/BaseView');
+var EntryLogModel = require('models/EntryLogModel');
 var EventNameEnum = require('enums/EventNameEnum');
 var validation = require('backbone-validation');
 var utils = require('lib/utils');
 var optionTemplate = require('templates/Option.hbs');
-var template = require('templates/CheckOutView.hbs');
+var template = require('templates/CheckInView.hbs');
 
-var CheckOutView = BaseView.extend({
+var CheckInView = BaseView.extend({
 
     /**
      *
      * @param options
      */
     initialize: function (options) {
-        console.trace('CheckOutView.initialize');
+        console.trace('CheckInView.initialize');
         options || (options = {});
         this.controller = options.controller;
         this.dispatcher = options.dispatcher || this;
 
+        this.model = new EntryLogModel();
+
         this.myIdentityModel = options.myIdentityModel;
+        this.openEntryLogyModel = options.openEntryLogyModel;
+        this.locusModel = options.locusModel;
         this.purposeCollection = options.purposeCollection;
         this.durationCollection = options.durationCollection;
 
-        this.listenTo(this.dispatcher, EventNameEnum.checkOutSuccess, this.onCheckOutSuccess);
+        this.listenTo(this.model, 'validated', this.onValidated);
         this.listenTo(this.purposeCollection, 'reset', this.renderPurposes);
         this.listenTo(this.durationCollection, 'reset', this.renderDurations);
-        this.listenTo(this.model, 'validated', this.onValidated);
+        this.listenTo(this.dispatcher, EventNameEnum.checkInSuccess, this.onCheckInSuccess);
+        this.listenTo(this.dispatcher, EventNameEnum.checkInError, this.onCheckInError);
         this.listenTo(this, 'loaded', this.onLoaded);
         this.listenTo(this, 'leave', this.onLeave);
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     render: function () {
         var currentContext = this;
-        var renderModel = _.extend({}, {cid: currentContext.cid}, currentContext.model);
-        currentContext.setElement(template(renderModel));
+        currentContext.setElement(template());
         currentContext.bindValidation();
         return this;
     },
-
-    //thirdPartyInitialize: function(){
-    //    var currentContext = this;
-    //    $('#purpose-input').material_select();
-    //    $('#duration-input').material_select();
-    //    return this;
-    //},
 
     /**
      *
      */
     events: {
+        'change #purpose-input': 'purposeChanged',
         'change #duration-input': 'durationChanged',
-        'click #cancel-check-out-button': 'cancelCheckOut',
-        'click #submit-check-out-button': 'submitCheckOut'
+        'click #submit-check-in-button': 'submitCheckIn',
+        'click #cancel-check-in-button': 'cancelCheckIn'
     },
 
     /**
      *
      * @param purposes
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     renderPurposes: function () {
         var currentContext = this;
         var optionsHtml = '';
         currentContext.purposeCollection.forEach(function (purposeModel) {
             optionsHtml += optionTemplate({
-                'value': purposeModel.get('defaultDuration'),
-                'text': purposeModel.get('purpose')
+                'value': purposeModel.get('value'),
+                'text': purposeModel.get('text')
             });
         });
         currentContext.$('#purpose-input').append(optionsHtml);
@@ -84,15 +83,15 @@ var CheckOutView = BaseView.extend({
     /**
      *
      * @param durations
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     renderDurations: function () {
         var currentContext = this;
         var optionsHtml = '';
         currentContext.durationCollection.forEach(function (durationModel) {
             optionsHtml += optionTemplate({
-                'value': durationModel.get('minutes'),
-                'text': durationModel.get('description')
+                'value': durationModel.get('value'),
+                'text': durationModel.get('text')
             });
         });
         currentContext.$('#duration-input').append(optionsHtml);
@@ -101,7 +100,7 @@ var CheckOutView = BaseView.extend({
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     bindValidation: function () {
         var currentContext = this;
@@ -113,7 +112,34 @@ var CheckOutView = BaseView.extend({
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
+     */
+    updateModelFromParentModels: function () {
+        var currentContext = this;
+        if (currentContext.openEntryLogyModel && currentContext.openEntryLogyModel.has('entryLogId')) {
+            currentContext.trigger('error');
+            return this;
+        }
+        if (currentContext.locusModel && currentContext.locusModel.has('locusId')) {
+            currentContext.model.set({'locusId': currentContext.locusModel.get('locusId')});
+            currentContext.model.set({'locusName': currentContext.locusModel.get('locusName')});
+            currentContext.model.set({'distance': currentContext.locusModel.get('distance')});
+            currentContext.model.set({'latitude': currentContext.locusModel.get('latitude')});
+            currentContext.model.set({'longitude': currentContext.locusModel.get('longitude')});
+        }
+        currentContext.model.set({'identityId': currentContext.myIdentityModel.get('identityId')});
+        currentContext.model.set({'identityName': currentContext.myIdentityModel.get('identityName')});
+        currentContext.model.set({'firstName': currentContext.myIdentityModel.get('firstName')});
+        currentContext.model.set({'middleName': currentContext.myIdentityModel.get('middleName')});
+        currentContext.model.set({'lastName': currentContext.myIdentityModel.get('lastName')});
+        currentContext.model.set({'contactNumber': currentContext.myIdentityModel.get('contactNumber')});
+        currentContext.model.set({'email': currentContext.myIdentityModel.get('email')});
+        return this;
+    },
+
+    /**
+     *
+     * @returns {CheckInView}
      */
     updateViewFromModel: function () {
         var currentContext = this;
@@ -137,231 +163,209 @@ var CheckOutView = BaseView.extend({
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updateIdentityNameInput: function () {
         var currentContext = this;
-        var identityId;
-        if (currentContext.model.has('identityId')) {
-            identityId = currentContext.model.get('identityId');
-        }
-        var identityName;
         if (currentContext.model.has('identityName')) {
-            identityName = currentContext.model.get('identityName');
+            var identityName = currentContext.model.get('identityName');
+            currentContext.$('#identity-name-input').val(identityName).parent().addClass('control-highlight');
         }
-        currentContext.$('#identity-name-input').attr('data-identity-id', identityId).val(identityName);
         return this;
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updateLocusNameInput: function () {
         var currentContext = this;
-        var locusId;
-        if (currentContext.model.has('locusId')) {
-            locusId = currentContext.model.get('locusId');
-        }
-        var locusName;
         if (currentContext.model.has('locusName')) {
-            locusName = currentContext.model.get('locusName');
+            var locusName = currentContext.model.get('locusName');
+            currentContext.$('#locus-name-input').val(locusName).parent().addClass('control-highlight');
         }
-        currentContext.$('#locus-name-input').attr('data-locus-id', locusId).val(locusName);
         return this;
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updateDistanceInput: function () {
         var currentContext = this;
-        var distance;
         if (currentContext.model.has('distance')) {
-            distance = currentContext.model.get('distance');
+            var distance = currentContext.model.get('distance');
+            currentContext.$('#distance-input').val(distance).parent().addClass('control-highlight');
         }
         return this;
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updateLatitudeInput: function () {
         var currentContext = this;
-        var latitude;
         if (currentContext.model.has('latitude')) {
-            latitude = currentContext.model.get('latitude');
+            var latitude = currentContext.model.get('latitude');
+            currentContext.$('#latitude-input').val(latitude).parent().addClass('control-highlight');
         }
-        currentContext.$('#latitude-input').val(latitude);
         return this;
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updateLongitudeInput: function () {
         var currentContext = this;
-        var longitude;
         if (currentContext.model.has('longitude')) {
-            longitude = currentContext.model.get('longitude');
+            var longitude = currentContext.model.get('longitude');
+            currentContext.$('#longitude-input').val(longitude).parent().addClass('control-highlight');
         }
-        currentContext.$('#longitude-input').val(longitude);
         return this;
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updateContactNumberInput: function () {
         var currentContext = this;
-        var formattedContactNumber;
         if (currentContext.model.has('contactNumber')) {
             var contactNumber = currentContext.model.get('contactNumber');
             var cleanedContactNumber = utils.cleanPhone(contactNumber);
-            formattedContactNumber = utils.formatPhone(cleanedContactNumber);
+            var formattedContactNumber = utils.formatPhone(cleanedContactNumber);
+            currentContext.$('#contact-number-input').val(formattedContactNumber).parent().addClass('control-highlight');
         }
-        currentContext.$('#contact-number-input').val(formattedContactNumber);
         return this;
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updateEmailInput: function () {
         var currentContext = this;
-        var email;
         if (currentContext.model.has('email')) {
-            email = currentContext.model.get('email');
+            var email = currentContext.model.get('email');
+            currentContext.$('#email-input').val(email).parent().addClass('control-highlight');
         }
-        currentContext.$('#email-input').val(email);
         return this;
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updatePurposeInput: function () {
         var currentContext = this;
-        var purpose;
         if (currentContext.model.has('purpose')) {
-            purpose = currentContext.model.get('purpose');
+            var purpose = currentContext.model.get('purpose');
+            currentContext.$('#purpose-input').val(purpose).parent().addClass('control-highlight');
         }
-        currentContext.$('#purpose-input').val(purpose);
         return this;
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updateDurationInput: function () {
         var currentContext = this;
-        var duration;
         if (currentContext.model.has('duration')) {
-            duration = currentContext.model.get('duration');
+            var duration = currentContext.model.get('duration');
+            currentContext.$('#duration-input').val(duration).parent().addClass('control-highlight');
         }
-        currentContext.$('#duration-input').val(duration);
         return this;
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updateExpectedOutTimeInput: function () {
         var currentContext = this;
-        var expectedOutTime;
         if (currentContext.model.has('expectedOutTime')) {
-            expectedOutTime = currentContext.model.get('expectedOutTime');
+            var expectedOutTime = currentContext.model.get('expectedOutTime');
+            currentContext.$('#expected-out-time-input').val(expectedOutTime).parent().addClass('control-highlight');
         }
-        currentContext.$('#expected-out-time-input').val(expectedOutTime);
 
         return this;
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updateInTimeInput: function () {
         var currentContext = this;
-        var inTime;
         if (currentContext.model.has('inTime')) {
-            inTime = currentContext.model.get('inTime');
+            var inTime = currentContext.model.get('inTime');
+            currentContext.$('#in-time-input').val(inTime).parent().addClass('control-highlight');
         }
-        currentContext.$('#in-time-input').val(inTime);
 
         return this;
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updateOutTimeInput: function () {
         var currentContext = this;
-        var outTime;
         if (currentContext.model.has('outTime')) {
-            outTime = currentContext.model.get('outTime');
+            var outTime = currentContext.model.get('outTime');
+            currentContext.$('#out-time-input').val(outTime).parent().addClass('control-highlight');
         }
-        currentContext.$('#out-time-input').val(outTime);
 
         return this;
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updateActualDurationInput: function () {
         var currentContext = this;
-        var actualDuration;
         if (currentContext.model.has('actualDuration')) {
-            actualDuration = currentContext.model.get('actualDuration');
+            var actualDuration = currentContext.model.get('actualDuration');
+            currentContext.$('#actual-duration-input').val(actualDuration).parent().addClass('control-highlight');
         }
-        currentContext.$('#actual-duration-input').val(actualDuration);
 
         return this;
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updateHasGroupCheckInInput: function () {
         var currentContext = this;
-        var hasGroupCheckIn;
         if (currentContext.model.has('hasGroupCheckIn')) {
-            hasGroupCheckIn = currentContext.model.get('hasGroupCheckIn');
+            var hasGroupCheckIn = currentContext.model.get('hasGroupCheckIn');
+            currentContext.$('#has-group-check-in-input').val(hasGroupCheckIn);
         }
-        currentContext.$('#has-group-check-in-input').val(hasGroupCheckIn);
         return this;
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updateAdditionalInfoInput: function () {
         var currentContext = this;
-        var additionalInfo;
         if (currentContext.model.has('additionalInfo')) {
-            additionalInfo = currentContext.model.get('additionalInfo');
+            var additionalInfo = currentContext.model.get('additionalInfo');
+            currentContext.$('#additional-info-input').val(additionalInfo).parent().addClass('control-highlight');
         }
-        currentContext.$('#additional-info-input').val(additionalInfo);
         return this;
     },
 
     /**
      *
      * @param event
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     purposeChanged: function (event) {
         if (event) {
@@ -380,7 +384,7 @@ var CheckOutView = BaseView.extend({
     /**
      *
      * @param show
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     togglePurposeOther: function (show) {
         var currentContext = this;
@@ -395,7 +399,7 @@ var CheckOutView = BaseView.extend({
     /**
      *
      * @param event
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     durationChanged: function (event) {
         if (event) {
@@ -410,14 +414,13 @@ var CheckOutView = BaseView.extend({
     /**
      *
      * @param event
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
-    submitCheckOut: function (event) {
+    submitCheckIn: function (event) {
         if (event) {
             event.preventDefault();
         }
         var currentContext = this;
-        currentContext.showLoading();
         currentContext.updateModelFromView();
         currentContext.model.validate();
         return this;
@@ -425,28 +428,26 @@ var CheckOutView = BaseView.extend({
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     updateModelFromView: function () {
         var currentContext = this;
         var attributes = {};
 
-        //attributes.identityName = currentContext.$('#identity-name-input').val();
-        //attributes.locusName = currentContext.$('#locus-name-input').val();
-        //attributes.latitude = currentContext.$('#latitude-input').val();
-        //attributes.longitude = currentContext.$('#longitude-input').val();
-        //var rawContactNumber = currentContext.$('#contact-number-input').val();
-        //attributes.contactNumber = utils.cleanPhone(rawContactNumber);
-        //attributes.email = currentContext.$('#email-input').val();
-        //attributes.purpose = currentContext.$('#purpose-input option:selected').text();
-        //if (currentContext.$('#purpose-input').prop('selectedIndex') === 0) {
-        //    attributes.purpose = '';
-        //}
-        //if (attributes.purpose === 'Other') {
-        //    attributes.purposeOther = currentContext.$('#purpose-other-input').val();
-        //}
-        //attributes.duration = currentContext.$('#duration-input').val();
-        //attributes.groupCheckIn = currentContext.$('#has-group-check-in-input').is(':checked');
+        attributes.latitude = currentContext.$('#latitude-input').val();
+        attributes.longitude = currentContext.$('#longitude-input').val();
+        var rawContactNumber = currentContext.$('#contact-number-input').val();
+        attributes.contactNumber = utils.cleanPhone(rawContactNumber);
+        attributes.email = currentContext.$('#email-input').val();
+        attributes.purpose = currentContext.$('#purpose-input option:selected').text();
+        if (currentContext.$('#purpose-input').prop('selectedIndex') === 0) {
+            attributes.purpose = '';
+        }
+        if (attributes.purpose === 'Other') {
+            attributes.purposeOther = currentContext.$('#purpose-other-input').val();
+        }
+        attributes.duration = currentContext.$('#duration-input').val();
+        attributes.groupCheckIn = currentContext.$('#has-group-check-in-input').is(':checked');
         attributes.additionalInfo = currentContext.$('#additional-info-input').val();
 
         currentContext.model.set(attributes);
@@ -458,21 +459,16 @@ var CheckOutView = BaseView.extend({
      * @param isValid
      * @param model
      * @param errors
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
     onValidated: function (isValid, model, errors) {
         var currentContext = this;
 
-        currentContext.$('.validate').each(function () {
-            $(this).parent().parent().removeClass('invalid');
-        });
-
         if (isValid) {
-            currentContext.checkOut();
+            currentContext.checkIn();
         } else {
-            currentContext.hideLoading();
             for (var error in errors) {
-                currentContext.$('[name="' + error + '"]').parent().parent().addClass('invalid');
+                currentContext.$('[name="' + error + '"]').parent().addClass('form-group-red');
             }
         }
         return this;
@@ -481,40 +477,66 @@ var CheckOutView = BaseView.extend({
     /**
      *
      * @param event
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
-    cancelCheckOut: function (event) {
+    checkIn: function (event) {
         if (event) {
             event.preventDefault();
         }
         var currentContext = this;
-        var locusId = currentContext.model.get('locusId');
-        currentContext.dispatcher.trigger(EventNameEnum.goToLocusWithId, locusId);
+        currentContext.dispatcher.trigger(EventNameEnum.checkIn, currentContext.model);
         return this;
     },
 
     /**
      *
      * @param event
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
-    checkOut: function (event) {
+    cancelCheckIn: function (event) {
         if (event) {
             event.preventDefault();
         }
         var currentContext = this;
-        currentContext.dispatcher.trigger(EventNameEnum.checkOut, currentContext.model);
+        var locusId = currentContext.model.get('locusId');
+        if (locusId) {
+            currentContext.dispatcher.trigger(EventNameEnum.goToLocusWithId, locusId);
+        } else {
+            currentContext.dispatcher.trigger(EventNameEnum.goToLocusSearch);
+        }
         return this;
     },
 
     /**
      *
-     * @returns {CheckOutView}
+     * @returns {CheckInView}
      */
-    onCheckOutSuccess: function () {
+    onCheckInSuccess: function () {
         var currentContext = this;
         var locusId = currentContext.model.get('locusId');
-        currentContext.dispatcher.trigger(EventNameEnum.goToLocusWithId, locusId);
+        if (locusId) {
+            currentContext.dispatcher.trigger(EventNameEnum.goToLocusWithId, locusId);
+        } else {
+            currentContext.dispatcher.trigger(EventNameEnum.goToLocusSearch);
+        }
+        return this;
+    },
+
+    /**
+     *
+     * @returns {CheckInView}
+     */
+    onCheckInError: function () {
+        var currentContext = this;
+        return this;
+    },
+
+    /**
+     *
+     */
+    onError: function (error) {
+        var currentContext = this;
+        currentContext.$('.form-group-wrap').addClass('el-loading-done');
         return this;
     },
 
@@ -522,19 +544,20 @@ var CheckOutView = BaseView.extend({
      *
      */
     onLoaded: function () {
+        console.trace('CheckInView.onLoaded');
         var currentContext = this;
-        currentContext.hideLoading();
+        currentContext.updateModelFromParentModels();
+        currentContext.updateViewFromModel();
+        currentContext.$('.form-group-wrap').addClass('el-loading-done');
     },
 
     /**
      *
      */
     onLeave: function () {
+        console.trace('CheckInView.onLeave');
         var currentContext = this;
-        console.trace('CheckOutView.onLeave');
-        //$('#purpose-input').material_select('destroy');
-        //$('#duration-input').material_select('destroy');
     }
 });
 
-module.exports = CheckOutView;
+module.exports = CheckInView;

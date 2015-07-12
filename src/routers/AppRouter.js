@@ -14,7 +14,7 @@ var LookupDataRepository = require('repositories/LookupDataRepository');
 var IssueRepository = require('repositories/IssueRepository');
 var ReportRepository = require('repositories/ReportRepository');
 var GeoLocationService = require('services/GeoLocationService');
-var IdentityViewController = require('controllers/LocusViewController');
+var IdentityViewController = require('controllers/IdentityViewController');
 var LocusViewController = require('controllers/LocusViewController');
 var EntryLogViewController = require('controllers/EntryLogViewController');
 var PersistenceContext = require('contexts/PersistenceContext');
@@ -60,7 +60,6 @@ var AppRouter = SwappingRouter.extend({
 
         //contexts
         currentContext.persistenceContext = new PersistenceContext({
-            dispatcher: currentContext.dispatcher,
             identityRepository: currentContext.identityRepository,
             locusRepository: currentContext.locusRepository,
             entryLogRepository: currentContext.entryLogRepository,

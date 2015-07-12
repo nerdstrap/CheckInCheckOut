@@ -8,15 +8,15 @@
     "text": "1 hour"
   },
   {
-    "minutes": "120",
+    "value": "120",
     "text": "2 hours"
   },
   {
-    "minutes": "360",
+    "value": "360",
     "text": "3 hours"
   },
   {
-    "minutes": "480",
+    "value": "480",
     "text": "4 hours"
   }
 ]

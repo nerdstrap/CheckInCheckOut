@@ -56,7 +56,7 @@ var _getByStatus = function (entryLogs, status) {
 };
 
 var _postCheckIn = function (entryLog) {
-    entryLog.id = utils.getNewGuid();
+    entryLog.entryLogId = utils.getNewGuid();
     entryLog.inTime = new Date().getTime();
     _entryLogs.push(entryLog);
     return entryLog;
@@ -166,7 +166,7 @@ _.extend(EntryLogRepository.prototype, {
 
         window.setTimeout(function () {
             deferred.resolveWith(currentContext, [results]);
-        }, 20);
+        }, 3000);
 
         return deferred.promise();
     },
@@ -183,7 +183,7 @@ _.extend(EntryLogRepository.prototype, {
 
         window.setTimeout(function () {
             deferred.resolveWith(currentContext, [results]);
-        }, 20);
+        }, 3000);
 
         return deferred.promise();
     },
@@ -200,7 +200,7 @@ _.extend(EntryLogRepository.prototype, {
 
         window.setTimeout(function () {
             deferred.resolveWith(currentContext, [results]);
-        }, 20);
+        }, 3000);
 
         return deferred.promise();
     }

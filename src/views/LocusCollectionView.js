@@ -27,11 +27,10 @@ var LocusCollectionView = BaseView.extend({
      * @param options
      */
     initialize: function (options) {
-        console.trace('LocusCollectionView.initialize');
         options || (options = {});
         this.dispatcher = options.dispatcher || this;
 
-        this.listenTo(this.collection, 'sync', this.onSync);
+        this.listenTo(this.collection, 'loading', this.onSync);
         this.listenTo(this.collection, 'reset', this.onReset);
         this.listenTo(this, 'loaded', this.onLoaded);
         this.listenTo(this, 'leave', this.onLeave);
@@ -106,7 +105,6 @@ var LocusCollectionView = BaseView.extend({
      */
     onLoaded: function () {
         var currentContext = this;
-        console.trace('LocusCollectionView.onLoaded');
     },
 
     /**
@@ -114,7 +112,6 @@ var LocusCollectionView = BaseView.extend({
      */
     onLeave: function () {
         var currentContext = this;
-        console.trace('LocusCollectionView.onLeave');
     }
 });
 

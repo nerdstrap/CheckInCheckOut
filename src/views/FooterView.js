@@ -19,6 +19,10 @@ var FooterView = BaseView.extend({
         this.dispatcher = options.dispatcher || this;
 
         this.listenTo(this.dispatcher, EventNameEnum.openEntryLogReset, this.onOpenEntryLogReset);
+        this.listenTo(this.dispatcher, EventNameEnum.goToCheckIn, this.onGoToCheckIn);
+        this.listenTo(this.dispatcher, EventNameEnum.goToAdHocCheckIn, this.onGoToCheckIn);
+        this.listenTo(this.dispatcher, EventNameEnum.goToEditCheckIn, this.onGoToCheckIn);
+        this.listenTo(this.dispatcher, EventNameEnum.goToCheckOut, this.onGoToCheckIn);
         this.listenTo(this, 'loaded', this.onLoaded);
         this.listenTo(this, 'leave', this.onLeave);
     },
@@ -31,6 +35,7 @@ var FooterView = BaseView.extend({
         var currentContext = this;
         var renderModel = _.extend({}, currentContext.model);
         currentContext.setElement(template(renderModel));
+        this.$('open-check-in-floating-button').dropdown();
         return this;
     },
 
@@ -55,6 +60,15 @@ var FooterView = BaseView.extend({
             currentContext.$('#edit-open-check-in-fbtn-container').addClass('hidden');
             currentContext.$('#ad-hoc-check-in-fbtn-container').removeClass('hidden');
         }
+    },
+
+    /**
+     *
+     */
+    onGoToCheckIn: function () {
+        var currentContext = this;
+        currentContext.$('#edit-open-check-in-fbtn-container').addClass('hidden');
+        currentContext.$('#ad-hoc-check-in-fbtn-container').addClass('hidden');
     },
 
     /**

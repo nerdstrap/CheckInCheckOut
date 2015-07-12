@@ -42,33 +42,6 @@ var HeaderView = BaseView.extend({
         'click #go-to-settings-button': 'goToSettings'
     },
 
-    onMyIdentityReset: function (myIdentityModel) {
-        var currentContext = this;
-        //if (myIdentityModel.openEntryLogCollection && myIdentityModel.openEntryLogCollection.length > 0) {
-        //    var openEntryLog = myIdentityModel.at(0);
-        //    if (openEntryLog.has('locusId')) {
-        //        var locusId = openEntryLog.get('locusId');
-        //        var checkInClass = 'open';
-        //        if (openEntryLog.has('checkOutOverdue')) {
-        //            checkInClass = 'overdue';
-        //        }
-        //        if (openEntryLog.has('checkOutExpired')) {
-        //            checkInClass = 'expired';
-        //        }
-        //        currentContext.$('#go-to-my-open-check-in-button').attr('data-locus-id', locusId).removeClass().addClass(checkInClass);
-        //    }
-        //    currentContext.$('#go-to-my-identity-button').addClass('hidden');
-        //    currentContext.$('#go-to-open-check-in-button').removeClass('hidden');
-        //} else {
-        //    if (myIdentityModel.has('identityId')) {
-        //        var identityId = myIdentityModel.get('identityId');
-        //        currentContext.$('#go-to-my-identity-button').attr('data-identity-id', identityId);
-        //    }
-        //    currentContext.$('#go-to-my-identity-button').removeClass('hidden');
-        //    currentContext.$('#go-to-open-check-in-button').addClass('hidden');
-        //}
-    },
-
     toggleMenu: function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -149,15 +122,6 @@ var HeaderView = BaseView.extend({
             }
         }
         this.dispatcher.trigger(EventNameEnum.goToIdentitySearch);
-    },
-    goToAdHocEntry: function (event) {
-        if (event) {
-            event.preventDefault();
-            if (event.target) {
-                $(event.target).parent().addClass('active').siblings().removeClass('active');
-            }
-        }
-        //this.dispatcher.trigger(EventNameEnum.goToAdHocCheckIn);
     },
     goToSettings: function (event) {
         if (event) {

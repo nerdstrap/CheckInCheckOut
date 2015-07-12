@@ -9,8 +9,10 @@ var IdentityModel = require('models/IdentityModel');
 var EntryLogModel = require('models/EntryLogModel');
 var EntryLogCollection = require('collections/EntryLogCollection');
 var CheckInView = require('views/CheckInView');
+var EditCheckInView = require('views/EditCheckInView');
 var CheckOutView = require('views/CheckOutView');
 var EventNameEnum = require('enums/EventNameEnum');
+var CheckInTypeEnum = require('enums/CheckInTypeEnum');
 var utils = require('lib/utils');
 
 /**
@@ -35,13 +37,59 @@ _.extend(EntryLogViewController.prototype, Backbone.Events, {
         this.dispatcher = options.dispatcher;
         this.persistenceContext = options.persistenceContext;
 
+        this.listenTo(this.dispatcher, EventNameEnum.goToAdHocCheckIn, this.goToAdHocCheckIn);
         this.listenTo(this.dispatcher, EventNameEnum.goToCheckIn, this.goToCheckIn);
+        this.listenTo(this.dispatcher, EventNameEnum.checkIn, this.checkIn);
         this.listenTo(this.dispatcher, EventNameEnum.goToCheckOut, this.goToCheckOut);
+        this.listenTo(this.dispatcher, EventNameEnum.checkOut, this.checkOut);
     },
 
     /**
      *
-     * @returns {*}
+     * @param locusId
+     * @returns {promise}
+     */
+    goToAdHocCheckIn: function () {
+        var currentContext = this;
+        var deferred = $.Deferred();
+
+        var myIdentityModel = new IdentityModel();
+        var openEntryLogModel = new EntryLogModel();
+        var entryLogModel = new EntryLogModel({checkInType: CheckInTypeEnum.locus});
+        var purposeCollection = new Backbone.Collection();
+        var durationCollection = new Backbone.Collection();
+        var areaCollection = new Backbone.Collection();
+        var checkInView = new CheckInView({
+            dispatcher: currentContext.dispatcher,
+            myIdentityModel: myIdentityModel,
+            openEntryLogModel: openEntryLogModel,
+            model: entryLogModel,
+            purposeCollection: purposeCollection,
+            durationCollection: durationCollection,
+            areaCollection: areaCollection
+        });
+
+        currentContext.router.swapContent(checkInView);
+        currentContext.router.navigate('adhoc/checkIn');
+
+        $.when(currentContext.persistenceContext.getMyIdentityAndOpenEntryLogs(myIdentityModel, openEntryLogModel), currentContext.persistenceContext.getOptions(purposeCollection, durationCollection, areaCollection))
+            .done(function () {
+                currentContext.dispatcher.trigger(EventNameEnum.myIdentityReset, myIdentityModel);
+                checkInView.trigger('loaded');
+                deferred.resolve(checkInView);
+            })
+            .fail(function (error) {
+                checkInView.trigger('error');
+                deferred.reject(error);
+            });
+
+        return deferred.promise();
+    },
+
+    /**
+     *
+     * @param locusId
+     * @returns {promise}
      */
     goToCheckIn: function (locusId) {
         var currentContext = this;
@@ -49,6 +97,7 @@ _.extend(EntryLogViewController.prototype, Backbone.Events, {
 
         var myIdentityModel = new IdentityModel();
         var openEntryLogModel = new EntryLogModel();
+        var entryLogModel = new EntryLogModel({checkInType: CheckInTypeEnum.locus});
         var locusModel = new LocusModel({locusId: locusId});
         var purposeCollection = new Backbone.Collection();
         var durationCollection = new Backbone.Collection();
@@ -56,6 +105,7 @@ _.extend(EntryLogViewController.prototype, Backbone.Events, {
             dispatcher: currentContext.dispatcher,
             myIdentityModel: myIdentityModel,
             openEntryLogModel: openEntryLogModel,
+            model: entryLogModel,
             locusModel: locusModel,
             purposeCollection: purposeCollection,
             durationCollection: durationCollection
@@ -67,7 +117,6 @@ _.extend(EntryLogViewController.prototype, Backbone.Events, {
         $.when(currentContext.persistenceContext.getMyIdentityAndOpenEntryLogs(myIdentityModel, openEntryLogModel), currentContext.persistenceContext.getLocusById(locusModel), currentContext.persistenceContext.getOptions(purposeCollection, durationCollection))
             .done(function () {
                 currentContext.dispatcher.trigger(EventNameEnum.myIdentityReset, myIdentityModel);
-                currentContext.dispatcher.trigger(EventNameEnum.openEntryLogReset, openEntryLogModel);
                 checkInView.trigger('loaded');
                 deferred.resolve(checkInView);
             })
@@ -76,83 +125,150 @@ _.extend(EntryLogViewController.prototype, Backbone.Events, {
                 deferred.reject(error);
             });
 
-        //$.when(currentContext.locusService.getLoci(), currentContext.identityService.getMyIdentity(), currentContext.entryLogService.getOptions())
-        //    .then(function (getCheckInOptionsResponse) {
-        //        identityModel.set(getCheckInOptionsResponse.identity);
-        //        currentContext.dispatcher.trigger(EventNameEnum.myIdentityReset, identityModel);
-        //
-        //        if (locusModel) {
-        //            entryLogModel.set({'locusId': locusModel.get('locusId')});
-        //            entryLogModel.set({'locusName': locusModel.get('locusName')});
-        //            entryLogModel.set({'distance': locusModel.get('distance')});
-        //            entryLogModel.set({'latitude': locusModel.get('latitude')});
-        //            entryLogModel.set({'longitude': locusModel.get('longitude')});
-        //
-        //            currentContext.geoLocationService.getCurrentPosition()
-        //                .then(function (position) {
-        //                    var distance = utils.computeDistanceBetween(position.coords, locusModel.attributes);
-        //                    if (distance) {
-        //                        locusModel.set({
-        //                            'distance': distance
-        //                        });
-        //                        checkInView.trigger('change:distance');
-        //                    }
-        //                })
-        //                .fail(function (error) {
-        //                });
-        //        }
-        //        entryLogModel.set({'identityId': identityModel.get('identityId')});
-        //        entryLogModel.set({'identityName': identityModel.get('identityName')});
-        //        entryLogModel.set({'contactNumber': identityModel.get('contactNumber')});
-        //        entryLogModel.set({'email': identityModel.get('email')});
-        //
-        //        purposeCollection.reset(getCheckInOptionsResponse.purposes);
-        //        durationCollection.reset(getCheckInOptionsResponse.durations);
-        //        checkInView.completeLoading();
-        //        deferred.resolve(checkInView);
-        //    })
-        //    .fail(function (error) {
-        //        checkInView.showError(utils.getResource('criticalSystemErrorMessage'));
-        //        checkInView.completeLoading();
-        //        deferred.reject(checkInView);
-        //    });
+        return deferred.promise();
+    },
+
+    /**
+     *
+     * @param entryLogModel
+     * @returns {promise}
+     */
+    checkIn: function (entryLogModel) {
+        var currentContext = this;
+        var deferred = $.Deferred();
+
+        currentContext.persistenceContext.checkIn(entryLogModel)
+            .done(function () {
+                currentContext.dispatcher.trigger(EventNameEnum.checkInSuccess, entryLogModel);
+                deferred.resolve(entryLogModel);
+            })
+            .fail(function (error) {
+                currentContext.dispatcher.trigger(EventNameEnum.checkInError, error);
+                deferred.reject(error);
+            });
 
         return deferred.promise();
     },
 
-    goToCheckOut: function (entryLogModel) {
-        var currentContext = this,
-            deferred = $.Deferred();
+    /**
+     *
+     * @param entryLogId
+     * @returns {promise}
+     */
+    goToEditCheckIn: function (entryLogModel) {
+        var currentContext = this;
+        var deferred = $.Deferred();
 
-        var identityModel = new IdentityModel();
+        var myIdentityModel = new IdentityModel();
+        var openEntryLogModel = new EntryLogModel();
+        var locusModel = new LocusModel({locusId: entryLogModel.get('locusId')});
         var purposeCollection = new Backbone.Collection();
         var durationCollection = new Backbone.Collection();
-        var checkOutViewInstance = new CheckOutView({
-            controller: currentContext,
+        var editCheckInView = new EditCheckInView({
             dispatcher: currentContext.dispatcher,
-            model: entryLogModel,
-            identityModel: identityModel,
+            myIdentityModel: myIdentityModel,
+            openEntryLogModel: openEntryLogModel,
+            locusModel: locusModel,
             purposeCollection: purposeCollection,
             durationCollection: durationCollection
         });
 
-        currentContext.router.swapContent(checkOutViewInstance);
+        currentContext.router.swapContent(editCheckInView);
+        currentContext.router.navigate('entryLog/' + entryLogModel.get('entryLogId'));
 
-        checkOutViewInstance.showLoading();
-        currentContext.entryLogService.getCheckOutOptions()
-            .then(function (getCheckOutOptionsResponse) {
-                identityModel.set(getCheckOutOptionsResponse.identity);
-                currentContext.dispatcher.trigger(EventNameEnum.myIdentityReset, identityModel);
-                checkOutViewInstance.updateViewFromModel();
-                purposeCollection.reset(getCheckOutOptionsResponse.purposes);
-                durationCollection.reset(getCheckOutOptionsResponse.durations);
-                checkOutViewInstance.completeLoading();
-                deferred.resolve(checkOutViewInstance);
+        $.when(currentContext.persistenceContext.getMyIdentityAndOpenEntryLogs(myIdentityModel, openEntryLogModel), currentContext.persistenceContext.getLocusById(locusModel), currentContext.persistenceContext.getOptions(purposeCollection, durationCollection))
+            .done(function () {
+                currentContext.dispatcher.trigger(EventNameEnum.myIdentityReset, myIdentityModel);
+                editCheckInView.trigger('loaded');
+                deferred.resolve(editCheckInView);
             })
             .fail(function (error) {
-                checkOutViewInstance.showError(utils.getResource('criticalSystemErrorMessage'));
-                checkOutViewInstance.completeLoading();
-                deferred.reject(checkOutViewInstance);
+                editCheckInView.trigger('error');
+                deferred.reject(error);
+            });
+
+        return deferred.promise();
+    },
+
+    /**
+     *
+     * @param entryLogModel
+     * @returns {promise}
+     */
+    editCheckIn: function (entryLogModel) {
+        var currentContext = this;
+        var deferred = $.Deferred();
+
+        currentContext.persistenceContext.editCheckIn(entryLogModel)
+            .done(function () {
+                currentContext.dispatcher.trigger(EventNameEnum.editCheckInSuccess, entryLogModel);
+                deferred.resolve(entryLogModel);
+            })
+            .fail(function (error) {
+                currentContext.dispatcher.trigger(EventNameEnum.editCheckInError, error);
+                deferred.reject(error);
+            });
+
+        return deferred.promise();
+    },
+
+    /**
+     *
+     * @param entryLogId
+     * @returns {promise}
+     */
+    goToCheckOut: function (entryLogModel) {
+        var currentContext = this;
+        var deferred = $.Deferred();
+
+        var myIdentityModel = new IdentityModel();
+        var openEntryLogModel = new EntryLogModel();
+        var locusModel = new LocusModel({locusId: entryLogModel.get('locusId')});
+        var purposeCollection = new Backbone.Collection();
+        var durationCollection = new Backbone.Collection();
+        var checkOutView = new CheckOutView({
+            dispatcher: currentContext.dispatcher,
+            myIdentityModel: myIdentityModel,
+            openEntryLogModel: openEntryLogModel,
+            locusModel: locusModel,
+            purposeCollection: purposeCollection,
+            durationCollection: durationCollection
+        });
+
+        currentContext.router.swapContent(checkOutView);
+        currentContext.router.navigate('entryLog/' + entryLogModel.get('entryLogId') + '/checkOut');
+
+        $.when(currentContext.persistenceContext.getMyIdentityAndOpenEntryLogs(myIdentityModel, openEntryLogModel), currentContext.persistenceContext.getLocusById(locusModel), currentContext.persistenceContext.getOptions(purposeCollection, durationCollection))
+            .done(function () {
+                currentContext.dispatcher.trigger(EventNameEnum.myIdentityReset, myIdentityModel);
+                checkOutView.trigger('loaded');
+                deferred.resolve(checkOutView);
+            })
+            .fail(function (error) {
+                checkOutView.trigger('error');
+                deferred.reject(error);
+            });
+
+        return deferred.promise();
+    },
+
+    /**
+     *
+     * @param entryLogModel
+     * @returns {promise}
+     */
+    checkOut: function (entryLogModel) {
+        var currentContext = this;
+        var deferred = $.Deferred();
+
+        currentContext.persistenceContext.checkOut(entryLogModel)
+            .done(function () {
+                currentContext.dispatcher.trigger(EventNameEnum.checkOutSuccess, entryLogModel);
+                deferred.resolve(entryLogModel);
+            })
+            .fail(function (error) {
+                currentContext.dispatcher.trigger(EventNameEnum.checkOutError, error);
+                deferred.reject(error);
             });
 
         return deferred.promise();

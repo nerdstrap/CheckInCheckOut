@@ -20,6 +20,12 @@
   "locusCollectionViewHeaderText": "Stations",
   "locusCollectionViewHeaderTextFormatString": "{0} Stations",
 
+  "reportCollectionViewHeaderText": "Reports",
+  "reportCollectionViewHeaderTextFormatString": "{0} Reports",
+
+  "issueCollectionViewHeaderText": "Issues",
+  "issueCollectionViewHeaderTextFormatString": "{0} Issues",
+
   "locusIcon": "map_marker",
   "hazardIcon": "lock",
   "activeIssuesIcon": "warning",
@@ -34,6 +40,7 @@
   "goToLocusIcon": "info",
   "closeButtonText": "close",
   "closeIcon": "close",
+  "cancelIcon": "close",
   "openCheckInIcon": "place",
   "adHocIcon": "pin_drop",
   "openEntryLogIcon": "schedule",
@@ -138,4 +145,11 @@
 
   "additionalInfoHeaderText": "Additional Info",
   "additionalInfoPlaceholder": "enter additional info",
+
+  "locusSearchButtonText":"___",
+  "identitySearchButtonText":"___",
+  "addFavoriteButtonText": "___",
+  "adHocButtonText":"___",
+  "shareButtonText":"___",
+  "entryLogCollectionViewHeaderText":"___"
 }

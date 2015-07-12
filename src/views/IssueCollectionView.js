@@ -5,32 +5,22 @@ Backbone.$ = require('jquery');
 var $ = Backbone.$;
 var _ = require('underscore');
 var BaseView = require('views/BaseView');
-var EntryLogTileView = require('views/EntryLogTileView');
+var IssueTileView = require('views/IssueTileView');
 var EventNameEnum = require('enums/EventNameEnum');
 var utils = require('lib/utils');
-var template = require('templates/EntryLogCollectionView.hbs');
+var template = require('templates/IssueCollectionView.hbs');
 
-var EntryLogCollectionView = BaseView.extend({
-
-    /**
-     *
-     */
-    headerText: utils.getResource('entryLogCollectionViewHeaderText'),
+var IssueCollectionView = BaseView.extend({
 
     /**
      *
      */
-    headerTextFormatString: utils.getResource('entryLogCollectionViewHeaderTextFormatString'),
+    headerText: utils.getResource('issueCollectionViewHeaderText'),
 
     /**
      *
      */
-    showIdentity: true,
-
-    /**
-     *
-     */
-    showLocus: false,
+    headerTextFormatString: utils.getResource('issueCollectionViewHeaderTextFormatString'),
 
     /**
      *
@@ -40,14 +30,6 @@ var EntryLogCollectionView = BaseView.extend({
         options || (options = {});
         this.dispatcher = options.dispatcher || this;
 
-        if (options.showIdentity) {
-            this.showIdentity = options.showIdentity;
-        }
-
-        if (options.showLocus) {
-            this.showLocus = options.showLocus;
-        }
-
         this.listenTo(this.collection, 'sync', this.onSync);
         this.listenTo(this.collection, 'reset', this.onReset);
         this.listenTo(this, 'loaded', this.onLoaded);
@@ -56,18 +38,18 @@ var EntryLogCollectionView = BaseView.extend({
 
     /**
      *
-     * @returns {EntryLogCollectionView}
+     * @returns {IssueCollectionView}
      */
     render: function () {
         var currentContext = this;
         currentContext.setElement(template());
-        currentContext.updateHeader
+        currentContext.updateHeader();
         return this;
     },
 
     /**
      *
-     * @returns {LocusCollectionView}
+     * @returns {IssueCollectionView}
      */
     updateHeader: function (useFormat) {
         var currentContext = this;
@@ -83,18 +65,16 @@ var EntryLogCollectionView = BaseView.extend({
 
     /**
      *
-     * @param model
-     * @returns {EntryLogCollectionView}
+     * @param issueModel
+     * @returns {IssueCollectionView}
      */
-    appendTile: function (model) {
+    appendTile: function (issueModel) {
         var currentContext = this;
-        var entryLogTileView = new EntryLogTileView({
+        var issueTileView = new IssueTileView({
             'dispatcher': currentContext.dispatcher,
-            'model': model,
-            'showIdentity': currentContext.showIdentity,
-            'showLocus': currentContext.showLocus
+            'model': issueModel
         });
-        currentContext.appendChildTo(entryLogTileView, '.tile-container');
+        currentContext.appendChildTo(issueTileView, '.tile-wrap');
         return this;
     },
 
@@ -130,8 +110,8 @@ var EntryLogCollectionView = BaseView.extend({
      *
      */
     onLeave: function () {
-        var currentContext = this;  console.trace('EntryLogCollectionView.onLeave');
+        var currentContext = this;
     }
 });
 
-module.exports = EntryLogCollectionView;
+module.exports = IssueCollectionView;

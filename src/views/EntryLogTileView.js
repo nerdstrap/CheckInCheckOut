@@ -58,13 +58,13 @@ var EntryLogTileView = BaseView.extend({
      *
      */
     events: {
-        'click [data-toggle="tile"]': 'tileToggleCollapse',
-        'click .share-locus-button': 'shareLocus',
-        'click .add-favorite-locus-button': 'addFavoriteLocus',
-        'click .dropdown-toggle-button': 'dropdownToggleCollapse',
-        'click .go-to-map-button': 'goToMap',
-        'click .go-to-locus-button': 'goToLocus',
-        'click .tile-toggle-button': 'tileToggleCollapse'
+        //'click [data-toggle="tile"]': 'tileToggleCollapse',
+        //'click .share-locus-button': 'shareLocus',
+        //'click .add-favorite-locus-button': 'addFavoriteLocus',
+        //'click .dropdown-toggle-button': 'dropdownToggleCollapse',
+        //'click .go-to-map-button': 'goToMap',
+        //'click .go-to-locus-button': 'goToLocus',
+        //'click .tile-toggle-button': 'tileToggleCollapse'
     },
 
     /**
