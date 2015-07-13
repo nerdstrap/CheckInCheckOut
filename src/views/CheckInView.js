@@ -275,8 +275,11 @@ var CheckInView = BaseView.extend({
      *
      * @returns {CheckInView}
      */
-    updateDurationInput: function () {
+    updateDurationInput: function (newDuration) {
         var currentContext = this;
+        if (newDuration) {
+            currentContext.model.set({duration: newDuration});
+        }
         if (currentContext.model.has('duration')) {
             var duration = currentContext.model.get('duration');
             currentContext.$('#duration-input').val(duration).parent().addClass('control-highlight');
@@ -288,21 +291,16 @@ var CheckInView = BaseView.extend({
      *
      * @returns {CheckInView}
      */
-    setExpectedOutTimeInput: function (expectedOutTime) {
+    updateExpectedOutTimeInput: function (duration) {
         var currentContext = this;
-        currentContext.$('#expected-out-time-input').val(utils.formatDate(expectedOutTime)).parent().addClass('control-highlight');
-        return this;
-    },
-
-    /**
-     *
-     * @returns {CheckInView}
-     */
-    updateExpectedOutTimeInput: function () {
-        var currentContext = this;
+        if (duration) {
+            var currentTime = new Date();
+            var expectedOutTime = utils.addMinutes(currentTime, duration);
+            currentContext.model.set({expectedOutTime: expectedOutTime});
+        }
         if (currentContext.model.has('expectedOutTime')) {
             var expectedOutTime = currentContext.model.get('expectedOutTime');
-            currentContext.$('#expected-out-time-input').val(expectedOutTime).parent().addClass('control-highlight');
+            currentContext.$('#expected-out-time-input').val(utils.formatDate(expectedOutTime)).parent().addClass('control-highlight');
         }
 
         return this;
@@ -390,7 +388,8 @@ var CheckInView = BaseView.extend({
         currentContext.togglePurposeOther(purpose === 'Other');
         if (!currentContext.manualDurationEntry) {
             var defaultDuration = currentContext.$('#purpose-input').val();
-            currentContext.$('#duration-input').val(defaultDuration);
+            currentContext.updateDurationInput(defaultDuration);
+            currentContext.updateExpectedOutTimeInput(defaultDuration);
         }
         return this;
     },
@@ -422,9 +421,7 @@ var CheckInView = BaseView.extend({
         var currentContext = this;
         currentContext.manualDurationEntry = true;
         var duration = Number(currentContext.$('#duration-input').val());
-        var currentTime = new Date();
-        var expectedOutTime = utils.addMinutes(currentTime, duration);
-        currentContext.setExpectedOutTimeInput(expectedOutTime);
+        currentContext.updateExpectedOutTimeInput(duration);
         return this;
     },
 
