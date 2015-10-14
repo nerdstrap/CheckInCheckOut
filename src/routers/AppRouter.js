@@ -30,7 +30,7 @@ var AppRouter = SwappingRouter.extend({
         console.trace('appRouter.initialize');
         options || (options = {});
 
-        this.initializeDependencies();
+        this.resolveDependencies();
         this.renderShellView();
         this.contentViewEl = this.shellView.contentViewEl();
     },
@@ -39,7 +39,7 @@ var AppRouter = SwappingRouter.extend({
      *
      * @returns {AppRouter}
      */
-    initializeDependencies: function () {
+    resolveDependencies: function () {
         var currentContext = this;
         // dispatchers
         currentContext.dispatcher = new EventDispatcher();
@@ -74,17 +74,20 @@ var AppRouter = SwappingRouter.extend({
         currentContext.identityViewController = new IdentityViewController({
             router: currentContext,
             dispatcher: currentContext.dispatcher,
-            persistenceContext: currentContext.persistenceContext
+            persistenceContext: currentContext.persistenceContext,
+            geoLocationService: currentContext.geoLocationService
         });
         currentContext.locusViewController = new LocusViewController({
             router: currentContext,
             dispatcher: currentContext.dispatcher,
-            persistenceContext: currentContext.persistenceContext
+            persistenceContext: currentContext.persistenceContext,
+            geoLocationService: currentContext.geoLocationService
         });
         currentContext.entryLogViewController = new EntryLogViewController({
             router: currentContext,
             dispatcher: currentContext.dispatcher,
-            persistenceContext: currentContext.persistenceContext
+            persistenceContext: currentContext.persistenceContext,
+            geoLocationService: currentContext.geoLocationService
         });
         return this;
     },
@@ -99,7 +102,7 @@ var AppRouter = SwappingRouter.extend({
             dispatcher: currentContext.dispatcher
         });
         currentContext.shellView.render();
-        $('body').append(currentContext.shellView.el);
+        $('body').prepend(currentContext.shellView.el);
         return this;
     },
 

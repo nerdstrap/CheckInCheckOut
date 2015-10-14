@@ -19,7 +19,6 @@
   ],
   "dependencies": {
     "font-awesome": "*",
-    "foundation": "*",
-    "bootstrap":"*"
+    "foundation": "*"
   }
 }

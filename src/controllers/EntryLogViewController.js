@@ -36,6 +36,7 @@ _.extend(EntryLogViewController.prototype, Backbone.Events, {
         this.router = options.router;
         this.dispatcher = options.dispatcher;
         this.persistenceContext = options.persistenceContext;
+        this.geoLocationService = options.geoLocationService;
 
         this.listenTo(this.dispatcher, EventNameEnum.goToAdHocCheckIn, this.goToAdHocCheckIn);
         this.listenTo(this.dispatcher, EventNameEnum.goToCheckIn, this.goToCheckIn);
@@ -71,6 +72,14 @@ _.extend(EntryLogViewController.prototype, Backbone.Events, {
 
         currentContext.router.swapContent(checkInView);
         currentContext.router.navigate('adhoc/checkIn');
+
+        currentContext.geoLocationService.getCurrentPosition()
+            .done(function (position) {
+                checkInView.updateGpsInput();
+            })
+            .error(function (getCurrentPositionError) {
+                checkInView.updateGpsInput();
+            });
 
         $.when(currentContext.persistenceContext.getMyIdentityAndOpenEntryLogs(myIdentityModel, openEntryLogModel), currentContext.persistenceContext.getOptions(purposeCollection, durationCollection, areaCollection))
             .done(function () {

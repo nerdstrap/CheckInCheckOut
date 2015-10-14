@@ -5,27 +5,12 @@
         </div>
     </div>
     <div class="content-inner">
-        <div class="container form-group-wrap el-loading">
-            <div class="el-loading-indicator">
-                <div class="progress-circular progress-circular-inline progress-circular-">
-                    <div class="progress-circular-wrapper">
-                        <div class="progress-circular-inner">
-                            <div class="progress-circular-left">
-                                <div class="progress-circular-spinner"></div>
-                            </div>
-                            <div class="progress-circular-gap"></div>
-                            <div class="progress-circular-right">
-                                <div class="progress-circular-spinner"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="identity-name-input-container" class="form-group form-group-label hidden">
+        <div class="container form-group-wrap">
+            <div class="form-group form-group-label hidden">
                 <label class="floating-label" for="identity-name-input">{{resource "identityNameHeaderText"}}</label>
                 <input id="identity-name-input" class="form-control" name="identityName" type="text" placeholder='{{resource "identityNamePlaceholder"}}'/>
             </div>
-            <div class="form-group form-group-label">
+            <div id="locus-name-input-container" class="form-group form-group-label">
                 <label class="floating-label" for="locus-name-input">{{resource "locusNameHeaderText"}}</label>
                 <input id="locus-name-input" class="form-control" name="locusName" type="text" placeholder='{{resource "locusNamePlaceholder"}}' disabled/>
             </div>
@@ -34,15 +19,19 @@
                 <input id="locus-description-input" class="form-control" name="locusDescription" type="text" length="100" placeholder='{{resource "locusDescriptionPlaceholder"}}'/>
                 <span class="form-help form-help-msg text-alt">{{resource "locusDescriptionHelpMessageText"}}<span class="form-help-icon icon">error</span></span>
             </div>
-            <div class="form-group form-group-label">
+            <div id="gps-input-container" class="form-group hidden">
+                <span class="static-label">{{resource "gpsHeaderText"}}</span>
+                <p id="gps-input" class="form-control-static"></p>
+            </div>
+            <div class="form-group form-group-label hidden">
                 <label class="floating-label" for="latitude-input">{{resource "latitudeHeaderText"}}</label>
                 <input id="latitude-input" class="form-control" name="latitude" type="text" placeholder='{{resource "latitudePlaceholder"}}' disabled/>
             </div>
-            <div class="form-group form-group-label">
+            <div class="form-group form-group-label hidden">
                 <label class="floating-label" for="longitude-input">{{resource "longitudeHeaderText"}}</label>
                 <input id="longitude-input" class="form-control" name="longitude" type="text" placeholder='{resource "longitudePlaceholder"}}' disabled/>
             </div>
-            <div id="distance-input-container" class="form-group form-group-label">
+            <div class="form-group form-group-label hidden">
                 <label class="floating-label" for="distance-input">{{resource "distanceHeaderText"}}</label>
                 <input id="distance-input" class="form-control" type="text" placeholder='{{resource "distancePlaceholder"}}' disabled/>
             </div>
@@ -50,7 +39,7 @@
                 <label class="floating-label" for="contact-number-input">{{resource "contactNumberHeaderText"}}</label>
                 <input id="contact-number-input" class="form-control" name="contactNumber" type="text" placeholder='{{resource "contactNumberPlaceholder"}}'/>
             </div>
-            <div class="form-group form-group-label">
+            <div class="form-group form-group-label hidden">
                 <label class="floating-label" for="email-input">{{resource "emailHeaderText"}}</label>
                 <input id="email-input" class="form-control" name="email" type="text" placeholder='{{resource "emailPlaceholder"}}'/>
             </div>

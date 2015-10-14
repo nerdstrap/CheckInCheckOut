@@ -108,36 +108,46 @@ var CheckInView = BaseView.extend({
         });
         return this;
     },
-
+    /**
+     *
+     * @returns {CheckInView}
+     */
+    validateOpenEntryLogModel: function () {
+        var currentContext = this;
+        if (currentContext.openEntryLogyModel && currentContext.openEntryLogyModel.has('entryLogId')) {
+            currentContext.trigger('error');
+        }
+        return this;
+    },
     /**
      *
      * @returns {CheckInView}
      */
     updateModelFromParentModels: function () {
         var currentContext = this;
-        if (currentContext.openEntryLogyModel && currentContext.openEntryLogyModel.has('entryLogId')) {
-            currentContext.trigger('error');
-            return this;
-        }
         if (currentContext.model.get('checkInType') === CheckInTypeEnum.locus) {
             if (currentContext.locusModel && currentContext.locusModel.has('locusId')) {
-                currentContext.model.set({'locusId': currentContext.locusModel.get('locusId')});
-                currentContext.model.set({'locusName': currentContext.locusModel.get('locusName')});
-                currentContext.model.set({'distance': currentContext.locusModel.get('distance')});
-                currentContext.model.set({'latitude': currentContext.locusModel.get('latitude')});
-                currentContext.model.set({'longitude': currentContext.locusModel.get('longitude')});
+                currentContext.model.set({
+                    locusId: currentContext.locusModel.get('locusId'),
+                    locusName: currentContext.locusModel.get('locusName'),
+                    distance: currentContext.locusModel.get('distance'),
+                    latitude: currentContext.locusModel.get('latitude'),
+                    longitude: currentContext.locusModel.get('longitude')
+                });
             } else {
                 currentContext.trigger('error');
                 return this;
             }
         }
-        currentContext.model.set({'identityId': currentContext.myIdentityModel.get('identityId')});
-        currentContext.model.set({'identityName': currentContext.myIdentityModel.get('identityName')});
-        currentContext.model.set({'firstName': currentContext.myIdentityModel.get('firstName')});
-        currentContext.model.set({'middleName': currentContext.myIdentityModel.get('middleName')});
-        currentContext.model.set({'lastName': currentContext.myIdentityModel.get('lastName')});
-        currentContext.model.set({'contactNumber': currentContext.myIdentityModel.get('contactNumber')});
-        currentContext.model.set({'email': currentContext.myIdentityModel.get('email')});
+        currentContext.model.set({
+            identityId: currentContext.myIdentityModel.get('identityId'),
+            identityName: currentContext.myIdentityModel.get('identityName'),
+            firstName: currentContext.myIdentityModel.get('firstName'),
+            middleName: currentContext.myIdentityModel.get('middleName'),
+            lastName: currentContext.myIdentityModel.get('lastName'),
+            contactNumber: currentContext.myIdentityModel.get('contactNumber'),
+            email: currentContext.myIdentityModel.get('email')
+        });
         return this;
     },
 
@@ -149,6 +159,7 @@ var CheckInView = BaseView.extend({
         var currentContext = this;
         currentContext.updateIdentityNameInput();
         currentContext.updateLocusNameInput();
+        currentContext.updateLocusDescriptionInput();
         currentContext.updateDistanceInput();
         currentContext.updateLatitudeInput();
         currentContext.updateLongitudeInput();
@@ -187,6 +198,32 @@ var CheckInView = BaseView.extend({
         if (currentContext.model.has('locusName')) {
             var locusName = currentContext.model.get('locusName');
             currentContext.$('#locus-name-input').val(locusName).parent().addClass('control-highlight');
+        }
+        return this;
+    },
+
+    /**
+     *
+     * @returns {CheckInView}
+     */
+    updateLocusDescriptionInput: function () {
+        var currentContext = this;
+        if (currentContext.model.has('locusDescription')) {
+            var locusDescription = currentContext.model.get('locusDescription');
+            currentContext.$('#locus-description-input').val(locusDescription).parent().addClass('control-highlight');
+        }
+        return this;
+    },
+
+    /**
+     *
+     * @returns {CheckInView}
+     */
+    updateGpsInput: function (latitude, longitude) {
+        var currentContext = this;
+        if (latitude && longitude) {
+            var formattedGpsText = latitude.toString() + ', ' + longitude.toString();
+            currentContext.$('#gps-input').val(formattedGpsText);
         }
         return this;
     },
@@ -448,11 +485,11 @@ var CheckInView = BaseView.extend({
         var currentContext = this;
         var attributes = {};
 
-        attributes.latitude = currentContext.$('#latitude-input').val();
-        attributes.longitude = currentContext.$('#longitude-input').val();
+        //attributes.latitude = currentContext.$('#latitude-input').val();
+        //attributes.longitude = currentContext.$('#longitude-input').val();
         var rawContactNumber = currentContext.$('#contact-number-input').val();
         attributes.contactNumber = utils.cleanPhone(rawContactNumber);
-        attributes.email = currentContext.$('#email-input').val();
+        //attributes.email = currentContext.$('#email-input').val();
         attributes.purpose = currentContext.$('#purpose-input option:selected').text();
         if (currentContext.$('#purpose-input').prop('selectedIndex') === 0) {
             attributes.purpose = '';
@@ -531,7 +568,8 @@ var CheckInView = BaseView.extend({
         if (locusId) {
             currentContext.dispatcher.trigger(EventNameEnum.goToLocusWithId, locusId);
         } else {
-            currentContext.dispatcher.trigger(EventNameEnum.goToLocusSearch);
+            var entryLogId = currentContext.model.get('entryLogId');
+            currentContext.dispatcher.trigger(EventNameEnum.goToAdHocLocusWithId, entryLogId);
         }
         return this;
     },
@@ -550,7 +588,6 @@ var CheckInView = BaseView.extend({
      */
     onError: function (error) {
         var currentContext = this;
-        currentContext.$('.form-group-wrap').addClass('el-loading-done');
         return this;
     },
 
@@ -560,9 +597,9 @@ var CheckInView = BaseView.extend({
     onLoaded: function () {
         console.trace('CheckInView.onLoaded');
         var currentContext = this;
+        currentContext.validateOpenEntryLogModel();
         currentContext.updateModelFromParentModels();
         currentContext.updateViewFromModel();
-        currentContext.$('.form-group-wrap').addClass('el-loading-done');
     },
 
     /**
@@ -570,7 +607,6 @@ var CheckInView = BaseView.extend({
      */
     onLeave: function () {
         console.trace('CheckInView.onLeave');
-        var currentContext = this;
     }
 });
 
